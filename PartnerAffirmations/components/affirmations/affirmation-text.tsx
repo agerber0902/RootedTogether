@@ -1,18 +1,19 @@
 import FadeInView from "../shared/fade-in-animated-view";
 import { affirmationTextStyles } from "@/constants/stylesheets/components/affimations/affirmation-text";
 import SharedText from "../shared/shared-text";
+import { TextStyle } from "react-native";
 
 type AffirmationTextProps = {
   text: string;
+  style?: TextStyle;
 };
 
-const AffirmationText = ({text} : AffirmationTextProps) => {
-  const style = affirmationTextStyles;
+const AffirmationText = ({text, style} : AffirmationTextProps) => {
 
   return (
     <>
-      <FadeInView style={style.textContainer}>
-        <SharedText numberOfLines={3} style={style.textContent} text={text} />
+      <FadeInView style={affirmationTextStyles.textContainer}>
+        <SharedText numberOfLines={3} style={[affirmationTextStyles.textContent, style]} text={text} />
       </FadeInView>
     </>
   );

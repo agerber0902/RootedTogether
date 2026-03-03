@@ -7,7 +7,7 @@ export const affirmationCardStyles = StyleSheet.create({
         ...sharedCardStyles.cardContainer,
     },
     cardContent: {
-        ...sharedCardStyles.cardContent,
+        textAlign: 'left',
         
     },
     cardTitle: {
@@ -19,4 +19,11 @@ export const affirmationCardStyles = StyleSheet.create({
         marginTop: spacing.xxl,
         marginHorizontal: 'auto',
     },
+    scrollView: {
+        flex: 1,
+    },
+    affirmation: {
+        textAlign: 'left'
+    },
+    addButton: {},
 });
