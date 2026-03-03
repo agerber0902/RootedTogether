@@ -19,6 +19,28 @@ export const addAffirmation = async (affirmation: Affirmation) => {
   await addData<Affirmation>(collectionName, affirmation);
 };
 
+export const getUserCreatedAffirmations = async (creatorId: string): Promise<Affirmation[]> => {
+  const affirmationRef = collection(firestore, collectionName);
+
+  const affirmationsQuery = query(
+    affirmationRef,
+    where("recipientId", "==", creatorId),
+  );
+
+  const snapshot = await getDocs(affirmationsQuery);
+
+  if (snapshot.empty) {
+    return [];
+  }
+
+  const userCreatorAffirmations: Affirmation[] = snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return affirmationMap(data, doc.id);
+  });
+
+  return userCreatorAffirmations;
+};
+
 export const getTodaysAffirmation = async (
   userId: string,
 ): Promise<TodaysAffirmation | undefined> => {

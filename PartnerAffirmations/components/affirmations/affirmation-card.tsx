@@ -4,10 +4,21 @@ import { View } from "react-native";
 import AffirmationText from "./affirmation-text";
 import Button from "../shared/button";
 import { affirmationCardStyles } from "@/constants/stylesheets/components/affimations/affirmation-card-styles";
-import { baseAnimationDelayDuration, baseAnimationDuration } from "@/constants/theme";
+import {
+  baseAnimationDelayDuration,
+  baseAnimationDuration,
+} from "@/constants/theme";
+import { useAppSelector } from "@/state/hooks";
 
 const AffirmationCard = () => {
   const { isAuthenticated } = useAuth();
+
+  const { todaysAffirmation } = useAppSelector(
+    (state) => state.affirmation.value,
+  );
+  const message =
+    todaysAffirmation?.affirmation?.message ??
+    "You are the designer of your best life";
 
   return (
     <>
@@ -19,7 +30,7 @@ const AffirmationCard = () => {
       >
         <View style={affirmationCardStyles.cardContent}>
           <View style={affirmationCardStyles.cardTitle}>
-            <AffirmationText />
+            <AffirmationText text={message} />
           </View>
 
           <View style={affirmationCardStyles.cardButton}>

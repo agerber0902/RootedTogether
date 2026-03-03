@@ -23,6 +23,7 @@ const SharedCard = ({
     <>
       <FadeInView
         duration={animationDuration ?? 2000}
+        delay={500}
         visible={visible}
         style={[style.cardContainer, cardContainerStyle ?? {}]}
       >
