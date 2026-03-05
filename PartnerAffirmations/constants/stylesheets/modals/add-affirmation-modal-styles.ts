@@ -1,12 +1,12 @@
 import { StyleSheet } from "react-native";
-import { Theme } from "../../theme";
+import { spacing, Theme } from "../../theme";
 
-export const addAffirmationModalStyles = () =>
+export const addAffirmationModalStyles =
   StyleSheet.create({
     form: {
       display: "flex",
       width: "75%",
-      minHeight: "100%",
+      
       flex: 1,
 
       paddingTop: 5,
@@ -14,6 +14,9 @@ export const addAffirmationModalStyles = () =>
       flexDirection: "column",
       justifyContent: "flex-start",
       alignSelf: "center",
+    },
+    inputs: {
+      padding: spacing.sm,
     },
     input: {
       width: "100%",

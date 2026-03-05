@@ -18,11 +18,10 @@ const SharedModal = ({
   onRequestClose,
   onBackDropPress,
 }: ModalProps) => {
-  const styles = sharedModalStyles();
 
   return (
     <Modal
-      style={styles.modalContainer}
+      style={sharedModalStyles.modalContainer}
       animationIn="slideInUp"
       isVisible={isVisible}
       avoidKeyboard={true}
@@ -30,8 +29,8 @@ const SharedModal = ({
       onBackdropPress={onBackDropPress}
       onBackButtonPress={onRequestClose}
     >
-      <View style={styles.modalView}>
-        <SharedText style={styles.modalHeader} text={header} />
+      <View style={sharedModalStyles.modalView}>
+        <SharedText style={sharedModalStyles.modalHeader} text={header} />
         {modalContent}
       </View>
     </Modal>

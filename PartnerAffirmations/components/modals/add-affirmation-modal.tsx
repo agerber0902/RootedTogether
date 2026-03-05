@@ -19,7 +19,9 @@ const AddAffirmationModal = ({
       header={"Add Affirmation"}
       onRequestClose={toggleVisibleState}
       onBackDropPress={isLoading ? undefined : toggleVisibleState}
-      modalContent={<AddAffirmationForm isLoading={isLoading} setIsLoading={setIsLoading}/>}
+      modalContent={
+      <AddAffirmationForm isLoading={isLoading} setIsLoading={setIsLoading}/>
+    }
     />
   );
 };

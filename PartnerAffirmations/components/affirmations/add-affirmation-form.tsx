@@ -7,6 +7,7 @@ import Button from "../shared/button";
 import LoadingSpinner from "../shared/loading-spinner";
 import { addAffirmation } from "@/helpers/affirmation-helper";
 import { useAuth } from "@/providers/auth-provider";
+import SharedTextInput from "../shared/shared-text-input";
 
 type AddAffirmationFormProps = {
   isLoading: boolean;
@@ -17,8 +18,6 @@ const AddAffirmationForm = ({
   isLoading,
   setIsLoading,
 }: AddAffirmationFormProps) => {
-  const style = addAffirmationModalStyles();
-  const modalStyle = sharedModalStyles();
 
   const { user } = useAuth();
 
@@ -46,20 +45,17 @@ const AddAffirmationForm = ({
   };
 
   return (
-    <View style={style.form}>
+    <View style={addAffirmationModalStyles.form}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={modalStyle.modalContainer}
+        style={sharedModalStyles.modalContainer}
       >
-        <TextInput
-          value={message}
-          placeholder="Enter Affirmation"
-          onChangeText={setMessage}
-          style={Theme.textInput}
-          maxLength={100}
-        />
+        <View style={addAffirmationModalStyles.inputs}>
+          <SharedTextInput value ={message} onChangeText={(message: string) => setMessage(message)} placeHolder="Enter Affirmation" />
+        </View>
+        
         {isLoading && <LoadingSpinner viewStyle={{}} />}
-        <View style={style.actions}>
+        <View style={addAffirmationModalStyles.actions}>
           <Button
             title={isLoading ? "Loading" : "Add"}
             onPress={handleAdd}

@@ -8,12 +8,15 @@ export const colors = {
   tabBackground: "#F6F0EA",
 
   card: "#fffcf9", //'#F9F2EE',
+  modal: "#F6F0EA",
 
   primaryText: "#42382e",
   secondaryText: "#605b42",
 
   primaryButton: "#898973",
   primaryButtonText: "#F6F0EA",
+
+  secondaryButton: "#F6F0EA",
 
   affirmation: "#6b6158",
 
@@ -22,7 +25,7 @@ export const colors = {
   accent: "#7A542E",
 
   tabInactive: "#b9ac98",
-  tabActive: "#898973",//"#8f8964",
+  tabActive: "#898973", //"#8f8964",
 };
 
 export const typography = {
@@ -38,6 +41,7 @@ export const typography = {
 
   sizes: {
     greeting: 30,
+    modalHeader: 28,
     affirmation: 24,
     body: 16,
     small: 14,
@@ -98,11 +102,51 @@ export const shadows = {
 
     elevation: 6,
   },
+  textInput: {
+    shadowColor: colors.accent,
+    shadowOpacity: 0.2,
+    shadowRadius: radius.button,
+    shadowOffset: { width: 0, height: 8 },
+    
+    outlineStyle: undefined,
+
+    elevation: 1,
+  },
 };
-export const modal = {
-  borderRadius: radius.modal,
-  // Shadow
-  ...shadows.modal,
+
+export const baseText = {
+  flexShrink: 1,
+
+  ...(Platform.OS === "web" && {
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+  }),
+} as TextStyle;
+
+export const sharedModal = {
+  modal: {
+    backgroundColor: colors.modal,
+
+    borderRadius: radius.modal,
+    // Shadow
+    ...shadows.modal,
+  },
+  header: {
+    width: '100%',
+    height: 'auto',
+
+    fontFamily: typography.fontFamily.serif,
+    fontSize: typography.sizes.modalHeader,
+    color: colors.primaryText,
+    marginBottom: spacing.md,
+    letterSpacing: typography.letterSpacing.greeting,
+
+    paddingLeft: 5,
+
+    ...baseText,
+  },
 };
 export const buttons = {
   primary: {
@@ -123,24 +167,30 @@ export const buttons = {
   } as ViewStyle,
   primaryText: {
     // Font
+    fontFamily: typography.fontFamily.sans,
     fontSize: typography.sizes.button,
     letterSpacing: typography.letterSpacing.subtle,
 
     color: colors.primaryButtonText,
 
-    textAlign: 'center',
-    
+    textAlign: "center",
   } as TextStyle,
 };
 
-// export const inputText = {
-//   background: colors.surface,
-//   text: colors.textPrimary,
-//   placeholder: colors.textSecondary,
-//   border: "transparent",
-//   borderFocus: colors.primary,
-//   shadow: colors.accent,
-// };
+export const inputTextWrapper = {
+  backgroundColor: colors.background,
+  text: colors.primaryText,
+  placeholder: colors.secondaryText,
+  border: "transparent",
+  // borderColor: colors.primary,
+  borderRadius: radius.button,
+  // borderWidth: 1,
+
+  shadow: shadows.textInput,
+
+  padding: spacing.xs,
+
+} as ViewStyle;
 
 export const motion = {
   fadeSlow: 600,
@@ -149,22 +199,11 @@ export const motion = {
   easing: "easeOut",
 };
 
-export const baseText = {
-  flexShrink: 1,
-
-  ...(Platform.OS === "web" && {
-    display: "-webkit-box",
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: "vertical",
-    overflow: "hidden",
-  }),
-} as TextStyle;
-
 export const Theme = {
   dark: false,
   colors: colors,
   typography: typography,
-  modal: modal,
+  modal: sharedModal,
   spacing: spacing,
   baseText: baseText,
 
@@ -177,7 +216,7 @@ export const Theme = {
   },
 
   // Text Input
-  // textInput: inputText,
+  textInput: inputTextWrapper,
 
   // Loading Spinner
   loadingSpinner: {

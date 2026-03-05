@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, TextStyle } from "react-native";
 import { Theme } from "../../theme";
 
-export const sharedModalStyles = () =>
+export const sharedModalStyles =
   StyleSheet.create({
     modalContainer: {
         width: "95%",
@@ -15,22 +15,18 @@ export const sharedModalStyles = () =>
         
     },
     modalView: {
-      ...Theme.modal,
+      ...Theme.modal.modal,
 
       width: "100%",
       height: "auto",
 
       padding: 5,
 
-
-      backgroundColor: Theme.colors.secondary,
     },
     modalHeader: {
-      ...Theme.fonts.header,
-
-      width: "100%",
-      textAlign: "center",
+      display: "flex", 
       paddingTop: 10,
-      paddingBottom: 10,
+
+      ...Theme.modal.header as TextStyle,
     },
   });
