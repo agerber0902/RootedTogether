@@ -1,7 +1,7 @@
 export type Affirmation = {
   id?: string;
   message: string;
-  displayDate?: Date | null;
+  displayDate: Date | null;
   recipientId: string;
   creatorId: string;
 }

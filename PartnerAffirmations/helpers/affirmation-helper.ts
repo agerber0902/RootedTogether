@@ -7,6 +7,7 @@ import { addData } from "./firebase-helper";
 import {
   collection,
   getDocs,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -24,7 +25,9 @@ export const getUserCreatedAffirmations = async (creatorId: string): Promise<Aff
 
   const affirmationsQuery = query(
     affirmationRef,
-    where("recipientId", "==", creatorId),
+    where("creatorId", "==", creatorId),
+    orderBy("createdAt", "desc"),
+    orderBy("displayDate", "desc"),
   );
 
   const snapshot = await getDocs(affirmationsQuery);
