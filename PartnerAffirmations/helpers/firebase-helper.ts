@@ -5,7 +5,13 @@ import {
   User,
 } from "firebase/auth";
 import { auth, firestore } from "../config/firebase";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  deleteDoc,
+  collection,
+  serverTimestamp,
+  doc,
+} from "firebase/firestore";
 import { addUser } from "./user-helper";
 
 export type FirebaseResponse = {
@@ -13,8 +19,11 @@ export type FirebaseResponse = {
   error: string | undefined;
 };
 
-export const addData = async <T extends { id?: string }>(collectionName: string, data: T) => {
-  const {id, ...dataToAdd} = data;
+export const addData = async <T extends { id?: string }>(
+  collectionName: string,
+  data: T,
+) => {
+  const { id, ...dataToAdd } = data;
   try {
     const docRef = await addDoc(collection(firestore, collectionName), {
       ...dataToAdd,
@@ -25,6 +34,15 @@ export const addData = async <T extends { id?: string }>(collectionName: string,
   } catch (error) {
     console.error("Error adding document:", error);
     throw error;
+  }
+};
+
+export const deleteData = async (collectionName: string, id: string) => {
+  try {
+    const docRef = doc(firestore, collectionName, id);
+    await deleteDoc(docRef);
+  } catch (error) {
+    console.log("Error deleting document:", error);
   }
 };
 

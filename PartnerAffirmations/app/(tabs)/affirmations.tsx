@@ -9,13 +9,13 @@ import SharedSafeView from "@/components/shared/shared-safe-view";
 import SharedText from "@/components/shared/shared-text";
 import { Affirmation } from "@/constants/models/affirmation";
 import { affirmationCardStyles } from "@/constants/stylesheets/components/affimations/affirmation-card-styles";
-import { getUserCreatedAffirmations } from "@/helpers/affirmation-helper";
+import {
+  deleteAffirmation,
+  getUserCreatedAffirmations,
+} from "@/helpers/affirmation-helper";
 import { useAuth } from "@/providers/auth-provider";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import {
-  setAffirmationToEditOrDelete,
-  setUserCreatedAffirmations,
-} from "@/state/slices/affirmation";
+import { setUserCreatedAffirmations } from "@/state/slices/affirmation";
 import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 
@@ -27,6 +27,10 @@ const AffirmationsScreen = () => {
     (state) => state.affirmation.value,
   );
 
+  const [selectedAffirmationId, setSelectedAffirmationId] =
+    useState<string>("");
+  const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
@@ -37,20 +41,32 @@ const AffirmationsScreen = () => {
   };
 
   const editButtonPressed = (affirmationId: string) => {
-    editOrDeleteButtonPressed(affirmationId);
+    setSelectedAffirmationId(affirmationId);
   };
   const deleteButtonPressed = (affirmationId: string) => {
-    editOrDeleteButtonPressed(affirmationId);
-
+    setSelectedAffirmationId(affirmationId);
     setShowConfirmationModal(true);
   };
 
-  const editOrDeleteButtonPressed = (affirmationId: string) => {
-    dispatch(
-      setAffirmationToEditOrDelete(
-        userCreatedAffirmations.find((a) => a.id === affirmationId),
-      ),
-    );
+  const onDelete = async () => {
+    try {
+      setIsDeleteLoading(true);
+
+      await deleteAffirmation(selectedAffirmationId);
+
+      // update
+      const createdAffirmations = await getUserCreatedAffirmations(
+        user?.uid ?? "0",
+      );
+
+      dispatch(setUserCreatedAffirmations(createdAffirmations));
+    } finally {
+      //  Add delay to make it not so jumpy
+      setTimeout(() => {
+        setIsDeleteLoading(false);
+        setShowConfirmationModal(false);
+      }, 1000);
+    }
   };
 
   useEffect(() => {
@@ -71,13 +87,14 @@ const AffirmationsScreen = () => {
         <>
           <ConfirmationModal
             isVisible={showConfirmationModal}
+            isLoading={isDeleteLoading}
             toggleVisibleState={() =>
               setShowConfirmationModal(!showConfirmationModal)
             }
             text="You are about to delete an affirmation."
             confirmText="Delete"
             onCancel={() => setShowConfirmationModal(false)}
-            onConfirm={() => {}}
+            onConfirm={() => onDelete()}
           />
 
           <AddAffirmationModal

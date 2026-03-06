@@ -62,7 +62,7 @@ const AddAffirmationForm = ({
           <SharedTextInput value ={message} onChangeText={(message: string) => setMessage(message)} placeHolder="Enter Affirmation" />
         </View>
         
-        {isLoading && <LoadingSpinner viewStyle={{}} />}
+        {isLoading && <LoadingSpinner viewStyle={{padding: 5}} />}
         <View style={addAffirmationModalStyles.actions}>
           <Button
             title={isLoading ? "Loading" : "Add"}

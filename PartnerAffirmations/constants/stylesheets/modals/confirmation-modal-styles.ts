@@ -29,6 +29,7 @@ export const confirmationModalStyles =
         display: 'flex',
 
         paddingTop: spacing.md,
+        paddingBottom: spacing.sm,
         gap: spacing.sm,
 
         flexDirection: 'row',
