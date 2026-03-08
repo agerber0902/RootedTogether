@@ -1,19 +1,15 @@
 import AffirmationHeader from "@/components/affirmations/affirmation-header";
 import AffirmationText from "@/components/affirmations/affirmation-text";
 import CreatedAffirmationView from "@/components/affirmations/created-affirmation-view";
-import AddAffirmationModal from "@/components/modals/add-affirmation-modal";
-import ConfirmationModal from "@/components/modals/confirmation-modal";
+import AddOrEditAffirmationModal from "@/components/modals/add-edit-affirmation-modal";
+import DeleteAffirmationModal from "@/components/modals/delete-affirmation-modal";
 import Button from "@/components/shared/button";
 import SharedCard from "@/components/shared/shared-card";
 import SharedSafeView from "@/components/shared/shared-safe-view";
 import SharedText from "@/components/shared/shared-text";
 import { Affirmation } from "@/constants/models/affirmation";
 import { affirmationCardStyles } from "@/constants/stylesheets/components/affimations/affirmation-card-styles";
-import {
-  deleteAffirmation,
-  editAffirmation,
-  getUserCreatedAffirmations,
-} from "@/helpers/affirmation-helper";
+import { getUserCreatedAffirmations } from "@/helpers/affirmation-helper";
 import { useAuth } from "@/providers/auth-provider";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import { setUserCreatedAffirmations } from "@/state/slices/affirmation";
@@ -30,11 +26,9 @@ const AffirmationsScreen = () => {
 
   const [selectedAffirmationId, setSelectedAffirmationId] =
     useState<string>("");
-  const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
-  const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
 
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [showConfirmationModal, setShowConfirmationModal] =
+  const [showDeleteModal, setShowDeleteModal] =
     useState<boolean>(false);
 
   const createButtonPressed = () => {
@@ -47,53 +41,7 @@ const AffirmationsScreen = () => {
   };
   const deleteButtonPressed = (affirmationId: string) => {
     setSelectedAffirmationId(affirmationId);
-    setShowConfirmationModal(true);
-  };
-
-  const onDelete = async () => {
-    try {
-      setIsDeleteLoading(true);
-
-      await deleteAffirmation(selectedAffirmationId);
-
-      // update
-      const createdAffirmations = await getUserCreatedAffirmations(
-        user?.uid ?? "0",
-      );
-
-      dispatch(setUserCreatedAffirmations(createdAffirmations));
-    } finally {
-      //  Add delay to make it not so jumpy
-      setTimeout(() => {
-        setIsDeleteLoading(false);
-        setShowConfirmationModal(false);
-      }, 1000);
-    }
-  };
-
-  const onEdit = async () => {
-    try {
-      setIsEditLoading(true);
-      const affirmtion = userCreatedAffirmations.find((a) => a.id === selectedAffirmationId)
-      if(!affirmtion){
-        return;
-      }
-      
-      await editAffirmation(affirmtion);
-
-      // update
-      const createdAffirmations = await getUserCreatedAffirmations(
-        user?.uid ?? "0",
-      );
-
-      dispatch(setUserCreatedAffirmations(createdAffirmations));
-    } finally {
-      //  Add delay to make it not so jumpy
-      setTimeout(() => {
-        setIsDeleteLoading(false);
-        setShowConfirmationModal(false);
-      }, 1000);
-    }
+    setShowDeleteModal(true);
   };
 
   useEffect(() => {
@@ -112,21 +60,14 @@ const AffirmationsScreen = () => {
     <>
       <SharedSafeView header={<AffirmationHeader />}>
         <>
-          <ConfirmationModal
-            isVisible={showConfirmationModal}
-            isLoading={isDeleteLoading}
-            toggleVisibleState={() =>
-              setShowConfirmationModal(!showConfirmationModal)
-            }
-            text="You are about to delete an affirmation."
-            confirmText="Delete"
-            onCancel={() => setShowConfirmationModal(false)}
-            onConfirm={() => onDelete()}
-          />
-
-          <AddAffirmationModal
+          <AddOrEditAffirmationModal
             isVisible={showModal}
             toggleVisibleState={() => setShowModal(!showModal)}
+          />
+          <DeleteAffirmationModal
+            showModal={showDeleteModal}
+            setShowModal={setShowDeleteModal}
+            affirmationToDeleteId={selectedAffirmationId}
           />
 
           <SharedCard visible={true}>

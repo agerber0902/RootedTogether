@@ -1,8 +1,7 @@
 import { addAffirmationModalStyles } from "@/constants/stylesheets/modals/add-affirmation-modal-styles";
 import { sharedModalStyles } from "@/constants/stylesheets/modals/shared-modal-styles";
-import { Theme } from "@/constants/theme";
 import { Dispatch, SetStateAction, useState } from "react";
-import { KeyboardAvoidingView, Platform, TextInput, View } from "react-native";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
 import Button from "../shared/button";
 import LoadingSpinner from "../shared/loading-spinner";
 import { addAffirmation, getUserCreatedAffirmations } from "@/helpers/affirmation-helper";
@@ -14,11 +13,13 @@ import { setUserCreatedAffirmations } from "@/state/slices/affirmation";
 type AddAffirmationFormProps = {
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  toggleViewState: (t: boolean) => void;
 };
 
 const AddAffirmationForm = ({
   isLoading,
   setIsLoading,
+  toggleViewState
 }: AddAffirmationFormProps) => {
 
   const { user } = useAuth();
@@ -48,6 +49,7 @@ const AddAffirmationForm = ({
     } finally {
       setTimeout(() => {
         setIsLoading(false);
+        toggleViewState(false)
       }, 1000);
     }
   };
