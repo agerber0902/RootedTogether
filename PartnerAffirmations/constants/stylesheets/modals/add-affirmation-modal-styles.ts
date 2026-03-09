@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { spacing, Theme } from "../../theme";
+import { spacing } from "../../theme";
 
 export const addAffirmationModalStyles =
   StyleSheet.create({
@@ -36,16 +36,5 @@ export const addAffirmationModalStyles =
 
       marginTop: "auto",
       paddingBottom: 15,
-    },
-    toggleAction: {
-      width: "100%",
-
-      paddingTop: 5,
-
-      color: Theme.colors.white,
-      fontStyle: "italic",
-    },
-    error: {
-      color: Theme.colors.notification,
-    },
+    }
   });

@@ -3,7 +3,7 @@ import {
   affirmationMap,
   TodaysAffirmation,
 } from "@/constants/models/affirmation";
-import { addData } from "./firebase-helper";
+import { addData, deleteData, updateData } from "./firebase-helper";
 import {
   collection,
   getDocs,
@@ -18,6 +18,12 @@ const collectionName = "affirmations";
 
 export const addAffirmation = async (affirmation: Affirmation) => {
   await addData<Affirmation>(collectionName, affirmation);
+};
+export const deleteAffirmation = async (affirmationId: string) => {
+  await deleteData(collectionName, affirmationId);
+};
+export const editAffirmation = async (affirmation: Affirmation) => {
+  await updateData<Affirmation>(collectionName, affirmation);
 };
 
 export const getUserCreatedAffirmations = async (creatorId: string): Promise<Affirmation[]> => {

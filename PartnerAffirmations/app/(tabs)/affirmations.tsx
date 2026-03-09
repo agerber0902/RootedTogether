@@ -1,7 +1,8 @@
 import AffirmationHeader from "@/components/affirmations/affirmation-header";
 import AffirmationText from "@/components/affirmations/affirmation-text";
 import CreatedAffirmationView from "@/components/affirmations/created-affirmation-view";
-import AddAffirmationModal from "@/components/modals/add-affirmation-modal";
+import AddOrEditAffirmationModal from "@/components/modals/add-edit-affirmation-modal";
+import DeleteAffirmationModal from "@/components/modals/delete-affirmation-modal";
 import Button from "@/components/shared/button";
 import SharedCard from "@/components/shared/shared-card";
 import SharedSafeView from "@/components/shared/shared-safe-view";
@@ -11,7 +12,7 @@ import { affirmationCardStyles } from "@/constants/stylesheets/components/affima
 import { getUserCreatedAffirmations } from "@/helpers/affirmation-helper";
 import { useAuth } from "@/providers/auth-provider";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { setUserCreatedAffirmations } from "@/state/slices/affirmation";
+import { setAffirmationToEditOrDelete, setUserCreatedAffirmations } from "@/state/slices/affirmation";
 import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 
@@ -23,15 +24,26 @@ const AffirmationsScreen = () => {
     (state) => state.affirmation.value,
   );
 
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedAffirmationId, setSelectedAffirmationId] =
+    useState<string>("");
+
+  const [showAddEditModal, setShowAddEditModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] =
+    useState<boolean>(false);
 
   const createButtonPressed = () => {
     // open modal
-    setShowModal(true);
+    setShowAddEditModal(true);
   };
 
-  const editOrDeleteButtonPressed = () => {
-
+  const editButtonPressed = (affirmation: Affirmation) => {
+    // setSelectedAffirmationId(affirmationId);
+    dispatch(setAffirmationToEditOrDelete(affirmation));
+    setShowAddEditModal(true);
+  };
+  const deleteButtonPressed = (affirmation: Affirmation) => {
+    setSelectedAffirmationId(affirmation.id!);
+    setShowDeleteModal(true);
   };
 
   useEffect(() => {
@@ -50,9 +62,14 @@ const AffirmationsScreen = () => {
     <>
       <SharedSafeView header={<AffirmationHeader />}>
         <>
-          <AddAffirmationModal
-            isVisible={showModal}
-            toggleVisibleState={() => setShowModal(!showModal)}
+          <AddOrEditAffirmationModal
+            isVisible={showAddEditModal}
+            toggleVisibleState={() => setShowAddEditModal(!showAddEditModal)}
+          />
+          <DeleteAffirmationModal
+            showModal={showDeleteModal}
+            setShowModal={setShowDeleteModal}
+            affirmationToDeleteId={selectedAffirmationId}
           />
 
           <SharedCard visible={true}>
@@ -71,7 +88,12 @@ const AffirmationsScreen = () => {
             )}
             <ScrollView scrollEnabled={true}>
               {userCreatedAffirmations.map((affirmation: Affirmation) => (
-                <CreatedAffirmationView key={affirmation.id}>
+                <CreatedAffirmationView
+                  key={affirmation.id}
+                  affirmation={affirmation}
+                  onEdit={editButtonPressed}
+                  onDelete={deleteButtonPressed}
+                >
                   <AffirmationText
                     key={affirmation.id}
                     style={affirmationCardStyles.affirmation}

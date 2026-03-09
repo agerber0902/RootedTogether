@@ -1,12 +1,16 @@
+import { Affirmation } from "@/constants/models/affirmation";
 import { createdAffirmationViewStyles } from "@/constants/stylesheets/components/affimations/created-affirmation-view-styles";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
 
 type CreatedAffirmationViewProps = {
     children: React.ReactNode;
+    affirmation: Affirmation;
+    onEdit: (affirmation: Affirmation) => void;
+    onDelete: (affirmation: Affirmation) => void;
 }
 
-const CreatedAffirmationView = ({children}: CreatedAffirmationViewProps) => {
+const CreatedAffirmationView = ({children, affirmation, onEdit, onDelete}: CreatedAffirmationViewProps) => {
     const affirmationText = children;
 
     return (<>
@@ -15,10 +19,10 @@ const CreatedAffirmationView = ({children}: CreatedAffirmationViewProps) => {
                 {affirmationText}
             </View>
             <View style={createdAffirmationViewStyles.actions}>
-                <Pressable onPress={undefined}>
+                <Pressable onPress={() => onEdit(affirmation)}>
                     <Ionicons name="pencil" size={20} color={createdAffirmationViewStyles.actions.color} />
                 </Pressable>
-                <Pressable>
+                <Pressable onPress={() => onDelete(affirmation)}>
                     <Ionicons name="trash" size={20} color={createdAffirmationViewStyles.actions.color}/>
                 </Pressable>
             </View>

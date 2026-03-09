@@ -5,6 +5,7 @@ export interface ProgressState {
   value: {
     todaysAffirmation: TodaysAffirmation | undefined;
     userCreatedAffirmations: Affirmation[];
+    affirmationToEditOrDelete: Affirmation | undefined;
   };
 }
 
@@ -12,6 +13,7 @@ const initialState: ProgressState = {
   value: {
     todaysAffirmation: undefined,
     userCreatedAffirmations: [],
+    affirmationToEditOrDelete: undefined,
   },
 };
 
@@ -25,12 +27,16 @@ const affirmationSlice = createSlice({
     setUserCreatedAffirmations: (state, action: PayloadAction<Affirmation[]>) => {
       state.value.userCreatedAffirmations = action.payload;
     },
+    setAffirmationToEditOrDelete : (state, action: PayloadAction<Affirmation | undefined>) => {
+      state.value.affirmationToEditOrDelete = action.payload;
+    },
   },
 });
 
 export const {
     setTodaysAffirmation,
-    setUserCreatedAffirmations
+    setUserCreatedAffirmations,
+    setAffirmationToEditOrDelete,
 } = affirmationSlice.actions;
 
 export default affirmationSlice.reducer;
