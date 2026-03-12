@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { auth } from "../config/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
+import { router } from "expo-router";
 
 const AuthContext = createContext<{
   user: User | null;
@@ -39,6 +40,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
       setUser(currentUser);
       setDisplayName(currentUser?.displayName ?? "");
+
+      if(currentUser){
+        // route to home on sign in
+        router.replace("/(tabs)");
+      }
 
       setTimeout(() => {
         setAuthLoading(false);

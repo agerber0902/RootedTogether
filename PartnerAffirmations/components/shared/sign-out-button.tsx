@@ -20,7 +20,7 @@ const SignOutButton = () => {
       <Button
         title="Sign Out"
         onPress={handleSignOut}
-        viewStyle={{ backgroundColor: Theme.colors.secondary }}
+        viewStyle={{ backgroundColor: Theme.colors.primaryButton }}
       />
     </>
   );
