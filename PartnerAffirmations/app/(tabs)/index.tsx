@@ -7,6 +7,7 @@ import { getTodaysAffirmation } from "@/helpers/affirmation-helper";
 import { setTodaysAffirmation } from "@/state/slices/affirmation";
 import SharedSafeView from "@/components/shared/shared-safe-view";
 import WelcomeMessage from "@/components/home/welcome-message";
+import LoginModal from "@/components/modals/login-modal";
 
 const App = () => {
   const { user, authLoading, isAuthenticated } = useAuth();
@@ -36,9 +37,15 @@ const App = () => {
   }, [user, isAuthenticated, todaysAffirmation, dispatch]);
 
   return (
-    <SharedSafeView header={<WelcomeMessage />}>
-      <AffirmationCard />
-    </SharedSafeView>
+    <>
+      {!isAuthenticated ? (
+        <LoginModal />
+      ) : (
+        <SharedSafeView header={<WelcomeMessage />}>
+          <AffirmationCard />
+        </SharedSafeView>
+      )}
+    </>
   );
 };
 export default App;
