@@ -14,6 +14,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { Theme } from "@/constants/theme";
 import SharedText from "../shared/shared-text";
 import { sharedTextInputStyles } from "@/constants/stylesheets/components/shared/shared-text-input-styles";
+import LoadingSpinner from "../shared/loading-spinner";
 
 type LoginFormProps = {
   isLogin: boolean;
@@ -27,19 +28,29 @@ const LoginForm = ({ isLogin, toggleLoginState }: LoginFormProps) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | undefined>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const loginOrCreate = async () => {
-    const response = isLogin
-      ? await signIn(email, password)
-      : await signUp(email, password, name);
+    setIsLoading(true);
+    setError(undefined);
 
-    // Login is handles by auth provider listener
+    try {
+      const response = isLogin
+        ? await signIn(email, password)
+        : await signUp(email, password, name);
 
-    // Set display name
-    setDisplayName(response.user?.displayName ?? "");
+      // Login is handles by auth provider listener
 
-    // handle error
-    setError(response.error);
+      // Set display name
+      setDisplayName(response.user?.displayName ?? "");
+
+      // handle error
+      setError(response.error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    }
   };
 
   return (
@@ -93,10 +104,14 @@ const LoginForm = ({ isLogin, toggleLoginState }: LoginFormProps) => {
         )}
 
         <View style={loginModalStyles.actions}>
-          <Button
-            title={isLogin ? "Login" : "Create"}
-            onPress={loginOrCreate}
-          />
+          {isLoading ? (
+            <LoadingSpinner viewStyle={{ padding: 5 }} />
+          ) : (
+            <Button
+              title={isLogin ? "Login" : "Create"}
+              onPress={loginOrCreate}
+            />
+          )}
 
           <Pressable onPress={toggleLoginState}>
             <SharedText
