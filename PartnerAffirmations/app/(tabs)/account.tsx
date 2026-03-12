@@ -8,7 +8,7 @@ import { AffirmationUser } from "@/constants/models/user";
 import { accountInfoStyles } from "@/constants/stylesheets/components/account/account-info-styles";
 import { useAuth } from "@/providers/auth-provider";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, ViewStyle } from "react-native";
 
 const AccountScreen = () => {
@@ -24,6 +24,14 @@ const AccountScreen = () => {
     affirmationUser?.first ?? "",
   );
   const [lastName, setLastName] = useState<string>(affirmationUser?.last ?? "");
+
+  useEffect(() => {
+  if (affirmationUser) {
+    setFullName(affirmationUser.name ?? "");
+    setFirstName(affirmationUser.first ?? "");
+    setLastName(affirmationUser.last ?? "");
+  }
+}, [affirmationUser]);
 
   const onEditPressed = () => {
     setIsEditMode(!isEditMode);

@@ -25,10 +25,10 @@ export const addUser = async (user: User) => {
 };
 
 export const getUser = async (
-  id: string,
+  uid: string,
 ): Promise<AffirmationUser | undefined> => {
   const ref = collection(firestore, collectionName);
-  const userQuery = query(ref, where("uid", "==", id), limit(1));
+  const userQuery = query(ref, where("uid", "==", uid), limit(1));
   const snapshot = await getDocs(userQuery);
 
   if (snapshot.empty) {
@@ -37,6 +37,6 @@ export const getUser = async (
 
   return AffirmationUserMap(
     snapshot.docs[0].data(),
-    snapshot.docs[0].data().id,
+    snapshot.docs[0].id,
   );
 };
