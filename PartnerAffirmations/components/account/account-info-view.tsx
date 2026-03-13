@@ -13,7 +13,7 @@ import LoadingSpinner from "../shared/loading-spinner";
 const AccountInfoView = () => {
   const dispatch = useAppDispatch();
   const { affirmationUser } = useAppSelector((state) => state.user.value);
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
   const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
