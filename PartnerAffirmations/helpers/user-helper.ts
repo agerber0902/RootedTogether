@@ -1,5 +1,5 @@
 import { AffirmationUser, AffirmationUserMap } from "@/constants/models/user";
-import { addData } from "./firebase-helper";
+import { addData, updateData } from "./firebase-helper";
 import { User } from "firebase/auth";
 import { collection, getDocs, limit, query, where } from "firebase/firestore";
 import { firestore } from "@/config/firebase";
@@ -24,6 +24,11 @@ export const addUser = async (user: User) => {
   });
 };
 
+export const updateUser = async (user: AffirmationUser) => {
+  await updateData<AffirmationUser>(collectionName, user);
+  return await getUser(user.uid);
+};
+
 export const getUser = async (
   uid: string,
 ): Promise<AffirmationUser | undefined> => {
@@ -35,8 +40,5 @@ export const getUser = async (
     return undefined;
   }
 
-  return AffirmationUserMap(
-    snapshot.docs[0].data(),
-    snapshot.docs[0].id,
-  );
+  return AffirmationUserMap(snapshot.docs[0].data(), snapshot.docs[0].id);
 };
