@@ -19,6 +19,7 @@ const UserBootStrap = () => {
 
         if (dbUser) {
           dispatch(setUser(dbUser));
+          // TODO: set partners
         }
       }
     };

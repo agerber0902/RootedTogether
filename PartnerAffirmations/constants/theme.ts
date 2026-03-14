@@ -19,6 +19,8 @@ export const colors = {
   secondaryButton: "#F6F0EA",
 
   affirmation: "#6b6158",
+  partnerName: "#6b6158",
+  partnerDisplayName: "#6b6158",
 
   primary: "#898973",
 
@@ -43,6 +45,8 @@ export const typography = {
     greeting: 30,
     modalHeader: 28,
     affirmation: 24,
+    partner: 24,
+    partnerSubName: 18,
     accountInfoHeader: 18,
     body: 16,
     small: 14,
@@ -270,6 +274,22 @@ export const Theme = {
     lineHeight: typography.lineHeights.affirmation,
     textAlign: "center",
     color: colors.affirmation,
+    letterSpacing: typography.letterSpacing.subtle,
+  },
+  partnerNameText: {
+    ...baseText,
+    fontFamily: typography.fontFamily.serif,
+    fontSize: typography.sizes.partner,
+    textAlign: "left",
+    color: colors.partnerName,
+    letterSpacing: typography.letterSpacing.subtle,
+  },
+  partnerDisplayNameText: {
+    ...baseText,
+    fontFamily: typography.fontFamily.serif,
+    fontSize: typography.sizes.partnerSubName,
+    textAlign: "left",
+    color: colors.partnerDisplayName,
     letterSpacing: typography.letterSpacing.subtle,
   },
 };

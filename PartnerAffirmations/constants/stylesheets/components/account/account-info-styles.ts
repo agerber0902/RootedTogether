@@ -2,6 +2,17 @@ import { spacing, Theme } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
 export const accountInfoStyles = StyleSheet.create({
+  mainContainer: {
+    display: 'flex',
+
+    flexDirection: "column",
+    gap: Theme.spacing.md,
+
+    flex: 1,
+
+    paddingBottom: Theme.spacing.xs,
+
+  },
   infoCardContainer: {
     flex: 1,
   },
