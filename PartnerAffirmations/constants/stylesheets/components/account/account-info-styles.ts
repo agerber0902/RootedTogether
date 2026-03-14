@@ -17,6 +17,8 @@ export const accountInfoStyles = StyleSheet.create({
     flex: 1,
   },
   infoCardContent: {
+    flex: 1,
+     
     alignItems: "flex-start",
     justifyContent: "flex-start",
   },

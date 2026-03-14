@@ -1,5 +1,4 @@
 import { useAuth } from "@/providers/auth-provider";
-import Header from "@/components/shared/header";
 import AffirmationCard from "@/components/affirmations/affirmation-card";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
@@ -10,7 +9,7 @@ import WelcomeMessage from "@/components/home/welcome-message";
 import LoginModal from "@/components/modals/login-modal";
 
 const App = () => {
-  const { user, authLoading, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   const dispatch = useAppDispatch();
   const { todaysAffirmation } = useAppSelector(

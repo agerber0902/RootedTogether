@@ -5,7 +5,19 @@ export const partnerInfoCardStyles = StyleSheet.create({
     flex: 1,
   },
   infoCardContent: {
+    flex: 1,
+    
+    flexDirection: 'column',
     alignItems: "flex-start",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
+  },
+  actions: {
+    display: 'flex',
+    width: '100%',
+  },
+  addButton: {
+    width: '50%',
+
+    alignSelf: 'center',
   },
 });
