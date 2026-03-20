@@ -1,30 +1,38 @@
-import { spacing, Theme } from "@/constants/theme";
+import { spacing, Theme, radius, shadows } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
 export const accountInfoStyles = StyleSheet.create({
   mainContainer: {
-    display: 'flex',
-
+    display: "flex",
     flexDirection: "column",
+    justifyContent: "flex-start",
     gap: Theme.spacing.md,
-
     flex: 1,
-
-    paddingBottom: Theme.spacing.xs,
-
+    minHeight: 0,
+    paddingBottom: Theme.spacing.sm,
   },
   infoCardContainer: {
+    backgroundColor: Theme.colors.card,
+    borderRadius: radius.card,
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    ...shadows.card,
+
     flex: 1,
+    minHeight: 0,
+    overflow: "hidden",
   },
   infoCardContent: {
-    alignItems: "flex-start",
+    flexGrow: 1,
+    alignItems: "stretch",
     justifyContent: "flex-start",
+    gap: Theme.spacing.md,
   },
   infoContainer: {
     display: "flex",
     width: "100%",
 
-    // flex: 1,
+    flexShrink: 1,
     justifyContent: "flex-start",
     flexDirection: "column",
     gap: Theme.spacing.sm,
@@ -36,19 +44,21 @@ export const accountInfoStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    minWidth: 0,
   },
   infoFieldContainer: {
     display: "flex",
-    width: "90%",
+    width: "100%",
+    flex: 1,
 
     flexDirection: "row",
     alignItems: "center",
+    minWidth: 0,
   },
   infoField: {
     display: "flex",
-    maxWidth: "50%",
-
-    flex: 1,
+    maxWidth: "45%",
+    flexShrink: 1,
 
     paddingRight: 5,
   },
@@ -61,9 +71,8 @@ export const accountInfoStyles = StyleSheet.create({
   },
   infoFieldValue: {
     display: "flex",
-    width: "50%",
-
-    flex: 2,
+    flex: 1,
+    minWidth: 0,
   },
   infoFieldValueText: {
     color: Theme.colors.primaryText,
@@ -71,6 +80,7 @@ export const accountInfoStyles = StyleSheet.create({
     fontSize: Theme.typography.sizes.accountInfoHeader,
 
     textAlign: "left",
+    flexShrink: 1,
   },
   editButtonView: {
     display: "flex",

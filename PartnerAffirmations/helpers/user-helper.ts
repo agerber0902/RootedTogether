@@ -18,9 +18,9 @@ export const addUser = async (user: User) => {
     id: undefined,
     uid: user.uid,
     name: user.displayName ?? "",
+    email: user.email ?? "",
     first: first,
     last: last,
-    displayNameForPartner: user.displayName ?? "",
   });
 };
 
@@ -34,6 +34,20 @@ export const getUser = async (
 ): Promise<AffirmationUser | undefined> => {
   const ref = collection(firestore, collectionName);
   const userQuery = query(ref, where("uid", "==", uid), limit(1));
+  const snapshot = await getDocs(userQuery);
+
+  if (snapshot.empty) {
+    return undefined;
+  }
+
+  return AffirmationUserMap(snapshot.docs[0].data(), snapshot.docs[0].id);
+};
+
+export const getUserByEmail = async (
+  email: string,
+): Promise<AffirmationUser | undefined> => {
+  const ref = collection(firestore, collectionName);
+  const userQuery = query(ref, where("email", "==", email), limit(1));
   const snapshot = await getDocs(userQuery);
 
   if (snapshot.empty) {

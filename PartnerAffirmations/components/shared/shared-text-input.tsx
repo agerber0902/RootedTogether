@@ -1,15 +1,17 @@
 import { sharedTextInputStyles } from "@/constants/stylesheets/components/shared/shared-text-input-styles";
-import { TextInput, View } from "react-native";
+import { KeyboardTypeOptions, TextInput, View } from "react-native";
 
 type SharedTextInputProps = {
   value: string | undefined;
   placeHolder: string;
+  keyboardType?: KeyboardTypeOptions;
   onChangeText: (text: string) => void;
 };
 
 const SharedTextInput = ({
   value,
   placeHolder,
+  keyboardType,
   onChangeText,
 }: SharedTextInputProps) => {
   return (
@@ -17,6 +19,7 @@ const SharedTextInput = ({
       <TextInput
         value={value}
         placeholder={placeHolder}
+        keyboardType={keyboardType}
         onChangeText={onChangeText}
         style={!value ? sharedTextInputStyles.placeholderText : sharedTextInputStyles.textInput}
         maxLength={100}

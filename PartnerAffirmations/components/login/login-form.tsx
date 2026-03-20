@@ -65,7 +65,6 @@ const LoginForm = ({ isLogin, toggleLoginState }: LoginFormProps) => {
               placeholder="Name"
               value={name}
               onChangeText={setName}
-              // style={loginModalStyles.input}
               selectionColor={Theme.colors.primary}
             />
           </View>
@@ -78,7 +77,6 @@ const LoginForm = ({ isLogin, toggleLoginState }: LoginFormProps) => {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
-            // style={loginModalStyles.input}
           />
         </View>
 
@@ -87,7 +85,6 @@ const LoginForm = ({ isLogin, toggleLoginState }: LoginFormProps) => {
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
-            // style={loginModalStyles.input}
             autoCapitalize="none"
             secureTextEntry={true}
             textContentType="password"

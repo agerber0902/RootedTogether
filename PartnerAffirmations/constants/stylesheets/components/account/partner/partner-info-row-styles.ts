@@ -11,7 +11,7 @@ export const partnerInfoRowStyles = StyleSheet.create({
 
     },
     partnerNameContainer: {
-        width: '33%'
+        width: '33%',
     },
     createdDateContainer: {
         width: '33%',
