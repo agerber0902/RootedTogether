@@ -1,8 +1,14 @@
-import { Theme } from "@/constants/theme";
+import { radius, shadows, spacing, Theme } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
 export const partnerInfoCardStyles = StyleSheet.create({
   infoCardContainer: {
+    backgroundColor: Theme.colors.card,
+    borderRadius: radius.card,
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    ...shadows.card,
+
     flex: 1,
   },
   infoCardContent: {
@@ -16,7 +22,6 @@ export const partnerInfoCardStyles = StyleSheet.create({
     display: "flex",
     width: "100%",
     paddingTop: Theme.spacing.lg,
-    
   },
   addButton: {
     width: "50%",
@@ -30,6 +35,6 @@ export const partnerInfoCardStyles = StyleSheet.create({
     fontFamily: Theme.typography.fontFamily.serif,
     fontSize: Theme.typography.sizes.affirmation,
 
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

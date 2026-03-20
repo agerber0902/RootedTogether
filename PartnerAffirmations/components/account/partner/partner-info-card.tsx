@@ -39,10 +39,11 @@ const PartnerInfoCard = () => {
         toggleVisibleState={setShowAddModal}
       />
 
-      <SharedCard
-        cardContainerStyle={partnerInfoCardStyles.infoCardContainer}
-        cardContentStyle={partnerInfoCardStyles.infoCardContent}
-        visible={true}
+      <View
+      style={partnerInfoCardStyles.infoCardContainer}
+        // cardContainerStyle={partnerInfoCardStyles.infoCardContainer}
+        // cardContentStyle={partnerInfoCardStyles.infoCardContent}
+        // visible={true}
       >
         {(!partnerConnections || partnerConnections.length <= 0) && (
           <SharedText
@@ -63,7 +64,7 @@ const PartnerInfoCard = () => {
             onPress={() => setShowAddModal(true)}
           />
         </View>
-      </SharedCard>
+      </View>
     </>
   );
 };

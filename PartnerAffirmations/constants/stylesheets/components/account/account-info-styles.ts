@@ -1,32 +1,41 @@
-import { spacing, Theme } from "@/constants/theme";
+import { spacing, Theme, radius, shadows } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
 export const accountInfoStyles = StyleSheet.create({
   mainContainer: {
-    display: 'flex',
+    display: "flex",
 
     flexDirection: "column",
+    justifyContent: 'space-evenly',
     gap: Theme.spacing.md,
 
     flex: 1,
 
     paddingBottom: Theme.spacing.xs,
-
   },
   infoCardContainer: {
+    backgroundColor: Theme.colors.card,
+    borderRadius: radius.card,
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    ...shadows.card,
+
     flex: 1,
+    height: '80%',
+    minHeight: 0,
   },
   infoCardContent: {
-    flex: 1,
-     
+    flexShrink: 1,
+
     alignItems: "flex-start",
     justifyContent: "flex-start",
   },
   infoContainer: {
     display: "flex",
     width: "100%",
+    height: '100%',
 
-    // flex: 1,
+    flexShrink: 1,
     justifyContent: "flex-start",
     flexDirection: "column",
     gap: Theme.spacing.sm,

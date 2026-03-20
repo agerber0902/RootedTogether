@@ -1,17 +1,16 @@
 import { accountInfoStyles } from "@/constants/stylesheets/components/account/account-info-styles";
-import SharedCard from "../shared/shared-card";
 import AccountInfoView from "./account-info-view";
+import React from "react";
+import { View } from "react-native";
 
 const AccountInfoCard = () => {
   return (
     <>
-      <SharedCard
-        cardContainerStyle={accountInfoStyles.infoCardContainer}
-        cardContentStyle={accountInfoStyles.infoCardContent}
-        visible={true}
-      >
-        <AccountInfoView />
-      </SharedCard>
+      <View style={accountInfoStyles.infoCardContainer}>
+        <View style={accountInfoStyles.infoCardContent}>
+          <AccountInfoView />
+        </View>
+      </View>
     </>
   );
 };
