@@ -16,6 +16,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import { setPartnerConnections } from "@/state/slices/partner-connection";
 import LoadingSpinner from "@/components/shared/loading-spinner";
+import AddPartnerModal from "@/components/modals/add-partner-modal";
 
 type PartnerInfoRowProps = {
   connection: PartnerConnection;
@@ -27,13 +28,12 @@ const PartnerInfoRow = ({ connection }: PartnerInfoRowProps) => {
   const dispatch = useAppDispatch();
   const { affirmationUser } = useAppSelector((state) => state.user.value);
 
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+
   const [partnerUser, setPartnerUser] = useState<AffirmationUser | undefined>(
     undefined,
   );
-
-  const [partnerDisplayName, setPartnerDisplayName] = useState<string>(
-    connection.partnerDisplayName,
-  );
+  
   const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
 
   const onDelete = async () => {
@@ -56,6 +56,10 @@ const PartnerInfoRow = ({ connection }: PartnerInfoRowProps) => {
     }
   };
 
+  const onEdit = () => {
+    setShowEditModal(true);
+  };
+
   useEffect(() => {
     const fetchPartner = async () => {
       if (!connection?.partnerId) return;
@@ -70,6 +74,12 @@ const PartnerInfoRow = ({ connection }: PartnerInfoRowProps) => {
   const lineBreak = Platform.OS !== "web" || width < 700;
   return (
     <>
+      <AddPartnerModal
+        isVisible={showEditModal}
+        toggleVisibleState={setShowEditModal}
+        connection={connection}
+      />
+
       <View style={partnerInfoRowStyles.mainContainer}>
         <View style={partnerInfoRowStyles.partnerNameContainer}>
           <PartnerNameText
@@ -86,15 +96,15 @@ const PartnerInfoRow = ({ connection }: PartnerInfoRowProps) => {
           )}
           <SharedText
             style={partnerInfoTextStyles.partnerFullName}
-            text={`${!lineBreak ? "Partners Since: " : ""}${connection.createdAt}`}
+            text={`${!lineBreak ? "Partners Since: " : ""}${connection.createdAt?.toDate().toLocaleDateString()}`}
           />
         </View>
         <View style={partnerInfoRowStyles.actionContainer}>
           {isDeleteLoading ? (
-            <LoadingSpinner viewStyle={{ padding: 5 }}/>
+            <LoadingSpinner viewStyle={{ padding: 5 }} />
           ) : (
             <>
-              <EditIconButton onEdit={() => {}} />
+              <EditIconButton onEdit={onEdit} />
               <DeleteIconButton onClick={onDelete} />
             </>
           )}

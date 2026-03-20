@@ -1,9 +1,14 @@
 import Button from "@/components/shared/button";
 import LoadingSpinner from "@/components/shared/loading-spinner";
 import SharedTextInput from "@/components/shared/shared-text-input";
+import { PartnerConnection } from "@/constants/models/partnerConnection";
 import { addEditPartnerModalStyles } from "@/constants/stylesheets/modals/add-edit-partner-modal-styles";
 import { sharedModalStyles } from "@/constants/stylesheets/modals/shared-modal-styles";
-import { addPartnerConnection, getPartnerConnections } from "@/helpers/partner-helper";
+import {
+  addPartnerConnection,
+  editPartnerConnection,
+  getPartnerConnections,
+} from "@/helpers/partner-helper";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import { setPartnerConnections } from "@/state/slices/partner-connection";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -13,28 +18,41 @@ type AddPartnerFormProps = {
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   toggleViewState: (t: boolean) => void;
+  connection?: PartnerConnection;
 };
 
-const AddPartnerForm = ({
+const AddEditPartnerForm = ({
   isLoading,
   setIsLoading,
   toggleViewState,
+  connection,
 }: AddPartnerFormProps) => {
   const dispatch = useAppDispatch();
   const { affirmationUser } = useAppSelector((state) => state.user.value);
 
-  const [displayName, setDisplayName] = useState<string>("");
+  const [displayName, setDisplayName] = useState<string>(
+    connection?.connectionCreatorDisplayName ?? "",
+  );
   const [email, setEmail] = useState<string>("");
 
-  const isEdit: boolean = false;
+  const isEdit: boolean = !!connection;
 
-  const handleAdd = async () => {
+  const handleAddEdit = async () => {
     setIsLoading(true);
     try {
-      await addPartnerConnection(affirmationUser!, email, displayName);
+      if (isEdit) {
+        const partnerConnection: PartnerConnection = { ...connection! };
+        partnerConnection.connectionCreatorDisplayName = displayName;
+        await editPartnerConnection(partnerConnection);
+      } else {
+        await addPartnerConnection(affirmationUser!, email, displayName);
+      }
 
-      dispatch(setPartnerConnections(await getPartnerConnections(affirmationUser!.uid)));
-
+      dispatch(
+        setPartnerConnections(
+          await getPartnerConnections(affirmationUser!.uid),
+        ),
+      );
     } finally {
       setTimeout(() => {
         setIsLoading(false);
@@ -58,19 +76,21 @@ const AddPartnerForm = ({
               }
               placeHolder="Partner Name"
             />
-            <SharedTextInput
-              placeHolder="Email"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-            />
+            {!isEdit && (
+              <SharedTextInput
+                placeHolder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+              />
+            )}
           </View>
 
           {isLoading && <LoadingSpinner viewStyle={{ padding: 5 }} />}
           <View style={addEditPartnerModalStyles.actions}>
             <Button
               title={isLoading ? "Loading" : isEdit ? "Save" : "Add"}
-              onPress={handleAdd}
+              onPress={handleAddEdit}
               isDisabled={isLoading}
             />
           </View>
@@ -79,4 +99,4 @@ const AddPartnerForm = ({
     </>
   );
 };
-export default AddPartnerForm;
+export default AddEditPartnerForm;
