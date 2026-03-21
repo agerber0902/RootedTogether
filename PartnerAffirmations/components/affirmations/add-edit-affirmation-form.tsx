@@ -2,7 +2,6 @@ import { addAffirmationModalStyles } from "@/constants/stylesheets/modals/add-af
 import { sharedModalStyles } from "@/constants/stylesheets/modals/shared-modal-styles";
 import { Dispatch, SetStateAction, useState } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import Button from "../shared/button";
 import LoadingSpinner from "../shared/loading-spinner";
 import {
@@ -40,13 +39,18 @@ const AddOrEditAffirmationForm = ({
   const [message, setMessage] = useState<string | undefined>(
     affirmationToEditOrDelete?.message,
   );
+  const [recipientId, setRecipientId] = useState<string | undefined>(
+    affirmationToEditOrDelete?.recipientId,
+  );
 
   const isEdit: boolean = affirmationToEditOrDelete !== undefined;
 
   const recipientPickerValues = [
-    { label: "-- Choose Recipient --", value: user!.uid },
-    { label: "Personal", value: user!.uid},
-    ...displayConnections.map((c) => {return {label: c.partnerDisplayName, value: c.partnerId}})
+    // { label: "-- Choose Recipient --", value: user!.uid },
+    { label: "Personal", value: user!.uid },
+    ...displayConnections.map((c) => {
+      return { label: c.partnerDisplayName, value: c.partnerId };
+    }),
   ];
 
   const handleAdd = async () => {
@@ -61,13 +65,14 @@ const AddOrEditAffirmationForm = ({
       if (isEdit && affirmationToEditOrDelete) {
         const affirmation = { ...affirmationToEditOrDelete };
         affirmation.message = message;
+        affirmation.recipientId = recipientId ?? affirmation.recipientId
         await editAffirmation(affirmation);
       } else {
         // Add to data base
         await addAffirmation({
           message,
           displayDate: null,
-          recipientId: user!.uid,
+          recipientId: recipientId ?? user!.uid,
           creatorId: user!.uid,
         });
       }
@@ -78,6 +83,8 @@ const AddOrEditAffirmationForm = ({
       );
 
       setMessage(""); // reset input
+      setRecipientId(undefined);
+      
     } catch (error) {
       console.error("Failed to add affirmation:", error);
     } finally {
@@ -101,7 +108,11 @@ const AddOrEditAffirmationForm = ({
             placeHolder="Enter Affirmation"
           />
 
-          <SharedPicker pickerValues={recipientPickerValues} />
+          <SharedPicker
+            pickerValues={recipientPickerValues}
+            selectedValue={recipientId}
+            onValueChange={setRecipientId}
+          />
         </View>
 
         {isLoading && <LoadingSpinner viewStyle={{ padding: 5 }} />}

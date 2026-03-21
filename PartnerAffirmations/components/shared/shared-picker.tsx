@@ -4,13 +4,23 @@ import { View } from "react-native";
 
 type SharedPickerProps = {
   pickerValues: { label: string; value: string }[];
+  selectedValue: string | undefined;
+  onValueChange: (value: string) => void;
 };
 
-const SharedPicker = ({ pickerValues }: SharedPickerProps) => {
+const SharedPicker = ({
+  pickerValues,
+  selectedValue,
+  onValueChange,
+}: SharedPickerProps) => {
   return (
     <>
       <View style={sharedPickerStyles.container}>
-        <Picker style={sharedPickerStyles.picker}>
+        <Picker
+          style={sharedPickerStyles.picker}
+          selectedValue={selectedValue}
+          onValueChange={(itemValue) => onValueChange(itemValue)}
+        >
           {pickerValues.map((p, index) => (
             <Picker.Item key={index} label={p.label} value={p.value} />
           ))}

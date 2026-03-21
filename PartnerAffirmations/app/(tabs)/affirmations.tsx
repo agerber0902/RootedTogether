@@ -35,6 +35,7 @@ const AffirmationsScreen = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const createButtonPressed = () => {
+    dispatch(setAffirmationToEditOrDelete(undefined));
     // open modal
     setShowAddEditModal(true);
   };
