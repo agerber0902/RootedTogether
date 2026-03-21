@@ -1,7 +1,10 @@
 import Button from "@/components/shared/button";
 import LoadingSpinner from "@/components/shared/loading-spinner";
 import SharedTextInput from "@/components/shared/shared-text-input";
-import { PartnerConnection } from "@/constants/models/partnerConnection";
+import {
+  PartnerConnection,
+  PartnerConnectionDisplay,
+} from "@/constants/models/partnerConnection";
 import { addEditPartnerModalStyles } from "@/constants/stylesheets/modals/add-edit-partner-modal-styles";
 import { sharedModalStyles } from "@/constants/stylesheets/modals/shared-modal-styles";
 import {
@@ -10,7 +13,7 @@ import {
   getPartnerConnections,
 } from "@/helpers/partner-helper";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { setPartnerConnections } from "@/state/slices/partner-connection";
+import { setDisplayConnections, setPartnerConnections } from "@/state/slices/partner-connection";
 import { Dispatch, SetStateAction, useState } from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 
@@ -18,7 +21,7 @@ type AddPartnerFormProps = {
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   toggleViewState: (t: boolean) => void;
-  connection?: PartnerConnection;
+  connection?: PartnerConnectionDisplay;
 };
 
 const AddEditPartnerForm = ({
@@ -29,9 +32,12 @@ const AddEditPartnerForm = ({
 }: AddPartnerFormProps) => {
   const dispatch = useAppDispatch();
   const { affirmationUser } = useAppSelector((state) => state.user.value);
+  const { partnerConnections } = useAppSelector(
+    (state) => state.partnerConnection.value,
+  );
 
   const [displayName, setDisplayName] = useState<string>(
-    connection?.connectionCreatorDisplayName ?? "",
+    connection?.partnerDisplayName ?? "",
   );
   const [email, setEmail] = useState<string>("");
 
@@ -41,18 +47,33 @@ const AddEditPartnerForm = ({
     setIsLoading(true);
     try {
       if (isEdit) {
-        const partnerConnection: PartnerConnection = { ...connection! };
-        partnerConnection.connectionCreatorDisplayName = displayName;
+        const connectionToEdit = partnerConnections.find(
+          (p) => p.id === connection?.connectionId,
+        );
+
+        if (!connectionToEdit) return;
+
+        const updatedPartnerDetails = connectionToEdit.partnerDetails.map(
+          (d) =>
+            d.userId === connection?.partnerId ? { ...d, displayName } : d,
+        );
+
+        // create updated connection object
+        const partnerConnection: PartnerConnection = {
+          ...connectionToEdit,
+          partnerDetails: updatedPartnerDetails,
+        };
+
         await editPartnerConnection(partnerConnection);
       } else {
         await addPartnerConnection(affirmationUser!, email, displayName);
       }
 
-      dispatch(
-        setPartnerConnections(
-          await getPartnerConnections(affirmationUser!.uid),
-        ),
-      );
+      const {connections, displays } = await getPartnerConnections(affirmationUser!.uid);
+
+      dispatch(setPartnerConnections(connections));
+      dispatch(setDisplayConnections(displays));
+      
     } finally {
       setTimeout(() => {
         setIsLoading(false);

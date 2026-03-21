@@ -1,52 +1,96 @@
-import { PartnerConnection, partnerConnectionMap } from "@/constants/models/partnerConnection";
+import {
+  PartnerConnection,
+  PartnerConnectionDisplay,
+  partnerConnectionMap,
+  PartnerUserDetail,
+} from "@/constants/models/partnerConnection";
 import { addData, deleteData, updateData } from "./firebase-helper";
-import { getUserByEmail } from "./user-helper";
+import { getUser, getUserByEmail } from "./user-helper";
 import { AffirmationUser } from "@/constants/models/user";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "@/config/firebase";
 
 const collectionName = "partnerConnections";
 
-export const getPartnerConnections = async (userId: string): Promise<PartnerConnection[]> => {
+export const getPartnerId = (
+  userId: string,
+  connection: PartnerConnection,
+): string | undefined => {
+  return connection.partnerIds.find((p) => p !== userId);
+};
+
+export const getPartnerInfo = async (
+  userId: string,
+  connection: PartnerConnection,
+): Promise<PartnerConnectionDisplay> => {
+  const partnerId = getPartnerId(userId, connection) ?? "";
+  const partner = await getUser(partnerId);
+
+  return {
+    connectionId: connection.id ?? "",
+    createdAt: connection.createdAt?.toDate().toLocaleDateString() ?? "",
+    partnerId: partnerId,
+    partnerName: partner?.name ?? "",
+    partnerDisplayName:
+      connection.partnerDetails.find((d) => d.userId === partnerId)
+        ?.displayName ?? "",
+  };
+};
+
+type ConnectionOutput = {
+  connections: PartnerConnection[];
+  displays: PartnerConnectionDisplay[];
+};
+
+export const getPartnerConnections = async (
+  userId: string,
+): Promise<ConnectionOutput> => {
   const ref = collection(firestore, collectionName);
 
-  const userCreatedQuery = query(
+  const connectionQuery = query(
     ref,
-    where("connectionCreatorId", "==", userId),
+    where("partnerIds", "array-contains", userId),
   );
 
-  const otherConnections = query(ref, where("partnerId", "==", userId));
+  const snapshot = await getDocs(connectionQuery);
 
-  const userCreatedSnapshot = await getDocs(userCreatedQuery);
-  const otherConnectionSnapshot = await getDocs(otherConnections);
+  if (snapshot.empty) {
+    return {connections: [], displays: []};
+  }
 
-  if (userCreatedSnapshot.empty && otherConnectionSnapshot.empty) {
+  let connections: PartnerConnection[] = snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return partnerConnectionMap(data, doc.id);
+  });
+
+  // Get display connections
+  const displays = await getConnectionsForDisplay(userId, connections)
+
+  return {connections, displays};
+};
+
+const getConnectionsForDisplay = async (
+  userId: string,
+  connections: PartnerConnection[],
+): Promise<PartnerConnectionDisplay[]> => {
+  try {
+    const results = await Promise.all(
+      connections.map((c) => getPartnerInfo(userId, c)),
+    );
+
+    return results;
+  } catch {
     return [];
   }
-
-  let connections: PartnerConnection[] = [];
-  if(!userCreatedSnapshot.empty){
-    connections = [...userCreatedSnapshot.docs.map((doc) => {
-      const data = doc.data();
-      return partnerConnectionMap(data, doc.id);
-    })];
-  }
-  if(!otherConnectionSnapshot.empty){
-    connections = [...otherConnectionSnapshot.docs.map((doc) => {
-      const data = doc.data();
-      return partnerConnectionMap(data, doc.id);
-    })];
-  }
-
-  return connections;
 };
 
 export const deletePartnerConnection = async (id: string) => {
   await deleteData(collectionName, id);
 };
-export const editPartnerConnection = async (partnerConnection: PartnerConnection) => {
-  const connection: PartnerConnection = {...partnerConnection};
-  await updateData<PartnerConnection>(collectionName, connection);
+export const editPartnerConnection = async (
+  partnerConnection: PartnerConnection,
+) => {
+  await updateData<PartnerConnection>(collectionName, partnerConnection);
 };
 
 export const addPartnerConnection = async (
@@ -75,11 +119,16 @@ const createPartnerConnection = async (
   connectionUserId: string,
   connectionUserDisplayName: string,
 ): Promise<void> => {
+  const partnerIds: [string, string] = [userId, connectionUserId];
+  const partnerDetails: PartnerUserDetail[] = [
+    { userId: userId, displayName: userDisplayName },
+    { userId: connectionUserId, displayName: connectionUserDisplayName },
+  ];
+
   const partnerConnection: PartnerConnection = {
-    connectionCreatorId: userId,
-    connectionCreatorDisplayName: userDisplayName,
-    partnerId: connectionUserId,
-    partnerDisplayName: connectionUserDisplayName,
+    createdById: userId,
+    partnerIds: partnerIds,
+    partnerDetails: partnerDetails,
   };
   await addData<PartnerConnection>(collectionName, partnerConnection);
   return;

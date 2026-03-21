@@ -9,7 +9,7 @@ import {
   addDoc,
   deleteDoc,
   collection,
-  serverTimestamp,
+  Timestamp,
   doc,
   updateDoc,
 } from "firebase/firestore";
@@ -28,7 +28,7 @@ export const addData = async <T extends { id?: string }>(
   try {
     const docRef = await addDoc(collection(firestore, collectionName), {
       ...dataToAdd,
-      createdAt: serverTimestamp(),
+      createdAt: Timestamp.fromDate(new Date()),
     });
 
     return docRef.id;
@@ -53,7 +53,7 @@ export const updateData = async <T extends { id?: string }>(
 
     await updateDoc(docRef, {
       ...dataToUpdate,
-      updatedAt: serverTimestamp(),
+      updatedAt: Timestamp.fromDate(new Date()),
     });
 
     return id;
