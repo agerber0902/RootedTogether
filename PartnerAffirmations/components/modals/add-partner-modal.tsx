@@ -1,12 +1,12 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import SharedModal from "../shared/modals/shared-modal";
 import AddEditPartnerForm from "../account/partner/add-edit-partner-connection-form";
-import { PartnerConnection } from "@/constants/models/partnerConnection";
+import { PartnerConnectionDisplay } from "@/constants/models/partnerConnection";
 
 type AddPartnerModalProps = {
   isVisible: boolean;
   toggleVisibleState: Dispatch<SetStateAction<boolean>>;
-  connection?: PartnerConnection | undefined;
+  connection?: PartnerConnectionDisplay | undefined;
 };
 const AddPartnerModal = ({
   isVisible,

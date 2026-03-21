@@ -5,21 +5,19 @@ import SharedText from "@/components/shared/shared-text";
 import { partnerInfoTextStyles } from "@/constants/stylesheets/components/account/partner/partner-info-text-styles";
 import EditIconButton from "@/components/shared/edit-icon-button";
 import DeleteIconButton from "@/components/shared/delete-icon-button";
-import { PartnerConnection } from "@/constants/models/partnerConnection";
-import { useEffect, useState } from "react";
-import { getUser } from "@/helpers/user-helper";
-import { AffirmationUser } from "@/constants/models/user";
+import { PartnerConnectionDisplay } from "@/constants/models/partnerConnection";
+import { useState } from "react";
 import {
   deletePartnerConnection,
   getPartnerConnections,
 } from "@/helpers/partner-helper";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { setPartnerConnections } from "@/state/slices/partner-connection";
+import { setDisplayConnections, setPartnerConnections } from "@/state/slices/partner-connection";
 import LoadingSpinner from "@/components/shared/loading-spinner";
 import AddPartnerModal from "@/components/modals/add-partner-modal";
 
 type PartnerInfoRowProps = {
-  connection: PartnerConnection;
+  connection: PartnerConnectionDisplay;
 };
 
 const PartnerInfoRow = ({ connection }: PartnerInfoRowProps) => {
@@ -29,10 +27,6 @@ const PartnerInfoRow = ({ connection }: PartnerInfoRowProps) => {
   const { affirmationUser } = useAppSelector((state) => state.user.value);
 
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-
-  const [partnerUser, setPartnerUser] = useState<AffirmationUser | undefined>(
-    undefined,
-  );
   
   const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
 
@@ -40,14 +34,16 @@ const PartnerInfoRow = ({ connection }: PartnerInfoRowProps) => {
     try {
       setIsDeleteLoading(true);
 
-      await deletePartnerConnection(connection.id!);
+      await deletePartnerConnection(connection.connectionId!);
 
       // update
-      const updatedConnections = await getPartnerConnections(
+      const { connections, displays } = await getPartnerConnections(
         affirmationUser?.uid ?? "",
       );
 
-      dispatch(setPartnerConnections(updatedConnections));
+      dispatch(setPartnerConnections(connections));
+      dispatch(setDisplayConnections(displays));
+
     } finally {
       //  Add delay to make it not so jumpy
       setTimeout(() => {
@@ -59,17 +55,6 @@ const PartnerInfoRow = ({ connection }: PartnerInfoRowProps) => {
   const onEdit = () => {
     setShowEditModal(true);
   };
-
-  useEffect(() => {
-    const fetchPartner = async () => {
-      if (!connection?.partnerId) return;
-
-      const partner = await getUser(connection.partnerId);
-      setPartnerUser(partner);
-    };
-
-    fetchPartner();
-  }, [connection?.partnerId]);
 
   const lineBreak = Platform.OS !== "web" || width < 700;
   return (
@@ -83,7 +68,7 @@ const PartnerInfoRow = ({ connection }: PartnerInfoRowProps) => {
       <View style={partnerInfoRowStyles.mainContainer}>
         <View style={partnerInfoRowStyles.partnerNameContainer}>
           <PartnerNameText
-            partnerName={partnerUser?.name ?? ""}
+            partnerName={connection.partnerName ?? ""}
             partnerDisplayName={connection.partnerDisplayName}
           />
         </View>
@@ -96,7 +81,7 @@ const PartnerInfoRow = ({ connection }: PartnerInfoRowProps) => {
           )}
           <SharedText
             style={partnerInfoTextStyles.partnerFullName}
-            text={`${!lineBreak ? "Partners Since: " : ""}${connection.createdAt?.toDate().toLocaleDateString()}`}
+            text={`${!lineBreak ? "Partners Since: " : ""}${connection.createdAt}`}
           />
         </View>
         <View style={partnerInfoRowStyles.actionContainer}>
