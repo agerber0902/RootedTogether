@@ -14,6 +14,9 @@ import SharedTextInput from "../shared/shared-text-input";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import { setUserCreatedAffirmations } from "@/state/slices/affirmation";
 import SharedPicker from "../shared/shared-picker";
+import DatePicker from "../shared/date-picker";
+import SharedText from "../shared/shared-text";
+import SharedSwitch from "../shared/shared-switch";
 
 type AddOrEditAffirmationFormProps = {
   isLoading: boolean;
@@ -42,6 +45,8 @@ const AddOrEditAffirmationForm = ({
   const [recipientId, setRecipientId] = useState<string | undefined>(
     affirmationToEditOrDelete?.recipientId,
   );
+  const [isSetDate, setIsSetDate] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
 
   const isEdit: boolean = affirmationToEditOrDelete !== undefined;
 
@@ -52,6 +57,15 @@ const AddOrEditAffirmationForm = ({
       return { label: c.partnerDisplayName, value: c.partnerId };
     }),
   ];
+
+  const onToggleSetDate = (value: boolean) => {
+    setIsSetDate(value);
+
+    // Ensure a date is available even if the user opens date selection but does not change pickers.
+    if (value && !selectedDate) {
+      setSelectedDate(new Date());
+    }
+  };
 
   const handleAdd = async () => {
     //TODO: Validate input
@@ -65,13 +79,15 @@ const AddOrEditAffirmationForm = ({
       if (isEdit && affirmationToEditOrDelete) {
         const affirmation = { ...affirmationToEditOrDelete };
         affirmation.message = message;
-        affirmation.recipientId = recipientId ?? affirmation.recipientId
+        affirmation.recipientId = recipientId ?? affirmation.recipientId;
+        affirmation.displayDate = isSetDate ? selectedDate ?? null : affirmation.displayDate;
+        
         await editAffirmation(affirmation);
       } else {
         // Add to data base
         await addAffirmation({
           message,
-          displayDate: null,
+          displayDate: isSetDate ? selectedDate ?? null : null,
           recipientId: recipientId ?? user!.uid,
           creatorId: user!.uid,
         });
@@ -84,7 +100,6 @@ const AddOrEditAffirmationForm = ({
 
       setMessage(""); // reset input
       setRecipientId(undefined);
-      
     } catch (error) {
       console.error("Failed to add affirmation:", error);
     } finally {
@@ -108,11 +123,33 @@ const AddOrEditAffirmationForm = ({
             placeHolder="Enter Affirmation"
           />
 
-          <SharedPicker
-            pickerValues={recipientPickerValues}
-            selectedValue={recipientId}
-            onValueChange={setRecipientId}
-          />
+          <View>
+            <View style={{paddingBottom: 5}}>
+              <SharedSwitch text="Add Date" onPress={onToggleSetDate} />
+            </View>
+
+            {isSetDate && (
+              <View>
+                <SharedText
+                  style={addAffirmationModalStyles.subHeader}
+                  text="Affirmation Date: "
+                />
+                <DatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+              </View>
+            )}
+          </View>
+
+          <View style={{ width: "100%" }}>
+            <SharedText
+              style={addAffirmationModalStyles.subHeader}
+              text="Affirmation Recipient: "
+            />
+            <SharedPicker
+              pickerValues={recipientPickerValues}
+              selectedValue={recipientId}
+              onValueChange={setRecipientId}
+            />
+          </View>
         </View>
 
         {isLoading && <LoadingSpinner viewStyle={{ padding: 5 }} />}

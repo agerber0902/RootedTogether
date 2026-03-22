@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export const sharedPickerStyles = StyleSheet.create({
   container: {
     display: "flex",
-    width: "50%",
+    width: "100%",
 
     backgroundColor: "#0000",
   },
