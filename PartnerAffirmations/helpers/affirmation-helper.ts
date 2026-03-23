@@ -92,12 +92,15 @@ export const getTodaysAffirmation = async (
 
   // filter by date
   const todaysAffirmations = allAffirmations.filter(
-    (a) =>
-      a.displayDate && a.displayDate >= startOfDay && a.displayDate <= endOfDay,
+    (a) => {
+      if (!a.displayDate) return false;
+      const d = new Date(a.displayDate);
+      return d >= startOfDay && d <= endOfDay;
+    }
   );
 
   if(todaysAffirmations && todaysAffirmations.length > 0){
-    return {date: new Date(), affirmation: getRandomItem(todaysAffirmations)};
+    return {date: new Date().toISOString(), affirmation: getRandomItem(todaysAffirmations)};
   };
 
   const otherAffirmations = allAffirmations.filter(
@@ -106,7 +109,7 @@ export const getTodaysAffirmation = async (
   );
 
   if(otherAffirmations && otherAffirmations.length > 0){
-    return {date: new Date(), affirmation: getRandomItem(otherAffirmations)};
+    return {date: new Date().toISOString(), affirmation: getRandomItem(otherAffirmations)};
   }
 
   return undefined;

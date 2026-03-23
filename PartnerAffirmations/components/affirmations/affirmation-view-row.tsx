@@ -44,7 +44,7 @@ const AffirmationViewRow = ({ affirmation }: AffirmationViewRowProps) => {
           text={
             (affirmation.displayDate &&
               `${
-                affirmation.displayDate?.toLocaleDateString("en-US", {
+                new Date(affirmation.displayDate).toLocaleDateString("en-US", {
                   month: "long",
                   day: "numeric",
                 }) || ""

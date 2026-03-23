@@ -1,18 +1,17 @@
 import { StyleSheet } from "react-native";
-import { Theme } from "../../theme";
+import { spacing, Theme } from "../../theme";
 
 export const loginModalStyles =
   StyleSheet.create({
     loginForm: {
       display: "flex",
       width: "75%",
-      minHeight: "100%",
       flex: 1,
 
       paddingTop: 5,
 
       flexDirection: "column",
-      justifyContent: "flex-start",
+      justifyContent: "center",
       alignSelf: "center",
     },
     input: Theme.textInput,
@@ -24,7 +23,7 @@ export const loginModalStyles =
       flexDirection: "column",
       alignSelf: "center",
 
-      marginTop: "auto",
+      marginTop: spacing.lg,
       paddingBottom: 15,
     },
     toggleAction: {

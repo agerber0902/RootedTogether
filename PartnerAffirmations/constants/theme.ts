@@ -156,10 +156,10 @@ export const sharedModal = {
     fontFamily: typography.fontFamily.serif,
     fontSize: typography.sizes.modalHeader,
     color: colors.primaryText,
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
     letterSpacing: typography.letterSpacing.greeting,
 
-    paddingLeft: 5,
+    paddingLeft: 15,
 
     ...baseText,
   },
