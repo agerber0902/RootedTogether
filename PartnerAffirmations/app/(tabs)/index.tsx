@@ -26,7 +26,7 @@ const App = () => {
         // TODO: I could do this in the backend on day change
         if (
           !todaysAffirmation ||
-          todaysAffirmation.date.getDay() !== new Date().getDay()
+          new Date(todaysAffirmation.date).getDay() !== new Date().getDay()
         ) {
           dispatch(
             setTodaysAffirmation(await getTodaysAffirmation(user?.uid ?? "")),

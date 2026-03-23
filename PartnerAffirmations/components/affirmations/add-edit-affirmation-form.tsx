@@ -80,14 +80,14 @@ const AddOrEditAffirmationForm = ({
         const affirmation = { ...affirmationToEditOrDelete };
         affirmation.message = message;
         affirmation.recipientId = recipientId ?? affirmation.recipientId;
-        affirmation.displayDate = isSetDate ? selectedDate ?? null : affirmation.displayDate;
+        affirmation.displayDate = isSetDate ? (selectedDate?.toISOString() ?? null) : affirmation.displayDate;
         
         await editAffirmation(affirmation);
       } else {
         // Add to data base
         await addAffirmation({
           message,
-          displayDate: isSetDate ? selectedDate ?? null : null,
+          displayDate: isSetDate ? (selectedDate?.toISOString() ?? null) : null,
           recipientId: recipientId ?? user!.uid,
           creatorId: user!.uid,
         });

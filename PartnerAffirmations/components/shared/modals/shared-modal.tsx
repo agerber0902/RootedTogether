@@ -31,7 +31,9 @@ const SharedModal = ({
     >
       <View style={sharedModalStyles.modalView}>
         <SharedText style={sharedModalStyles.modalHeader} text={header} />
-        {modalContent}
+        <View style={sharedModalStyles.modalContent}>
+          {modalContent}
+        </View>
       </View>
     </Modal>
   );

@@ -18,7 +18,7 @@ import LoadingSpinner from "../shared/loading-spinner";
 
 type LoginFormProps = {
   isLogin: boolean;
-  toggleLoginState: () => void;
+  toggleLoginState: (flag: boolean) => void;
 };
 
 const LoginForm = ({ isLogin, toggleLoginState }: LoginFormProps) => {
@@ -29,6 +29,11 @@ const LoginForm = ({ isLogin, toggleLoginState }: LoginFormProps) => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const toggleLogin = () => {
+    toggleLoginState(!isLogin);
+    setError(undefined);
+  };
 
   const loginOrCreate = async () => {
     setIsLoading(true);
@@ -110,12 +115,14 @@ const LoginForm = ({ isLogin, toggleLoginState }: LoginFormProps) => {
             />
           )}
 
-          <Pressable onPress={toggleLoginState}>
-            <SharedText
-              style={loginModalStyles.toggleAction}
-              text={isLogin ? "Create Account" : "Back to Login"}
-            />
-          </Pressable>
+          {!isLoading && (
+            <Pressable onPress={toggleLogin}>
+              <SharedText
+                style={loginModalStyles.toggleAction}
+                text={isLogin ? "Create Account" : "Back to Login"}
+              />
+            </Pressable>
+          )}
         </View>
       </KeyboardAvoidingView>
     </View>
