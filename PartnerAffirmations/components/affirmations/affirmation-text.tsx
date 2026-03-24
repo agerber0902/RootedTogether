@@ -13,7 +13,7 @@ const AffirmationText = ({text, style} : AffirmationTextProps) => {
   return (
     <>
       <FadeInView style={affirmationTextStyles.textContainer}>
-        <SharedText numberOfLines={3} style={[affirmationTextStyles.textContent, style]} text={text} />
+        <SharedText numberOfLines={4} style={[affirmationTextStyles.textContent, style]} text={text} />
       </FadeInView>
     </>
   );

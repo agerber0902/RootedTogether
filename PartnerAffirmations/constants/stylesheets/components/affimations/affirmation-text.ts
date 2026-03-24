@@ -10,7 +10,7 @@ export const affirmationTextStyles = StyleSheet.create({
     },
     textContent: {
         width: "100%",
-
+        height: '100%',
         ...Theme.affirmationText,
     } as TextStyle,
 });

@@ -1,7 +1,6 @@
 import { Affirmation } from "@/constants/models/affirmation";
 import { View } from "react-native";
 import AffirmationText from "./affirmation-text";
-import { affirmationCardStyles } from "@/constants/stylesheets/components/affimations/affirmation-card-styles";
 import SharedText from "../shared/shared-text";
 import { affirmationViewRowStyles } from "@/constants/stylesheets/components/affimations/affirmation-view-row-styles";
 import { useAppSelector } from "@/state/hooks";
@@ -31,7 +30,7 @@ const AffirmationViewRow = ({ affirmation }: AffirmationViewRowProps) => {
     <View>
       <AffirmationText
         key={affirmation.id}
-        style={affirmationCardStyles.affirmation}
+        style={affirmationViewRowStyles.affirmation}
         text={affirmation.message}
       />
       <View style={affirmationViewRowStyles.subContainer}>
