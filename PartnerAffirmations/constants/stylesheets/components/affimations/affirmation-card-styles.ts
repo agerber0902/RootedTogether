@@ -7,11 +7,13 @@ export const affirmationCardStyles = StyleSheet.create({
     ...sharedCardStyles.cardContainer,
   },
   cardContent: {
+    ...sharedCardStyles.cardContent,
     textAlign: "left",
   } as ViewStyle,
   cardTitle: {
     display: "flex",
     width: "100%",
+    justifyContent: "center",
   },
   cardButton: {
     width: "50%",

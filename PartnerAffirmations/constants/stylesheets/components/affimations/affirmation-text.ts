@@ -5,7 +5,6 @@ export const affirmationTextStyles = StyleSheet.create({
     textContainer: {
         width: '100%',
         display: 'flex',
-        flex: 1,
 
         overflow: "hidden",
     },

@@ -2,7 +2,6 @@ import { useAuth } from "@/providers/auth-provider";
 import FadeInView from "../shared/fade-in-animated-view";
 import { View } from "react-native";
 import AffirmationText from "./affirmation-text";
-import Button from "../shared/button";
 import { affirmationCardStyles } from "@/constants/stylesheets/components/affimations/affirmation-card-styles";
 import {
   baseAnimationDelayDuration,
@@ -16,9 +15,30 @@ const AffirmationCard = () => {
   const { todaysAffirmation } = useAppSelector(
     (state) => state.affirmation.value,
   );
-  const message =
+  const { affirmationUser } = useAppSelector((state) => state.user.value);
+  const { displayConnections } = useAppSelector((state) => state.partnerConnection.value);
+
+  const message: string =
     todaysAffirmation?.affirmation?.message ??
     "You are the designer of your best life";
+  
+  const getForword = () : string => {
+    if(!todaysAffirmation?.affirmation?.message){
+      return '';
+    }
+
+    if(todaysAffirmation.affirmation.recipientId === affirmationUser?.uid){
+      return 'You wanted to remind yourself: ';
+    }
+    
+    const displayName = displayConnections.find((dc) => dc.partnerId === todaysAffirmation.affirmation?.recipientId)?.partnerDisplayName;
+    if(displayName){
+      return `${displayName} wanted to remind you: `;
+    }
+
+    return '';
+
+  }
 
   return (
     <>
@@ -30,12 +50,13 @@ const AffirmationCard = () => {
       >
         <View style={affirmationCardStyles.cardContent}>
           <View style={affirmationCardStyles.cardTitle}>
-            <AffirmationText text={message} />
+            <AffirmationText text={getForword()} />
+            <AffirmationText style={{fontSize: 40, paddingTop: 15}} text={message} />
           </View>
 
-          <View style={affirmationCardStyles.cardButton}>
+          {/* <View style={affirmationCardStyles.cardButton}>
             <Button onPress={() => {}} title={"Next Affirmation"} />
-          </View>
+          </View> */}
         </View>
       </FadeInView>
     </>
