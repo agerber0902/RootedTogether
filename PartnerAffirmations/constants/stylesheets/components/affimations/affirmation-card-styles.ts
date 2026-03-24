@@ -1,44 +1,13 @@
-import { StyleSheet, ViewStyle } from "react-native";
-import { spacing, Theme } from "../../../theme";
-import { sharedCardStyles } from "../shared/shared-card-styles";
+import { StyleSheet } from "react-native";
 
 export const affirmationCardStyles = StyleSheet.create({
   cardContainer: {
-    ...sharedCardStyles.cardContainer,
-  },
-  cardContent: {
-    ...sharedCardStyles.cardContent,
-    textAlign: "left",
-  } as ViewStyle,
-  cardTitle: {
-    display: "flex",
     width: "100%",
-    justifyContent: "center",
+    height: "100%",
   },
-  cardButton: {
-    width: "50%",
-    marginTop: spacing.xxl,
-    marginHorizontal: "auto",
+  affirmationMessage: { 
+    fontSize: 40, 
+    paddingTop: 15, 
+    lineHeight: 45,
   },
-  noAffirmationTextContainer: {
-    width: "100%",
-    display: "flex",
-    flex: 1,
-    justifyContent: "center",
-    alignSelf: "center",
-  },
-  noAffirmationText: {
-    width: "100%",
-
-    color: Theme.colors.primaryText,
-    fontFamily: Theme.typography.fontFamily.serif,
-    fontSize: Theme.typography.sizes.affirmation,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  affirmation: {
-    textAlign: "left",
-  },
-  addButton: {},
 });

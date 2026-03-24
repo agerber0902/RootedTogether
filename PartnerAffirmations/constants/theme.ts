@@ -54,13 +54,14 @@ export const typography = {
   },
 
   lineHeights: {
-    affirmation: 38, // ~1.6 ratio
+    affirmation: 38,
     body: 24,
   },
 
   letterSpacing: {
     greeting: -0.2,
     subtle: 0.3,
+    affirmation: 0.5,
     wide: 0.5,
   },
 };
@@ -274,7 +275,7 @@ export const Theme = {
     lineHeight: typography.lineHeights.affirmation,
     textAlign: "center",
     color: colors.affirmation,
-    letterSpacing: typography.letterSpacing.subtle,
+    letterSpacing: typography.letterSpacing.affirmation,
   },
   partnerNameText: {
     ...baseText,

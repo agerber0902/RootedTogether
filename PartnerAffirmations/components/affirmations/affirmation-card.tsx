@@ -8,6 +8,7 @@ import {
   baseAnimationDuration,
 } from "@/constants/theme";
 import { useAppSelector } from "@/state/hooks";
+import ReworkedCard from "../shared/reworked-card";
 
 const AffirmationCard = () => {
   const { isAuthenticated } = useAuth();
@@ -16,29 +17,32 @@ const AffirmationCard = () => {
     (state) => state.affirmation.value,
   );
   const { affirmationUser } = useAppSelector((state) => state.user.value);
-  const { displayConnections } = useAppSelector((state) => state.partnerConnection.value);
+  const { displayConnections } = useAppSelector(
+    (state) => state.partnerConnection.value,
+  );
 
   const message: string =
     todaysAffirmation?.affirmation?.message ??
     "You are the designer of your best life";
-  
-  const getForword = () : string => {
-    if(!todaysAffirmation?.affirmation?.message){
-      return '';
+
+  const getForword = (): string => {
+    if (!todaysAffirmation?.affirmation?.message) {
+      return "";
     }
 
-    if(todaysAffirmation.affirmation.recipientId === affirmationUser?.uid){
-      return 'You wanted to remind yourself: ';
+    if (todaysAffirmation.affirmation.recipientId === affirmationUser?.uid) {
+      return "You wanted to remind yourself: ";
     }
-    
-    const displayName = displayConnections.find((dc) => dc.partnerId === todaysAffirmation.affirmation?.recipientId)?.partnerDisplayName;
-    if(displayName){
+
+    const displayName = displayConnections.find(
+      (dc) => dc.partnerId === todaysAffirmation.affirmation?.recipientId,
+    )?.partnerDisplayName;
+    if (displayName) {
       return `${displayName} wanted to remind you: `;
     }
 
-    return '';
-
-  }
+    return "";
+  };
 
   return (
     <>
@@ -48,16 +52,13 @@ const AffirmationCard = () => {
         visible={isAuthenticated}
         style={affirmationCardStyles.cardContainer}
       >
-        <View style={affirmationCardStyles.cardContent}>
-          <View style={affirmationCardStyles.cardTitle}>
-            <AffirmationText text={getForword()} />
-            <AffirmationText style={{fontSize: 40, paddingTop: 15}} text={message} />
-          </View>
-
-          {/* <View style={affirmationCardStyles.cardButton}>
-            <Button onPress={() => {}} title={"Next Affirmation"} />
-          </View> */}
-        </View>
+        <ReworkedCard>
+          <AffirmationText text={getForword()} />
+          <AffirmationText
+            style={{ fontSize: 40, paddingTop: 15, lineHeight: 45 }}
+            text={message}
+          />
+        </ReworkedCard>
       </FadeInView>
     </>
   );

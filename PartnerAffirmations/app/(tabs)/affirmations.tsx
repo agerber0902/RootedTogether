@@ -9,7 +9,7 @@ import SharedCard from "@/components/shared/shared-card";
 import SharedSafeView from "@/components/shared/shared-safe-view";
 import SharedText from "@/components/shared/shared-text";
 import { Affirmation } from "@/constants/models/affirmation";
-import { affirmationCardStyles } from "@/constants/stylesheets/components/affimations/affirmation-card-styles";
+import { affirmationScreenStyles } from "@/constants/stylesheets/components/affimations/affirmation-screen-styles";
 import { getUserCreatedAffirmations } from "@/helpers/affirmation-helper";
 import { useAuth } from "@/providers/auth-provider";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
@@ -82,10 +82,10 @@ const AffirmationsScreen = () => {
             <SharedCard visible={true}>
               {(!userCreatedAffirmations ||
                 userCreatedAffirmations.length <= 0) && (
-                <View style={affirmationCardStyles.noAffirmationTextContainer}>
+                <View style={affirmationScreenStyles.noAffirmationTextContainer}>
                   <SharedText
                     style={[
-                      affirmationCardStyles.noAffirmationText,
+                      affirmationScreenStyles.noAffirmationText,
                       { textAlign: "center" },
                     ]}
                     numberOfLines={3}
