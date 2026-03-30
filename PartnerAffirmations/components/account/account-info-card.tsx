@@ -8,7 +8,7 @@ import {
   baseAnimationDelayDuration,
   baseAnimationDuration,
 } from "@/constants/theme";
-import ReworkedCard from "../shared/reworked-card";
+import SharedCard from "../shared/shared-card";
 
 const AccountInfoCard = () => {
   return (
@@ -19,7 +19,7 @@ const AccountInfoCard = () => {
         visible={true}
         style={accountInfoStyles.infoContainer}
       >
-        <ReworkedCard containerStyle={accountInfoStyles.card} contentStyle={accountInfoStyles.cardContent}>
+        <SharedCard containerStyle={accountInfoStyles.card} contentStyle={accountInfoStyles.cardContent}>
           <ScrollView
             style={accountInfoStyles.infoScrollViewContainer}
             contentContainerStyle={accountInfoStyles.infoCardContent}
@@ -28,7 +28,7 @@ const AccountInfoCard = () => {
             <AccountInfoView />
             <PartnerInfoView />
           </ScrollView>
-        </ReworkedCard>
+        </SharedCard>
       </FadeInView>
     </>
   );
