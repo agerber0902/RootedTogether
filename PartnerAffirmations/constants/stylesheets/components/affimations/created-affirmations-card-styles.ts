@@ -6,6 +6,31 @@ export const createdAffirmationsCardStyles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  card: {
+    justifyContent: "flex-start",
+  },
+  cardContent: {
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingTop: Theme.spacing.sm,
+  },
+  listContainer: {
+    flex: 1,
+    width: "100%",
+  },
+  scrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  scrollContent: {
+    paddingBottom: Theme.spacing.sm,
+  },
+  buttonContainer: {
+    width: "100%",
+    marginTop: Theme.spacing.xs,
+    paddingTop: Theme.spacing.xs,
+    paddingBottom: Theme.spacing.sm,
+  },
   noAffirmationTextContainer: {
     width: "100%",
     display: "flex",

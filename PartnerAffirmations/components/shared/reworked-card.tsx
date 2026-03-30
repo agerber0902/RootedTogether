@@ -1,16 +1,23 @@
 import { colors, radius, shadows } from "@/constants/theme";
-import { StyleSheet, View } from "react-native";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import FadeInView from "./fade-in-animated-view";
 
 type ReworkedCardProps = {
   children: React.ReactNode;
   visible?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
 };
 
-const ReworkedCard = ({ children, visible = true }: ReworkedCardProps) => {
+const ReworkedCard = ({
+  children,
+  visible = true,
+  containerStyle,
+  contentStyle,
+}: ReworkedCardProps) => {
   return (
-    <FadeInView style={styles.mainCardContainer} visible={visible}>
-      <View style={styles.mainCardContent}>
+    <FadeInView style={[styles.mainCardContainer, containerStyle]} visible={visible}>
+      <View style={[styles.mainCardContent, contentStyle]}>
         {children}
       </View>
     </FadeInView>

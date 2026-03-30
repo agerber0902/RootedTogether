@@ -18,7 +18,6 @@ import AddorEditAffirmationModal from "../modals/add-edit-affirmation-modal";
 import DeleteAffirmationModal from "../modals/delete-affirmation-modal";
 
 const CreatedAffirmationCard = () => {
-
   const dispatch = useAppDispatch();
   const { userCreatedAffirmations } = useAppSelector(
     (state) => state.affirmation.value,
@@ -45,6 +44,8 @@ const CreatedAffirmationCard = () => {
     setShowDeleteModal(true);
   };
 
+  const hasCreatedAffirmations = userCreatedAffirmations.length > 0;
+
   return (
     <>
       <AddorEditAffirmationModal
@@ -63,37 +64,47 @@ const CreatedAffirmationCard = () => {
         visible={true}
         style={createdAffirmationsCardStyles.cardContainer}
       >
-        <ReworkedCard>
-          {(!userCreatedAffirmations ||
-            userCreatedAffirmations.length <= 0) && (
-            <View
-              style={createdAffirmationsCardStyles.noAffirmationTextContainer}
-            >
-              <SharedText
-                style={[
-                  createdAffirmationsCardStyles.noAffirmationText,
-                  { textAlign: "center" },
-                ]}
-                numberOfLines={3}
-                text="You do not have any affirmations yet, create as many as you like."
-              />
-            </View>
-          )}
-          <ScrollView scrollEnabled={true}>
-            {userCreatedAffirmations.map((affirmation: Affirmation) => (
-              <CreatedAffirmationView
-                key={affirmation.id}
-                affirmation={affirmation}
-                onEdit={editButtonPressed}
-                onDelete={deleteButtonPressed}
+        <ReworkedCard
+          containerStyle={createdAffirmationsCardStyles.card}
+          contentStyle={createdAffirmationsCardStyles.cardContent}
+        >
+          <View style={createdAffirmationsCardStyles.listContainer}>
+            {!hasCreatedAffirmations ? (
+              <View
+                style={createdAffirmationsCardStyles.noAffirmationTextContainer}
               >
-                <>
-                  <AffirmationViewRow affirmation={affirmation} />
-                </>
-              </CreatedAffirmationView>
-            ))}
-          </ScrollView>
-          <Button onPress={createButtonPressed} title="Create Affirmation" />
+                <SharedText
+                  style={[
+                    createdAffirmationsCardStyles.noAffirmationText,
+                    { textAlign: "center" },
+                  ]}
+                  numberOfLines={3}
+                  text="You do not have any affirmations yet, create as many as you like."
+                />
+              </View>
+            ) : (
+              <ScrollView
+                style={createdAffirmationsCardStyles.scrollView}
+                contentContainerStyle={createdAffirmationsCardStyles.scrollContent}
+                scrollEnabled={true}
+                showsVerticalScrollIndicator={false}
+              >
+                {userCreatedAffirmations.map((affirmation: Affirmation) => (
+                  <CreatedAffirmationView
+                    key={affirmation.id}
+                    affirmation={affirmation}
+                    onEdit={editButtonPressed}
+                    onDelete={deleteButtonPressed}
+                  >
+                    <AffirmationViewRow affirmation={affirmation} />
+                  </CreatedAffirmationView>
+                ))}
+              </ScrollView>
+            )}
+          </View>
+          <View style={createdAffirmationsCardStyles.buttonContainer}>
+            <Button onPress={createButtonPressed} title="Create Affirmation" />
+          </View>
         </ReworkedCard>
       </FadeInView>
     </>
