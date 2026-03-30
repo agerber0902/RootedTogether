@@ -3,7 +3,7 @@ import {
   baseAnimationDuration,
 } from "@/constants/theme";
 import FadeInView from "../shared/fade-in-animated-view";
-import ReworkedCard from "../shared/reworked-card";
+import SharedCard from "../shared/shared-card";
 import { createdAffirmationsCardStyles } from "@/constants/stylesheets/components/affimations/created-affirmations-card-styles";
 import { Affirmation } from "@/constants/models/affirmation";
 import { ScrollView, View } from "react-native";
@@ -64,7 +64,7 @@ const CreatedAffirmationCard = () => {
         visible={true}
         style={createdAffirmationsCardStyles.cardContainer}
       >
-        <ReworkedCard
+        <SharedCard
           containerStyle={createdAffirmationsCardStyles.card}
           contentStyle={createdAffirmationsCardStyles.cardContent}
         >
@@ -105,7 +105,7 @@ const CreatedAffirmationCard = () => {
           <View style={createdAffirmationsCardStyles.buttonContainer}>
             <Button onPress={createButtonPressed} title="Create Affirmation" />
           </View>
-        </ReworkedCard>
+        </SharedCard>
       </FadeInView>
     </>
   );

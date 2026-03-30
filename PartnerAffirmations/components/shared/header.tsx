@@ -14,7 +14,7 @@ type HeaderProps = {
 };
 
 const Header = ({ headerText, subHeaderText, headerStyle, subHeaderStyle }: HeaderProps) => {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   // Animation order goes view, then twice the amount of time as the preceeding animation
   const viewAnimationDuration = baseAnimationDuration;

@@ -7,7 +7,7 @@ import {
   baseAnimationDuration,
 } from "@/constants/theme";
 import { useAppSelector } from "@/state/hooks";
-import ReworkedCard from "../shared/reworked-card";
+import SharedCard from "../shared/shared-card";
 
 const AffirmationCard = () => {
   const { isAuthenticated } = useAuth();
@@ -51,13 +51,13 @@ const AffirmationCard = () => {
         visible={isAuthenticated}
         style={affirmationCardStyles.cardContainer}
       >
-        <ReworkedCard>
+        <SharedCard>
           <AffirmationText text={getForword()} />
           <AffirmationText
             style={{ fontSize: 40, paddingTop: 15, lineHeight: 45 }}
             text={message}
           />
-        </ReworkedCard>
+        </SharedCard>
       </FadeInView>
     </>
   );

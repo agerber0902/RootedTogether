@@ -1,4 +1,4 @@
-import { radius, shadows, spacing, Theme } from "@/constants/theme";
+import { Theme } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
 export const partnerInfoCardStyles = StyleSheet.create({

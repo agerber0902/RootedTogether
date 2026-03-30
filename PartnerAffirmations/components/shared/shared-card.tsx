@@ -1,37 +1,26 @@
-import React from "react";
+import { StyleProp, View, ViewStyle } from "react-native";
 import FadeInView from "./fade-in-animated-view";
 import { sharedCardStyles } from "@/constants/stylesheets/components/shared/shared-card-styles";
-import { View, ViewStyle } from "react-native";
 
-type SharedCardType = {
-  animationDuration?: number;
-  visible: boolean;
+type SharedCardProps = {
   children: React.ReactNode;
-  cardContainerStyle?: ViewStyle;
-  cardContentStyle?: ViewStyle;
+  visible?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
 };
-const SharedCard = ({
-  animationDuration,
-  visible,
-  children,
-  cardContainerStyle,
-  cardContentStyle
-}: SharedCardType) => {
-  const style = sharedCardStyles;
 
+const SharedCard = ({
+  children,
+  visible = true,
+  containerStyle,
+  contentStyle,
+}: SharedCardProps) => {
   return (
-    <>
-      <FadeInView
-        duration={animationDuration ?? 2000}
-        delay={500}
-        visible={visible}
-        style={[style.cardContainer, cardContainerStyle ?? {}]}
-      >
-        <View style={[style.cardContent, cardContentStyle]}>
-            {children}
-        </View>
-      </FadeInView>
-    </>
+    <FadeInView style={[sharedCardStyles.mainCardContainer, containerStyle]} visible={visible}>
+      <View style={[sharedCardStyles.mainCardContent, contentStyle]}>
+        {children}
+      </View>
+    </FadeInView>
   );
 };
 export default SharedCard;
