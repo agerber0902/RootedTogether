@@ -1,4 +1,4 @@
-import { spacing, Theme, radius, shadows } from "@/constants/theme";
+import { spacing, Theme } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
 export const accountInfoStyles = StyleSheet.create({
@@ -11,13 +11,7 @@ export const accountInfoStyles = StyleSheet.create({
     minHeight: 0,
     paddingBottom: Theme.spacing.sm,
   },
-  infoCardContainer: {
-    backgroundColor: Theme.colors.card,
-    borderRadius: radius.card,
-    paddingVertical: spacing.xl,
-    paddingHorizontal: spacing.lg,
-    ...shadows.card,
-
+  infoScrollViewContainer: {
     flex: 1,
     minHeight: 0,
     overflow: "hidden",
@@ -28,9 +22,18 @@ export const accountInfoStyles = StyleSheet.create({
     justifyContent: "flex-start",
     gap: Theme.spacing.md,
   },
+  card: {
+    justifyContent: "flex-start",
+  },
+  cardContent: {
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingVertical: Theme.spacing.md,
+  },
   infoContainer: {
     display: "flex",
     width: "100%",
+    height: "100%",
 
     flexShrink: 1,
     justifyContent: "flex-start",

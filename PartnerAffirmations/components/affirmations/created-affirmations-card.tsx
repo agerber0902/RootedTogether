@@ -60,7 +60,7 @@ const CreatedAffirmationCard = () => {
 
       <FadeInView
         duration={baseAnimationDuration}
-        delay={baseAnimationDelayDuration * 3}
+        delay={baseAnimationDelayDuration * 1}
         visible={true}
         style={createdAffirmationsCardStyles.cardContainer}
       >

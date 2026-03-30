@@ -1,4 +1,4 @@
-import { colors, radius, shadows } from "@/constants/theme";
+import { colors, radius, shadows, spacing } from "@/constants/theme";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import FadeInView from "./fade-in-animated-view";
 
