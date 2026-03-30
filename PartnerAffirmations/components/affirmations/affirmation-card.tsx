@@ -47,7 +47,7 @@ const AffirmationCard = () => {
     <>
       <FadeInView
         duration={baseAnimationDuration}
-        delay={baseAnimationDelayDuration * 3}
+        delay={0}
         visible={isAuthenticated}
         style={affirmationCardStyles.cardContainer}
       >
