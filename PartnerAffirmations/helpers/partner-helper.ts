@@ -108,7 +108,7 @@ export const addPartnerConnection = async (
   await createPartnerConnection(
     user.uid,
     user.name,
-    userConnection.id!,
+    userConnection.uid!,
     displayName,
   );
 };

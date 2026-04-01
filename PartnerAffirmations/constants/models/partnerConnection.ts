@@ -33,7 +33,7 @@ export const partnerConnectionMap = (data: any, id: string): PartnerConnection =
     id,
     partnerIds: data.partnerIds,
     createdById: data.createdById,
-    createdAt: data.createdAt,
+    createdAt: data.createdAt?.toMillis?.() ?? data.createdAt,
     partnerDetails,
   };
 }

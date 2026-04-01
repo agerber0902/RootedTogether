@@ -5,7 +5,7 @@ export const sharedCardStyles = StyleSheet.create({
   mainCardContainer: {
     display: "flex",
     width: "100%",
-    height: "95%",
+    height: "90%",
 
     backgroundColor: colors.card,
     borderRadius: radius.card,
