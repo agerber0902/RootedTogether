@@ -6,7 +6,7 @@ const DisplayCard = () => {
         <>
             <View style={displayCardStyle.cardContainer}>
                 <View style={displayCardStyle.cardContent}>
-                    Hello, World
+                    {/* Hello, World */}
                 </View>
             </View>
         </>
