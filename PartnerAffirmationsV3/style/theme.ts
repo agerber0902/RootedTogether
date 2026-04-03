@@ -55,4 +55,17 @@ export const Theme = {
       overflow: "hidden",
     }),
   } as TextStyle,
+  // Animations
+  animation: {
+    delay: {
+      baseDelay: 1000,
+      headerDelay: 1000,
+      cardDelay: 1500,
+    },
+    duration: {
+      baseDuration: 1000,
+      headerDuration: 1000,
+      cardDuration: 1000,
+    },
+  },
 };

@@ -5,11 +5,11 @@ import { Animated } from "react-native";
 type FadeInViewProps = {
     visible: boolean;
     duration?: number | undefined;
-    delay: number | 0;
+    delay?: number | undefined;
     children: React.ReactNode;
 };
 
-const FadeInView = ({ visible, duration = 1000, delay, children } : FadeInViewProps) => {
+const FadeInView = ({ visible, duration = 1000, delay = 0, children } : FadeInViewProps) => {
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
