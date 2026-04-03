@@ -20,6 +20,7 @@ export const Theme = {
   //   Borders
   borders: {
     cardRadius: 24,
+    tabRadius: 24,
   },
   //   Shadows
   shadows: {

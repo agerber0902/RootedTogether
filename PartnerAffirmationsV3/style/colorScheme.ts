@@ -1,10 +1,15 @@
 // Color Scheme for the Application
+const backgroundColor = "#F6F0EA";
+
 export const colorScheme = {
-  background: "#F6F0EA",
-  tabBackground: "#F6F0EA",
+  background: backgroundColor,
+  tabBackground: backgroundColor,
 
   card: "#FFFCF9",
-  modal: "#F6F0EA",
+  modal: backgroundColor,
 
   accent: "#7A542E", // Used for Shadows
+
+  tabInactive: "#b9ac98",
+  tabActive: "#898973",
 };
