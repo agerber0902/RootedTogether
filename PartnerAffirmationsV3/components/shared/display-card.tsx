@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { displayCardStyle } from "@/style/stylesheets/components/display-card-style";
+import { displayCardStyle } from "@/style/stylesheets/components/shared/display-card-style";
 
 const DisplayCard = () => {
     return (

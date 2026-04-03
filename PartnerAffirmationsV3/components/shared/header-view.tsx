@@ -1,4 +1,4 @@
-import { headerViewStyle } from "@/style/stylesheets/components/header-view-style";
+import { headerViewStyle } from "@/style/stylesheets/components/shared/header-view-style";
 import { Text, View } from "react-native";
 
 type HeaderTextProps = {
