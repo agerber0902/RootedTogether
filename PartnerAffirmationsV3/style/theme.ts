@@ -1,4 +1,4 @@
-import { DimensionValue, Platform } from "react-native";
+import { DimensionValue, Platform, TextStyle } from "react-native";
 import { colorScheme } from "./colorScheme";
 
 // Main Theme Object
@@ -7,7 +7,16 @@ export const Theme = {
   // App Color Scheme
   colorScheme: colorScheme,
   //   App Fonts
-  fonts: {},
+  typography: {
+    serif: "Cormorant_300Light",
+    serifMedium: "Cormorant_500Medium",
+    sans: "SourceSans3_400Regular",
+
+    size: {
+      header: 30,
+      subHeader: 24,
+    },
+  },
   //   Heights
   componentHeights: {
     cardHeight: (Platform.OS === "web" ? "90%" : "80%") as DimensionValue,
@@ -16,6 +25,8 @@ export const Theme = {
   spacing: {
     sm: 16,
     md: 24,
+    lg: 30,
+    xl: 32,
   },
   //   Borders
   borders: {
@@ -33,4 +44,15 @@ export const Theme = {
       elevation: 6,
     },
   },
+  // Base Text
+  baseText: {
+    flexShrink: 1,
+
+    ...(Platform.OS === "web" && {
+      display: "-webkit-box",
+      WebkitLineClamp: 2,
+      WebkitBoxOrient: "vertical",
+      overflow: "hidden",
+    }),
+  } as TextStyle,
 };
