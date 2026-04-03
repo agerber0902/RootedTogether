@@ -58,12 +58,12 @@ export const Theme = {
   // Animations
   animation: {
     delay: {
-      baseDelay: 1000,
+      baseDelay: 500,
       headerDelay: 1000,
       cardDelay: 1500,
     },
     duration: {
-      baseDuration: 1000,
+      baseDuration: 500,
       headerDuration: 1000,
       cardDuration: 1000,
     },
