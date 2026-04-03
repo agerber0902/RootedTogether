@@ -1,5 +1,7 @@
-import { headerViewStyle } from "@/style/stylesheets/components/header-view-style";
+import { headerViewStyle } from "@/style/stylesheets/components/shared/header-view-style";
 import { Text, View } from "react-native";
+import FadeInView from "./fade-in-view";
+import { animationStyle } from "@/style/stylesheets/components/shared/animation-style";
 
 type HeaderTextProps = {
   title: string;
@@ -9,24 +11,30 @@ type HeaderTextProps = {
 const HeaderView = ({ title, subText }: HeaderTextProps) => {
   return (
     <>
-      <View style={headerViewStyle.headerView}>
-        <Text
-          style={headerViewStyle.headerText}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-        >
-          {title}
-        </Text>
-        {subText && (
+      <FadeInView
+        visible={true}
+        delay={animationStyle.delay.headerDelay}
+        duration={animationStyle.duration.headerDuration}
+      >
+        <View style={headerViewStyle.headerView}>
           <Text
-            style={headerViewStyle.subTitleText}
+            style={headerViewStyle.headerText}
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {subText}
+            {title}
           </Text>
-        )}
-      </View>
+          {subText && (
+            <Text
+              style={headerViewStyle.subTitleText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {subText}
+            </Text>
+          )}
+        </View>
+      </FadeInView>
     </>
   );
 };
