@@ -3,7 +3,11 @@ import { displayCardStyle } from "@/style/stylesheets/components/shared/display-
 import FadeInView from "./fade-in-view";
 import { animationStyle } from "@/style/stylesheets/components/shared/animation-style";
 
-const DisplayCard = () => {
+type DisplayCardProps = {
+  children: React.ReactNode;
+};
+
+const DisplayCard = ({ children }: DisplayCardProps) => {
   return (
     <>
       <FadeInView
@@ -12,7 +16,7 @@ const DisplayCard = () => {
         duration={animationStyle.duration.cardDuration}
       >
         <View style={displayCardStyle.cardContainer}>
-          <View style={displayCardStyle.cardContent}>{/* Hello, World */}</View>
+          <View style={displayCardStyle.cardContent}>{children}</View>
         </View>
       </FadeInView>
     </>
