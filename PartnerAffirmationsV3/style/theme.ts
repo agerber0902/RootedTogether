@@ -17,6 +17,9 @@ export const Theme = {
       subHeader: 24,
 
       modalHeader: 16,
+
+      affirmation: 40,
+      affirmationForword: 24,
     },
   },
   //   Heights

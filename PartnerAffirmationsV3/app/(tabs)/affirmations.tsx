@@ -4,14 +4,11 @@ import { safeAreaStyle } from "@/style/stylesheets/pages/safe-area-style";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AffirmationsModal from "../modals/affirmations-modal";
-import { affirmations } from "@/data/mock";
 import { Text } from "react-native";
 
 const AffirmationsScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  const affirmation =
-    affirmations[Math.floor(Math.random() * affirmations.length)];
 
   const onBackDrop = () => {
     setIsModalVisible(false);
