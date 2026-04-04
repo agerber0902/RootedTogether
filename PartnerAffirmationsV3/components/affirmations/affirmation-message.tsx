@@ -1,0 +1,41 @@
+import { Affirmation } from "@/models/affirmation";
+import { affirmationMessageStyle } from "@/style/stylesheets/affirmations/affirmation-message-style";
+import { Text, View } from "react-native";
+
+type AffirmationMessageProp = {
+  affirmation: Affirmation;
+  hasForword: boolean;
+};
+
+const AffirmationMessage = ({
+  affirmation,
+  hasForword,
+}: AffirmationMessageProp) => {
+  const forword = (): string => {
+    return hasForword ? "You wanted to remind yourself: " : "";
+  };
+
+  return (
+    <>
+      <View style={affirmationMessageStyle.container}>
+        {hasForword && (
+          <Text
+            style={affirmationMessageStyle.forword}
+            numberOfLines={2}
+            ellipsizeMode="tail"
+          >
+            {forword()}
+          </Text>
+        )}
+        <Text
+          style={affirmationMessageStyle.message}
+          numberOfLines={3}
+          ellipsizeMode="tail"
+        >
+          {affirmation.message}
+        </Text>
+      </View>
+    </>
+  );
+};
+export default AffirmationMessage;

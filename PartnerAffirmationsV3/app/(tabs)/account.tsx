@@ -4,6 +4,7 @@ import { safeAreaStyle } from "@/style/stylesheets/pages/safe-area-style";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AccountModal from "../modals/account-modal";
 import { useState } from "react";
+import { Text } from "react-native";
 
 const AccountScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -25,7 +26,9 @@ const AccountScreen = () => {
       />
       <SafeAreaView style={safeAreaStyle.safeArea}>
         <AccountHeader />
-        <DisplayCard />
+        <DisplayCard>
+          <Text />
+        </DisplayCard>
       </SafeAreaView>
     </>
   );
