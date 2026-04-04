@@ -1,5 +1,5 @@
 import { modalStyle } from "@/style/stylesheets/modals/modal-style";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import Modal from "react-native-modal";
 
 type ModalViewProps = {
@@ -7,20 +7,27 @@ type ModalViewProps = {
   onBackDrop: () => void;
   onClose: () => void;
   children: React.ReactNode;
+
+  headerTitle: string;
 };
 
-const ModalView = ({ children, isVisible, onBackDrop, onClose }: ModalViewProps) => {
-  
-    const onBackDropPress = () => {
-        onBackDrop();
-    };
-  
-    const onClosePress = () => {
-        onClose();
-    };
+const ModalView = ({
+  children,
+  isVisible,
+  onBackDrop,
+  onClose,
 
+  headerTitle,
+}: ModalViewProps) => {
+  const onBackDropPress = () => {
+    onBackDrop();
+  };
 
-    return (
+  const onClosePress = () => {
+    onClose();
+  };
+
+  return (
     <>
       <Modal
         style={modalStyle.modal}
@@ -32,7 +39,17 @@ const ModalView = ({ children, isVisible, onBackDrop, onClose }: ModalViewProps)
         onBackButtonPress={onClosePress}
       >
         <View style={modalStyle.modalContent}>
-            {children}
+          {/* Header */}
+          <Text
+            style={modalStyle.headerText}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {headerTitle}
+          </Text>
+
+          {/* Children */}
+          {children}
         </View>
       </Modal>
     </>

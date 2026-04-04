@@ -15,6 +15,8 @@ export const Theme = {
     size: {
       header: 30,
       subHeader: 24,
+
+      modalHeader: 16,
     },
   },
   //   Heights
@@ -36,6 +38,14 @@ export const Theme = {
   //   Shadows
   shadows: {
     card: {
+      shadowColor: colorScheme.accent,
+      shadowOpacity: 0.4,
+      shadowRadius: 20,
+      shadowOffset: { width: 0, height: 8 },
+
+      elevation: 6,
+    },
+    modal: {
       shadowColor: colorScheme.accent,
       shadowOpacity: 0.4,
       shadowRadius: 20,

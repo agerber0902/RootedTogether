@@ -1,15 +1,29 @@
+import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 
 export const modalStyle = StyleSheet.create({
-    modal: {
-        height: 'auto',
-        width: 'auto',
-    },
-    modalContent: {
-        height: 'auto',
-        width: 'auto',
+  modal: {
+    justifyContent: "center",
+    margin: Theme.spacing.sm,
+  },
+  modalContent: {
+    width: "100%",
+    maxHeight: "95%",
+    backgroundColor: Theme.colorScheme.modal,
+    borderRadius: Theme.borders.cardRadius,
+    paddingHorizontal: Theme.spacing.md,
+    paddingVertical: Theme.spacing.sm,
 
-        maxHeight: '95%',
-        maxWidth: '95%',
-    },
+    ...Theme.shadows.modal,
+  },
+  headerText: {
+    width: "100%",
+
+    fontFamily: Theme.typography.serif,
+    fontSize: Theme.typography.size.header,
+    color: Theme.colorScheme.headerText,
+    letterSpacing: -0.2,
+
+    ...Theme.baseText,
+  },
 });
