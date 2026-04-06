@@ -11,6 +11,33 @@ export const _currentUser: User = {
   email: "test@test.com",
 };
 
+export const users: User[] = [
+  {
+    id: "1",
+    uid: "1111",
+    name: "Andrew Gerber",
+    first: "Andrew",
+    last: "Gerber",
+    email: "ag@test.com",
+  },
+  {
+    id: "2",
+    uid: "2222",
+    name: "Cheyenne Hoffman",
+    first: "Cheyenne",
+    last: "Hoffman",
+    email: "ch@test.com",
+  },
+  {
+    id: "1",
+    uid: "1111",
+    name: "Test User",
+    first: "Test",
+    last: "User",
+    email: "test@test.com",
+  },
+];
+
 export const affirmations: Affirmation[] = [
   {
     id: "1",
@@ -18,7 +45,7 @@ export const affirmations: Affirmation[] = [
     displayDate: undefined,
     recipientId: _currentUser.id!,
     creatorId: _currentUser.id!,
-    createdAt: new Timestamp(0,0)
+    createdAt: new Timestamp(0, 0),
   },
   {
     id: "2",
@@ -26,15 +53,15 @@ export const affirmations: Affirmation[] = [
     displayDate: undefined,
     recipientId: _currentUser.id!,
     creatorId: _currentUser.id!,
-    createdAt: new Timestamp(0,0)
+    createdAt: new Timestamp(0, 0),
   },
   {
     id: "3",
     message: "You are capable!",
     displayDate: undefined,
     recipientId: _currentUser.id!,
-    creatorId: _currentUser.id!,
-    createdAt: new Timestamp(0,0)
+    creatorId: users[1].id!,
+    createdAt: new Timestamp(0, 0),
   },
   {
     id: "4",
@@ -42,6 +69,22 @@ export const affirmations: Affirmation[] = [
     displayDate: undefined,
     recipientId: _currentUser.id!,
     creatorId: _currentUser.id!,
-    createdAt: new Timestamp(0,0)
+    createdAt: new Timestamp(0, 0),
+  },
+  {
+    id: "3",
+    message: "You are capable!",
+    displayDate: undefined,
+    recipientId: _currentUser.id!,
+    creatorId: users[1].id!,
+    createdAt: new Timestamp(0, 0),
+  },
+  {
+    id: "4",
+    message: "You are the designer of your best life!",
+    displayDate: undefined,
+    recipientId: _currentUser.id!,
+    creatorId: _currentUser.id!,
+    createdAt: new Timestamp(0, 0),
   },
 ];
