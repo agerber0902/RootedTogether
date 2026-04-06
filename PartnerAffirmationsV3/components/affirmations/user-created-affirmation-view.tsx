@@ -14,6 +14,9 @@ const UserCreatedAffirmationView = () => {
 
   return (
     <>
+
+    
+
       <DisplayCard>
         <>
           {/* User Created Affirmations */}
