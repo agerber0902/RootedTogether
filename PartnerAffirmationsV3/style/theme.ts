@@ -20,11 +20,13 @@ export const Theme = {
 
       affirmation: 40,
       affirmationForword: 24,
+
+      button: 16,
     },
   },
   //   Heights
   componentHeights: {
-    cardHeight: (Platform.OS === "web" ? "90%" : "80%") as DimensionValue,
+    cardHeight: (Platform.OS === "web" ? "90%" : "90%") as DimensionValue,
   },
   //   Spacing
   spacing: {
@@ -55,6 +57,14 @@ export const Theme = {
       shadowOffset: { width: 0, height: 8 },
 
       elevation: 6,
+    },
+    button: {
+      shadowColor: colorScheme.accent,
+      shadowOpacity: 0.4,
+      shadowRadius: 16,
+      shadowOffset: { width: 0, height: 8 },
+
+      elevation: 4,
     },
   },
   // Base Text

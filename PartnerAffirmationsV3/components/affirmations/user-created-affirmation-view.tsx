@@ -1,8 +1,9 @@
-import { ScrollView, Text } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import DisplayCard from "../shared/display-card";
 import { _currentUser, affirmations } from "@/data/mock";
 import { userCreatedAffirmationsCardStyle } from "@/style/stylesheets/affirmations/user-created-affirmations-card-style";
 import ListedAffirmationView from "./listed-affirmation-view";
+import PrimaryButton from "../shared/primary-button";
 
 const UserCreatedAffirmationView = () => {
   const userCreatedAffirmations = affirmations.filter(
@@ -29,12 +30,19 @@ const UserCreatedAffirmationView = () => {
             {hasAffirmations &&
               userCreatedAffirmations.map((affirmation) => (
                 <>
-                  <ListedAffirmationView affirmation={affirmation}/>
+                  <ListedAffirmationView affirmation={affirmation} />
                 </>
               ))}
           </ScrollView>
 
           {/* Add Button */}
+          <View style={userCreatedAffirmationsCardStyle.buttonContainer}>
+            <PrimaryButton
+              title="Create Affirmation"
+              onPress={() => {}}
+              isDisabled={false}
+            />
+          </View>
         </>
       </DisplayCard>
     </>

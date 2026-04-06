@@ -71,4 +71,20 @@ export const affirmations: Affirmation[] = [
     creatorId: _currentUser.id!,
     createdAt: new Timestamp(0, 0),
   },
+  {
+    id: "3",
+    message: "You are capable!",
+    displayDate: undefined,
+    recipientId: _currentUser.id!,
+    creatorId: users[1].id!,
+    createdAt: new Timestamp(0, 0),
+  },
+  {
+    id: "4",
+    message: "You are the designer of your best life!",
+    displayDate: undefined,
+    recipientId: _currentUser.id!,
+    creatorId: _currentUser.id!,
+    createdAt: new Timestamp(0, 0),
+  },
 ];

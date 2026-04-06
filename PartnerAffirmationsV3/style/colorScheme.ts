@@ -26,4 +26,5 @@ export const colorScheme = {
   affirmation: primaryColor,
 
   primaryButtonColor: primaryColor,
+  primaryButtonText: backgroundColor,
 };
