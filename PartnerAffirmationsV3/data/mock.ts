@@ -1,4 +1,5 @@
 import { Affirmation } from "@/models/affirmation";
+import { PartnerConnection } from "@/models/partner-connection";
 import { User } from "@/models/user";
 import { Timestamp } from "firebase/firestore";
 
@@ -35,6 +36,25 @@ export const users: User[] = [
     first: "Test",
     last: "User",
     email: "test@test.com",
+  },
+];
+
+export const partnerConnections: PartnerConnection[] = [
+  {
+    id: "1",
+    partnerIds: ["1", "2"],
+    createdById: "1",
+    partnerDetails: [
+      {
+        userId: "1",
+        displayName: "Andrew",
+      },
+      {
+        userId: '2',
+        displayName: 'Cheyenne'
+      },
+    ],
+    createdAt: new Timestamp(0, 0),
   },
 ];
 
