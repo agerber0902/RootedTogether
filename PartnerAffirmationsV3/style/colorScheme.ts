@@ -25,6 +25,8 @@ export const colorScheme = {
   affirmationForword: "#6b6158",
   affirmation: primaryColor,
 
-  primaryButtonColor: primaryColor,
+  primaryButton: primaryColor,
   primaryButtonText: backgroundColor,
+  secondaryButton: backgroundColor,
+  secondaryButtonText: primaryColor, 
 };

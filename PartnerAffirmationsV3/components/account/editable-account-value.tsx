@@ -1,20 +1,19 @@
 import { editableAccountValueStyle } from "@/style/stylesheets/account/editable-account-value-style";
-import { useState } from "react";
 import { Text, TextInput, TextInputChangeEvent, View } from "react-native";
 
 type EditableAccountValueProps = {
   title: string;
   value: string;
+  setValue: (value: string) => void;
   isEdit: boolean;
 };
 
 const EditableAccountValue = ({
   title,
   value,
+  setValue,
   isEdit,
 }: EditableAccountValueProps) => {
-  const [editableValue, setEditableValue] = useState<string | undefined>(value);
-
   return (
     <>
       <View style={editableAccountValueStyle.container}>
@@ -28,9 +27,9 @@ const EditableAccountValue = ({
             numberOfLines={1}
             style={editableAccountValueStyle.editableInput}
             placeholder={`Enter ${title}`}
-            value={editableValue}
+            value={value}
             onChange={(e: TextInputChangeEvent) =>
-              setEditableValue(e.nativeEvent.text)
+              setValue(e.nativeEvent.text)
             }
           ></TextInput>
         ) : (
