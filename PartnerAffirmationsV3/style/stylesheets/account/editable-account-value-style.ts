@@ -2,6 +2,7 @@ import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 const valueWidth = '75%';
 const titleWidth = '25%';
+const inputPadding = 10;
 
 export const editableAccountValueStyle = StyleSheet.create({
   container: {
@@ -31,6 +32,8 @@ export const editableAccountValueStyle = StyleSheet.create({
     fontFamily: Theme.typography.serif,
     fontSize: Theme.typography.size.accountInfoTitle,
 
+    padding: inputPadding,
+
     textAlign: "left",
   },
   editableInput: {
@@ -43,7 +46,7 @@ export const editableAccountValueStyle = StyleSheet.create({
 
     overflowX: 'hidden',
 
-    padding: 10,
+    padding: inputPadding,
 
     ...Theme.shadows.textInput,
   },
