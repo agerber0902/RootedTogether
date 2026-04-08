@@ -22,6 +22,9 @@ export const Theme = {
       affirmationForword: 24,
 
       button: 16,
+
+      accountInfoTitle: 18,
+      accountInfoValue: 18,
     },
   },
   //   Heights
