@@ -3,7 +3,7 @@ import DisplayCard from "../shared/display-card";
 import { _currentUser, affirmations } from "@/data/mock";
 import { userCreatedAffirmationsCardStyle } from "@/style/stylesheets/affirmations/user-created-affirmations-card-style";
 import ListedAffirmationView from "./listed-affirmation-view";
-import PrimaryButton from "../shared/primary-button";
+import PrimaryButton from "../shared/card-button";
 
 const UserCreatedAffirmationView = () => {
   const userCreatedAffirmations = affirmations.filter(
@@ -14,9 +14,6 @@ const UserCreatedAffirmationView = () => {
 
   return (
     <>
-
-    
-
       <DisplayCard>
         <>
           {/* User Created Affirmations */}
@@ -32,9 +29,7 @@ const UserCreatedAffirmationView = () => {
             )}
             {hasAffirmations &&
               userCreatedAffirmations.map((affirmation) => (
-                <>
-                  <ListedAffirmationView affirmation={affirmation} />
-                </>
+                <ListedAffirmationView key={affirmation.id} affirmation={affirmation} />
               ))}
           </ScrollView>
 

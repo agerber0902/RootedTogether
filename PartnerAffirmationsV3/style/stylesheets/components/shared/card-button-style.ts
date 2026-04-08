@@ -1,7 +1,7 @@
 import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 
-export const primaryButtonStyle = StyleSheet.create({
+export const cardButtonStyle = StyleSheet.create({
   container: {
     width: "100%",
 
@@ -10,7 +10,7 @@ export const primaryButtonStyle = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 5,
 
-    backgroundColor: Theme.colorScheme.primaryButtonColor,
+    backgroundColor: Theme.colorScheme.primaryButton,
     color: Theme.colorScheme.primaryButtonText,
 
     // Shadow
@@ -26,5 +26,12 @@ export const primaryButtonStyle = StyleSheet.create({
     color: Theme.colorScheme.primaryButtonText,
 
     textAlign: "center",
+  },
+  secondaryContainer: {
+    // Style for the secondary button, which will be the same as primary, other than colors
+    backgroundColor: Theme.colorScheme.secondaryButton,
+  },
+  secondaryText: {
+    color: Theme.colorScheme.secondaryButtonText,
   },
 });
