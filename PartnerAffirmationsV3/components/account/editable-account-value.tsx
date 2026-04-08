@@ -26,6 +26,7 @@ const EditableAccountValue = ({
         {isEdit ? (
           <TextInput
             numberOfLines={1}
+            style={editableAccountValueStyle.editableInput}
             placeholder={`Enter ${title}`}
             value={editableValue}
             onChange={(e: TextInputChangeEvent) =>

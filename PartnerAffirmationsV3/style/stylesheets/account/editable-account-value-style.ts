@@ -1,5 +1,7 @@
 import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
+const valueWidth = '75%';
+const titleWidth = '25%';
 
 export const editableAccountValueStyle = StyleSheet.create({
   container: {
@@ -14,7 +16,7 @@ export const editableAccountValueStyle = StyleSheet.create({
 
   },
   title: {
-    width: "25%",
+    width: titleWidth,
 
     color: Theme.colorScheme.primaryText,
     fontFamily: Theme.typography.serif,
@@ -23,12 +25,26 @@ export const editableAccountValueStyle = StyleSheet.create({
     textAlign: "left",
   },
   value: {
-    width: "75%",
+    width: valueWidth,
 
     color: Theme.colorScheme.primaryText,
     fontFamily: Theme.typography.serif,
     fontSize: Theme.typography.size.accountInfoTitle,
 
     textAlign: "left",
+  },
+  editableInput: {
+    width: valueWidth,
+
+    borderWidth: 1,
+    borderColor: 'rgba(122, 84, 46, 0.25)',
+    borderRadius: Theme.borders.inputRadius,
+    backgroundColor: Theme.colorScheme.card,
+
+    overflowX: 'hidden',
+
+    padding: 10,
+
+    ...Theme.shadows.textInput,
   },
 });

@@ -42,6 +42,7 @@ export const Theme = {
   borders: {
     cardRadius: 24,
     tabRadius: 24,
+    inputRadius: 8,
   },
   //   Shadows
   shadows: {
@@ -68,6 +69,16 @@ export const Theme = {
       shadowOffset: { width: 0, height: 8 },
 
       elevation: 4,
+    },
+    textInput: {
+      shadowColor: colorScheme.accent,
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 8 },
+
+      outlineStyle: undefined,
+
+      elevation: 1,
     },
   },
   // Base Text
