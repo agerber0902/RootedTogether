@@ -14,9 +14,6 @@ const UserCreatedAffirmationView = () => {
 
   return (
     <>
-
-    
-
       <DisplayCard>
         <>
           {/* User Created Affirmations */}
@@ -32,9 +29,7 @@ const UserCreatedAffirmationView = () => {
             )}
             {hasAffirmations &&
               userCreatedAffirmations.map((affirmation) => (
-                <>
-                  <ListedAffirmationView affirmation={affirmation} />
-                </>
+                <ListedAffirmationView key={affirmation.id} affirmation={affirmation} />
               ))}
           </ScrollView>
 
