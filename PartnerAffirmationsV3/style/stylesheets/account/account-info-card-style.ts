@@ -1,0 +1,21 @@
+import { StyleSheet } from "react-native";
+
+export const accountInfoCardStyle = StyleSheet.create({
+    cardContainer:{
+        display: 'flex',
+        width: '100%',
+        height: '100%',
+
+        flexDirection: 'column',
+        
+        gap: 5,
+    },
+    accountInfoContainer:{
+        width: '100%',
+        height: '50%',
+    },
+    partnerConnectionsContainer:{
+        width: '100%',
+        height: '48%',
+    },
+});

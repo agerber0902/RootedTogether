@@ -9,14 +9,21 @@ export const userCreatedAffirmationsCardStyle = StyleSheet.create({
     padding: Theme.spacing.sm,
   },
   buttonContainer: {
-    display: 'flex',
-    width: '90%',
-    
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    width: "90%",
 
-    marginHorizontal: 'auto',
+    alignItems: "center",
+    justifyContent: "center",
+
+    marginHorizontal: "auto",
 
     paddingVertical: Theme.spacing.md,
+  },
+  emptyWarningContainer: {
+    display: 'flex',
+    width: '100%',
+    height: '100%',
+
+    paddingTop: '50%',
   },
 });

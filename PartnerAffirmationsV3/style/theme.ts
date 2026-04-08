@@ -16,6 +16,8 @@ export const Theme = {
       header: 30,
       subHeader: 24,
 
+      cardHeader: 24,
+
       modalHeader: 16,
 
       affirmation: 40,
@@ -25,6 +27,8 @@ export const Theme = {
 
       accountInfoTitle: 18,
       accountInfoValue: 18,
+
+      emptyWarning: 24,
     },
   },
   //   Heights
