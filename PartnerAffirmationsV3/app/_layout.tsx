@@ -13,6 +13,7 @@ import {
   SourceSans3_500Medium,
 } from "@expo-google-fonts/source-sans-3";
 import { useEffect } from "react";
+import { AuthProvider } from "@/provider/auth-provider";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -39,14 +40,16 @@ export default function RootLayout() {
 
   return (
     <>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="modal"
-          options={{ presentation: "modal", title: "Modal" }}
-        />
-      </Stack>
-      <StatusBar style="auto" />
+      <AuthProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="modal"
+            options={{ presentation: "modal", title: "Modal" }}
+          />
+        </Stack>
+        <StatusBar style="auto" />
+      </AuthProvider>
     </>
   );
 }
