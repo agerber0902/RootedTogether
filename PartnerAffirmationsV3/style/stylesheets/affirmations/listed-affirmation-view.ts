@@ -43,6 +43,6 @@ export const listedAffirmationViewStyle = StyleSheet.create({
     letterSpacing: 0.5,
   },
   actionIcon: {
-    color: Theme.colorScheme.primaryButtonColor
+    color: Theme.colorScheme.primaryButton
   }
 });

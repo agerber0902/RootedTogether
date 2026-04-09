@@ -11,6 +11,7 @@ export const colorScheme = {
 
   card: "#FFFCF9",
   modal: backgroundColor,
+  cardHeader: primaryColor,
 
   accent: "#7A542E", // Used for Shadows
 

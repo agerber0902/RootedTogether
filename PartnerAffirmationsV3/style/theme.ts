@@ -16,6 +16,8 @@ export const Theme = {
       header: 30,
       subHeader: 24,
 
+      cardHeader: 24,
+
       modalHeader: 16,
 
       affirmation: 40,
@@ -25,11 +27,16 @@ export const Theme = {
 
       accountInfoTitle: 18,
       accountInfoValue: 18,
+
+      partnerDisplayName: 24,
+      partnerName: 16,
+
+      emptyWarning: 24,
     },
   },
   //   Heights
   componentHeights: {
-    cardHeight: (Platform.OS === "web" ? "90%" : "90%") as DimensionValue,
+    cardHeight: (Platform.OS === "web" ? "95%" : "90%") as DimensionValue,
   },
   //   Spacing
   spacing: {
