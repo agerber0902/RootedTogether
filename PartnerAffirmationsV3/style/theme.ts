@@ -36,7 +36,7 @@ export const Theme = {
   },
   //   Heights
   componentHeights: {
-    cardHeight: (Platform.OS === "web" ? "90%" : "90%") as DimensionValue,
+    cardHeight: (Platform.OS === "web" ? "95%" : "90%") as DimensionValue,
   },
   //   Spacing
   spacing: {

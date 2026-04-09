@@ -1,10 +1,8 @@
 import AccountHeader from "@/components/account/account-header";
-import DisplayCard from "@/components/shared/display-card";
 import { safeAreaStyle } from "@/style/stylesheets/pages/safe-area-style";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AccountModal from "../modals/account-modal";
 import { useState } from "react";
-import { Text } from "react-native";
 import AccountInfoCard from "@/components/account/account-info-card";
 
 const AccountScreen = () => {
