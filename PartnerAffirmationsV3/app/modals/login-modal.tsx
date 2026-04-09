@@ -11,9 +11,11 @@ import { useState } from "react";
 import CardButton from "@/components/shared/card-button";
 import { loginModalStyle } from "@/style/stylesheets/modals/login-modal-style";
 import { stringExists } from "@/helpers/validation-helper";
+import { signIn, signUp } from "@/helpers/firebase-helper";
+import LoadingSpinner from "@/components/shared/loading-spinner";
 
 const LoginModal = () => {
-  const { isAuthenticated, authLoading } = useAuth();
+  const { isAuthenticated, authLoading, setDisplayName } = useAuth();
 
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -35,22 +37,42 @@ const LoginModal = () => {
     setIsCreate(!isCreate);
   };
 
-  const onCreateClick = () => {
+  const onActionClick = async () => {
     setIsLoading(true);
+    setError(undefined);
 
     try {
       if (isCreate && !stringExists(name)) {
         setError("Name is invalid.");
+        return;
       } else if (!stringExists(email)) {
         setError("Username is invalid.");
+        return;
       } else if (!stringExists(password) || password.length < 6) {
         setError("Password is invalid.");
+        return;
       }
+
+      const response = isCreate
+        ? await signUp(email, password, name)
+        : await signIn(email, password);
+
+      // Login is handled by auth provider listener
+
+      // Set display name
+      setDisplayName(response.firebaseUser?.displayName ?? "");
+
+      // handle error
+      setError(response.error);
     } catch {
-      setIsLoading(false);
       setError("An error occured, please try again.");
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
   };
 
@@ -80,6 +102,7 @@ const LoginModal = () => {
             <TextInput
               key={"email"}
               keyboardType={"email-address"}
+              autoCapitalize="none"
               numberOfLines={1}
               style={loginModalStyle.editableInput}
               placeholder={`Email`}
@@ -109,17 +132,23 @@ const LoginModal = () => {
             <CardButton
               key={"login-button"}
               title={isCreate ? "Create" : "Login"}
-              onPress={onCreateClick}
+              onPress={onActionClick}
               isDisabled={authLoading || isAuthenticated || isLoading}
             />
-            <Pressable onPress={(authLoading || isLoading) ? undefined : onToggleClick}>
-              <Text
-                style={loginModalStyle.toggleButton}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {isCreate ? "Login user" : "Create new user"}
-              </Text>
+            <Pressable
+              onPress={authLoading || isLoading ? undefined : onToggleClick}
+            >
+              {isLoading ? (
+                <LoadingSpinner viewStyle={{ padding: 5 }} />
+              ) : (
+                <Text
+                  style={loginModalStyle.toggleButton}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {isCreate ? "Login user" : "Create new user"}
+                </Text>
+              )}
             </Pressable>
             {/* Error Message */}
             {error && (
