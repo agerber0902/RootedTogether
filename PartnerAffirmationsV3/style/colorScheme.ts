@@ -14,6 +14,7 @@ export const colorScheme = {
   cardHeader: primaryColor,
 
   accent: "#7A542E", // Used for Shadows
+  error: '#ff0000',
 
   tabInactive: "#b9ac98",
   tabActive: primaryColor,

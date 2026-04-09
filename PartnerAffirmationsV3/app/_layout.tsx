@@ -13,9 +13,33 @@ import {
   SourceSans3_500Medium,
 } from "@expo-google-fonts/source-sans-3";
 import { useEffect } from "react";
+import { useAuth } from "@/provider/auth-provider";
+import LayoutWrapper from "./layoutWrapper";
+import LoginModal from "./modals/login-modal";
 
 export const unstable_settings = {
   anchor: "(tabs)",
+};
+
+const RootNavigator = () => {
+  const { isAuthenticated, authLoading } = useAuth();
+
+  if (authLoading || !isAuthenticated) {
+    return <LoginModal/>;
+  }
+
+  return (
+    <>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="modal"
+          options={{ presentation: "modal", title: "Modal" }}
+        />
+      </Stack>
+      <StatusBar style="auto" />
+    </>
+  );
 };
 
 export default function RootLayout() {
@@ -39,14 +63,9 @@ export default function RootLayout() {
 
   return (
     <>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="modal"
-          options={{ presentation: "modal", title: "Modal" }}
-        />
-      </Stack>
-      <StatusBar style="auto" />
+      <LayoutWrapper>
+        <RootNavigator />
+      </LayoutWrapper>
     </>
   );
 }
