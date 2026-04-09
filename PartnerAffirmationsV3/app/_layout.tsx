@@ -14,6 +14,7 @@ import {
 } from "@expo-google-fonts/source-sans-3";
 import { useEffect } from "react";
 import { AuthProvider } from "@/provider/auth-provider";
+import LoginModal from "./modals/login-modal";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -41,6 +42,7 @@ export default function RootLayout() {
   return (
     <>
       <AuthProvider>
+        <LoginModal />
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
