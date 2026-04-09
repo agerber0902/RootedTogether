@@ -1,8 +1,24 @@
 import { User as FirebaseUser } from "firebase/auth";
-import { User as AffirmationUser } from "../models/user";
+import { AffirmationUser, AffirmationUserMap } from "../models/user";
 import { addData, updateData } from "./firebase-helper";
+import { collection, getDocs, limit, query, where } from "firebase/firestore";
+import { firestore } from "@/config/firebase";
 
 const collectionName = "users";
+
+export const getUser = async (
+  uid: string,
+): Promise<AffirmationUser | undefined> => {
+  const ref = collection(firestore, collectionName);
+  const userQuery = query(ref, where("uid", "==", uid), limit(1));
+  const snapshot = await getDocs(userQuery);
+
+  if (snapshot.empty) {
+    return undefined;
+  }
+
+  return AffirmationUserMap(snapshot.docs[0].data(), snapshot.docs[0].id);
+};
 
 // Add the user to the database for querying
 export const addUser = async (user: FirebaseUser) => {
@@ -24,5 +40,5 @@ export const addUser = async (user: FirebaseUser) => {
 
 export const updateUser = async (user: AffirmationUser) => {
   await updateData<AffirmationUser>(collectionName, user);
-//   return await getUser(user.uid);
+  //   return await getUser(user.uid);
 };
