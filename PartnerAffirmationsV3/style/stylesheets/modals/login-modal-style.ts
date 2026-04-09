@@ -32,6 +32,13 @@ export const loginModalStyle = StyleSheet.create({
     color: Theme.colorScheme.primaryText,
     fontSize: 16,
   },
+  error: {
+    paddingLeft: 8,
+
+    fontFamily: Theme.typography.sans,
+    color: Theme.colorScheme.error,
+    fontSize: 16,
+  },
   editableInput: {
     width: '100%',
 

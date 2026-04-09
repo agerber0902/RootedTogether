@@ -10,6 +10,7 @@ import { useAuth } from "@/provider/auth-provider";
 import { useState } from "react";
 import CardButton from "@/components/shared/card-button";
 import { loginModalStyle } from "@/style/stylesheets/modals/login-modal-style";
+import { stringExists } from "@/helpers/validation-helper";
 
 const LoginModal = () => {
   const { isAuthenticated, authLoading } = useAuth();
@@ -21,17 +22,37 @@ const LoginModal = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState<boolean>(false);
 
-
   const resetInputs = () => {
     setName("");
     setEmail("");
     setPassword("");
-  }
+    setError(undefined);
+    setIsLoading(false);
+  };
 
   const onToggleClick = () => {
     resetInputs();
     setIsCreate(!isCreate);
-  }
+  };
+
+  const onCreateClick = () => {
+    setIsLoading(true);
+
+    try {
+      if (isCreate && !stringExists(name)) {
+        setError("Name is invalid.");
+      } else if (!stringExists(email)) {
+        setError("Username is invalid.");
+      } else if (!stringExists(password) || password.length < 6) {
+        setError("Password is invalid.");
+      }
+    } catch {
+      setIsLoading(false);
+      setError("An error occured, please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -88,10 +109,10 @@ const LoginModal = () => {
             <CardButton
               key={"login-button"}
               title={isCreate ? "Create" : "Login"}
-              onPress={() => {}}
-              isDisabled={authLoading || isAuthenticated}
+              onPress={onCreateClick}
+              isDisabled={authLoading || isAuthenticated || isLoading}
             />
-            <Pressable onPress={onToggleClick}>
+            <Pressable onPress={(authLoading || isLoading) ? undefined : onToggleClick}>
               <Text
                 style={loginModalStyle.toggleButton}
                 numberOfLines={1}
@@ -100,6 +121,16 @@ const LoginModal = () => {
                 {isCreate ? "Login user" : "Create new user"}
               </Text>
             </Pressable>
+            {/* Error Message */}
+            {error && (
+              <Text
+                style={loginModalStyle.error}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {error}
+              </Text>
+            )}
           </View>
         </View>
       </ModalView>
