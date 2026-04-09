@@ -18,5 +18,5 @@ export type PartnerConnectionDisplay = {
   partnerName: string,
   partnerId: string,
   partnerDisplayName: string,
-  createdAt: string,
+  createdAt: Timestamp,
 }

@@ -1,5 +1,5 @@
 import { Affirmation } from "@/models/affirmation";
-import { PartnerConnection } from "@/models/partner-connection";
+import { PartnerConnection, PartnerConnectionDisplay } from "@/models/partner-connection";
 import { User } from "@/models/user";
 import { Timestamp } from "firebase/firestore";
 
@@ -58,6 +58,23 @@ export const partnerConnections: PartnerConnection[] = [
   },
 ];
 
+export const partnerConnectionDisplays: PartnerConnectionDisplay[] = [
+  {
+    connectionId: '1',
+    partnerName: 'Andrew Gerber',
+    partnerDisplayName: 'Andy',
+    partnerId: '1',
+    createdAt: new Timestamp(0,0)
+  },
+  {
+    connectionId: '2',
+    partnerName: 'Andrew Gerber',
+    partnerDisplayName: 'Andy',
+    partnerId: '1',
+    createdAt: new Timestamp(0,0)
+  },
+];
+
 export const affirmations: Affirmation[] = [
   {
     id: "1",
@@ -92,7 +109,7 @@ export const affirmations: Affirmation[] = [
     createdAt: new Timestamp(0, 0),
   },
   {
-    id: "3",
+    id: "5",
     message: "You are capable!",
     displayDate: undefined,
     recipientId: _currentUser.id!,
@@ -100,7 +117,7 @@ export const affirmations: Affirmation[] = [
     createdAt: new Timestamp(0, 0),
   },
   {
-    id: "4",
+    id: "6",
     message: "You are the designer of your best life!",
     displayDate: undefined,
     recipientId: _currentUser.id!,

@@ -19,5 +19,10 @@ export const partnerConnectionsViewStyle = StyleSheet.create({
     letterSpacing: -0.2,
 
     ...Theme.baseText,
-  }
+  },
+  actions: {
+    width: '100%',
+
+    paddingVertical: 5,
+  },
 });

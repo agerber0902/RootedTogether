@@ -28,6 +28,9 @@ export const Theme = {
       accountInfoTitle: 18,
       accountInfoValue: 18,
 
+      partnerDisplayName: 24,
+      partnerName: 16,
+
       emptyWarning: 24,
     },
   },
