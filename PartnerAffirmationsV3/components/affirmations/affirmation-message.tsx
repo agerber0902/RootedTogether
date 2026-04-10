@@ -3,7 +3,7 @@ import { affirmationMessageStyle } from "@/style/stylesheets/affirmations/affirm
 import { Text, View } from "react-native";
 
 type AffirmationMessageProp = {
-  affirmation: Affirmation;
+  affirmation: Affirmation | undefined;
   hasForword: boolean;
 };
 
@@ -32,7 +32,7 @@ const AffirmationMessage = ({
           numberOfLines={3}
           ellipsizeMode="tail"
         >
-          {affirmation.message}
+          {affirmation?.message ?? 'You are the designer of your best life!'}
         </Text>
       </View>
     </>
