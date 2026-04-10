@@ -1,9 +1,9 @@
 import { Affirmation } from "@/models/affirmation";
 import { PartnerConnection, PartnerConnectionDisplay } from "@/models/partner-connection";
-import { User } from "@/models/user";
+import { AffirmationUser } from "@/models/user";
 import { Timestamp } from "firebase/firestore";
 
-export const _currentUser: User = {
+export const _currentUser: AffirmationUser = {
   id: "1",
   uid: "1111",
   name: "Andrew Gerber",
@@ -12,7 +12,7 @@ export const _currentUser: User = {
   email: "test@test.com",
 };
 
-export const users: User[] = [
+export const users: AffirmationUser[] = [
   {
     id: "1",
     uid: "1111",

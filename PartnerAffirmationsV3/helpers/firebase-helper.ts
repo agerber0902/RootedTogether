@@ -1,5 +1,5 @@
 import { auth, firestore } from "../config/firebase";
-import { FirebaseResponse } from "@/models/fireabse";
+import { FirebaseResponse } from "@/models/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -8,11 +8,11 @@ import {
 import { addDoc, collection, deleteDoc, doc, Timestamp, updateDoc } from "firebase/firestore";
 import { addUser } from "./user-helper";
 
-export const addData = async <T extends { id?: string }>(
+export const addData = async <T extends object>(
   collectionName: string,
   data: T,
 ) => {
-  const { id, ...dataToAdd } = data;
+  const { id, ...dataToAdd } = data as T & { id?: string };
   try {
     const docRef = await addDoc(collection(firestore, collectionName), {
       ...dataToAdd,
