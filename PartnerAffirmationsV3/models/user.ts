@@ -11,7 +11,13 @@ export type CreateAffirmationUser = Omit<AffirmationUser, "id">;
 export type UpdateAffirmationUser =
     Partial<CreateAffirmationUser> & Pick<AffirmationUser, "id">;
 
-type AffirmationUserRaw = Omit<AffirmationUser, "id">;
+type AffirmationUserRaw = {
+    uid?: unknown;
+    name?: unknown;
+    email?: unknown;
+    first?: unknown;
+    last?: unknown;
+};
 
 export const AffirmationUserMap = (
     data: AffirmationUserRaw,
