@@ -1,0 +1,31 @@
+import { getUser } from "@/helpers/user-helper";
+import { useAuth } from "@/provider/auth-provider";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { setUser } from "@/state/slices/user-slice";
+import { useEffect } from "react";
+
+const UserBootStrap = () => {
+  const { user } = useAuth();
+  const { affirmationUser } = useAppSelector((state) => state.user.value);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const bootstrapUser = async () => {
+      if (!user) return;
+
+      if (!affirmationUser) {
+        const dbUser = await getUser(user.uid);
+
+        if (dbUser) {
+          dispatch(setUser(dbUser));
+        }
+      }
+    };
+
+    bootstrapUser();
+  }, [user, affirmationUser, dispatch]);
+
+  return <></>;
+};
+export default UserBootStrap;

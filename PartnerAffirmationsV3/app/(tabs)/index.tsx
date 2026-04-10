@@ -6,7 +6,7 @@ import { safeAreaStyle } from "@/style/stylesheets/pages/safe-area-style";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
-  const affirmation =
+  const todaysAffirmation =
     affirmations[Math.floor(Math.random() * affirmations.length)];
 
   return (
@@ -14,7 +14,8 @@ export default function HomeScreen() {
       <SafeAreaView style={safeAreaStyle.safeArea}>
         <HomeHeader />
         <DisplayCard>
-          <AffirmationMessage affirmation={affirmation} hasForword={true} />
+          {}
+          <AffirmationMessage affirmation={todaysAffirmation} hasForword={todaysAffirmation !== undefined} />
         </DisplayCard>
       </SafeAreaView>
     </>

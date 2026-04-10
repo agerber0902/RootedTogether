@@ -2,10 +2,10 @@ import { loadingSpinnerStyle } from "@/style/stylesheets/components/shared/loadi
 import { ActivityIndicator, View, ViewStyle } from "react-native";
 
 type LoadingSpinnerProps = {
-    viewStyle: ViewStyle;
+    viewStyle?: ViewStyle;
 }
 
-const LoadingSpinner = ({viewStyle} : LoadingSpinnerProps) => {
+const LoadingSpinner = ({viewStyle = {padding: 5}} : LoadingSpinnerProps) => {
     return (
         <View style={viewStyle}>
             <ActivityIndicator size="large" color={loadingSpinnerStyle.spinner.color} />

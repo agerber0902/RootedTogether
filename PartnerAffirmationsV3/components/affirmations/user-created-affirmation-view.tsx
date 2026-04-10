@@ -1,14 +1,18 @@
 import { ScrollView, View } from "react-native";
 import DisplayCard from "../shared/display-card";
-import { _currentUser, affirmations } from "@/data/mock";
+import { affirmations } from "@/data/mock";
 import { userCreatedAffirmationsCardStyle } from "@/style/stylesheets/affirmations/user-created-affirmations-card-style";
 import ListedAffirmationView from "./listed-affirmation-view";
 import CardButton from "../shared/card-button";
 import EmptyListWarning from "../shared/empty-list-warning";
+import { useAppSelector } from "@/state/hooks";
 
 const UserCreatedAffirmationView = () => {
+
+  const { affirmationUser } = useAppSelector((state) => state.user.value);
+
   const userCreatedAffirmations = affirmations.filter(
-    (a) => a.creatorId === _currentUser.id,
+    (a) => a.creatorId === affirmationUser?.id,
   );;
 
   const hasAffirmations = userCreatedAffirmations.length > 0;

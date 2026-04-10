@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/provider/auth-provider";
 import LayoutWrapper from "./layoutWrapper";
 import LoginModal from "./modals/login-modal";
+import UserBootStrap from "@/components/user-bootstrap";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -30,6 +31,7 @@ const RootNavigator = () => {
 
   return (
     <>
+      <UserBootStrap />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen

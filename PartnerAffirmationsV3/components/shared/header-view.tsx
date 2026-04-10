@@ -27,7 +27,7 @@ const HeaderView = ({ title, subText }: HeaderTextProps) => {
           {subText && (
             <Text
               style={headerViewStyle.subTitleText}
-              numberOfLines={1}
+              numberOfLines={2}
               ellipsizeMode="tail"
             >
               {subText}
