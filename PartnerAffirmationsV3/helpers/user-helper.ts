@@ -46,5 +46,5 @@ export const addUser = async (user: FirebaseUser) => {
 
 export const updateUser = async (user: AffirmationUser) => {
   await updateData<UpdateAffirmationUser>(collectionName, user);
-  //   return await getUser(user.uid);
+  return await getUser(user.uid);
 };

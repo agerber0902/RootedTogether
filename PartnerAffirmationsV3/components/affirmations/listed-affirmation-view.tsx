@@ -22,7 +22,7 @@ const ListedAffirmationView = ({ affirmation }: ListedAffirmationViewProps) => {
             numberOfLines={2}
             ellipsizeMode="tail"
           >
-            {affirmation.message}
+            {affirmation?.message}
           </Text>
           <Text
             style={listedAffirmationViewStyle.recipientText}
