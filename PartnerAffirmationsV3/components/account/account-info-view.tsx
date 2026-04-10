@@ -2,23 +2,26 @@ import { ScrollView, View } from "react-native";
 import CardButton from "../shared/card-button";
 import { accountInfoViewStyle } from "@/style/stylesheets/account/account-info-view-style";
 import EditableAccountValue from "./editable-account-value";
-import { _currentUser } from "@/data/mock";
 import { useState } from "react";
+import { useAppSelector } from "@/state/hooks";
 
 const AccountInfoView = () => {
+
+  const { affirmationUser } = useAppSelector((state) => state.user.value);
+
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   // editable account details
-  const [name, setName] = useState<string>(_currentUser.name);
-  const [first, setFirst] = useState<string>(_currentUser.first);
-  const [last, setLast] = useState<string>(_currentUser.last);
-  const [email, setEmail] = useState<string>(_currentUser.email);
+  const [name, setName] = useState<string>(affirmationUser?.name ?? '');
+  const [first, setFirst] = useState<string>(affirmationUser?.first ?? '');
+  const [last, setLast] = useState<string>(affirmationUser?.last ?? '');
+  const [email, setEmail] = useState<string>(affirmationUser?.email ?? '');
 
   const resetDetails = () => {
-    setName(_currentUser.name);
-    setFirst(_currentUser.first);
-    setLast(_currentUser.last);
-    setEmail(_currentUser.email);
+    setName(affirmationUser?.name ?? '');
+    setFirst(affirmationUser?.first ?? '');
+    setLast(affirmationUser?.last ?? '');
+    setEmail(affirmationUser?.email ?? '');
   }
 
   const onCancel = () => {
