@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import userReducer  from "./slices/user-slice";
+import partnerConnectionReducer from "./slices/patner-connection-slice";
 
-const rootReducer = combineReducers({ user: userReducer });
+const rootReducer = combineReducers({ user: userReducer, partnerConnection: partnerConnectionReducer });
 
 export const makeStore = (preloadedState?: Partial<RootState>) => {
   return configureStore({

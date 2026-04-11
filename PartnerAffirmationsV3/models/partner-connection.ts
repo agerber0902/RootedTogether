@@ -23,6 +23,33 @@ export interface PartnerConnectionDisplay {
   createdAt: Timestamp;
 }
 
-export type CreatePartnerConnection = Omit<PartnerConnection, "id" | "createdAt">;
-export type UpdatePartnerConnection =
-  Partial<CreatePartnerConnection> & Pick<PartnerConnection, "id">;
+export type CreatePartnerConnection = Omit<
+  PartnerConnection,
+  "id" | "createdAt"
+>;
+export type UpdatePartnerConnection = Partial<CreatePartnerConnection> &
+  Pick<PartnerConnection, "id">;
+
+export const partnerConnectionMap = (
+  data: any,
+  id: string,
+): PartnerConnection => {
+  const partnerDetails = (
+    data.partnerDetails ??
+    data.participantDetails ??
+    []
+  ).map(
+    (detail: any): PartnerUserDetail => ({
+      userId: detail.userId,
+      displayName: detail.displayName,
+    }),
+  );
+
+  return {
+    id,
+    partnerIds: data.partnerIds,
+    createdById: data.createdById,
+    createdAt: data.createdAt?.toMillis?.() ?? data.createdAt,
+    partnerDetails,
+  };
+};

@@ -48,3 +48,17 @@ export const updateUser = async (user: AffirmationUser) => {
   await updateData<UpdateAffirmationUser>(collectionName, user);
   return await getUser(user.uid);
 };
+
+export const getUserByEmail = async (
+  email: string,
+): Promise<AffirmationUser | undefined> => {
+  const ref = collection(firestore, collectionName);
+  const userQuery = query(ref, where("email", "==", email), limit(1));
+  const snapshot = await getDocs(userQuery);
+
+  if (snapshot.empty) {
+    return undefined;
+  }
+
+  return AffirmationUserMap(snapshot.docs[0].data(), snapshot.docs[0].id);
+};

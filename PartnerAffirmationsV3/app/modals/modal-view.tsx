@@ -9,6 +9,7 @@ type ModalViewProps = {
   children: React.ReactNode;
 
   headerTitle: string;
+  error: string | undefined;
 };
 
 const ModalView = ({
@@ -18,6 +19,7 @@ const ModalView = ({
   onClose,
 
   headerTitle,
+  error,
 }: ModalViewProps) => {
   const onBackDropPress = () => {
     onBackDrop();
@@ -50,6 +52,17 @@ const ModalView = ({
 
           {/* Children */}
           {children}
+
+          {/* Error Message */}
+          {error && (
+            <Text
+              style={modalStyle.error}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {error}
+            </Text>
+          )}
         </View>
       </Modal>
     </>

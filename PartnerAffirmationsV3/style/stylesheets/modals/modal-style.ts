@@ -26,4 +26,13 @@ export const modalStyle = StyleSheet.create({
 
     ...Theme.baseText,
   },
+  error: {
+    paddingTop: 16,
+
+    textAlign: 'center',
+
+    fontFamily: Theme.typography.sans,
+    color: Theme.colorScheme.error,
+    fontSize: 16,
+  },
 });

@@ -1,5 +1,5 @@
 import { auth, firestore } from "../config/firebase";
-import { FirebaseResponse } from "@/models/firebase";
+import { FirebaseResponse, FirebaseUserResponse } from "@/models/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -11,7 +11,7 @@ import { addUser } from "./user-helper";
 export const addData = async <T extends object>(
   collectionName: string,
   data: T,
-) => {
+) : Promise<FirebaseResponse<string>> => {
   const { id, ...dataToAdd } = data as T & { id?: string };
   try {
     const docRef = await addDoc(collection(firestore, collectionName), {
@@ -19,7 +19,7 @@ export const addData = async <T extends object>(
       createdAt: Timestamp.fromDate(new Date()),
     });
 
-    return docRef.id;
+    return {data: docRef.id };
   } catch (error) {
     console.error("Error adding document:", error);
     throw error;
@@ -29,11 +29,11 @@ export const addData = async <T extends object>(
 export const updateData = async <T extends { id?: string }>(
   collectionName: string,
   data: T,
-) => {
+) : Promise<FirebaseResponse<string>> => {
   const { id, ...dataToUpdate } = data;
 
   if (!id) {
-    return;
+    return {data: undefined, error: 'User with that email could not be found.'};
   }
 
   try {
@@ -44,19 +44,19 @@ export const updateData = async <T extends { id?: string }>(
       updatedAt: Timestamp.fromDate(new Date()),
     });
 
-    return id;
-  } catch (error) {
-    console.error("Error updating document:", error);
-    throw error;
+    return {data: id};
+  } catch {
+    return {data: undefined, error: "An unexpected error occured"};
   }
 };
 
-export const deleteData = async (collectionName: string, id: string) => {
+export const deleteData = async (collectionName: string, id: string) : Promise<FirebaseResponse<string>> => {
   try {
     const docRef = doc(firestore, collectionName, id);
     await deleteDoc(docRef);
-  } catch (error) {
-    console.log("Error deleting document:", error);
+    return {data: 'deleted'}
+  } catch {
+    return {data: undefined, error: "An unexpected error occured"}
   }
 };
 
@@ -67,7 +67,6 @@ export const signOut = async (): Promise<boolean> => {
       return true;
     })
     .catch((error) => {
-      //TODO: handle error
       return false;
     });
 
@@ -78,7 +77,7 @@ export const signUp = async (
   email: string,
   password: string,
   displayName: string,
-): Promise<FirebaseResponse> => {
+): Promise<FirebaseUserResponse> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -101,7 +100,7 @@ export const signUp = async (
 export const signIn = async (
   email: string,
   password: string,
-): Promise<FirebaseResponse> => {
+): Promise<FirebaseUserResponse> => {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
