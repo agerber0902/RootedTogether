@@ -3,7 +3,7 @@ import ModalView from "./modal-view";
 import CardButton from "@/components/shared/card-button";
 import LoadingSpinner from "@/components/shared/loading-spinner";
 import { partnerConnectionModalStyle } from "@/style/stylesheets/modals/partner-connection-modal.style";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import {
   PartnerConnection,
@@ -24,6 +24,7 @@ type PartnerConnectionModalProps = {
   onBackDrop: () => void;
   onClose: () => void;
   connection?: PartnerConnectionDisplay;
+  setConnection: (connection: PartnerConnectionDisplay | undefined) => void;
 };
 
 const PartnerConnectionModal = ({
@@ -31,17 +32,29 @@ const PartnerConnectionModal = ({
   onBackDrop,
   onClose,
   connection,
+  setConnection,
 }: PartnerConnectionModalProps) => {
   const dispatch = useAppDispatch();
   const { partnerConnections } = useAppSelector(
     (state) => state.partnerConnection.value,
   );
+
   const { affirmationUser } = useAppSelector((state) => state.user.value);
 
-  const [displayName, setDisplayName] = useState<string>("");
+  const [displayName, setDisplayName] = useState<string>(
+    connection?.partnerDisplayName ?? "",
+  );
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    setDisplayName(connection?.partnerDisplayName ?? "");
+    setEmail("");
+    setError(undefined);
+  }, [connection, isVisible]);
 
   const resetInput = (): void => {
     setDisplayName("");
@@ -56,9 +69,9 @@ const PartnerConnectionModal = ({
   };
 
   const onSave = async (): Promise<void> => {
-    resetInput();
     let hasSaveError = false;
 
+    setError(undefined);
     setIsLoading(true);
     try {
       if (connection) {
@@ -111,6 +124,10 @@ const PartnerConnectionModal = ({
 
         // close modal
         if (!hasSaveError) {
+          resetInput();
+
+          // Reset connection to edit
+          setConnection(undefined);
           onClose();
         }
       }, 1000);
@@ -120,7 +137,7 @@ const PartnerConnectionModal = ({
   return (
     <>
       <ModalView
-        headerTitle={connection ? 'Edit Partner' : 'Add Partner'}
+        headerTitle={connection ? "Edit Partner" : "Add Partner"}
         isVisible={isVisible}
         onBackDrop={onBackDrop}
         onClose={onClose}
@@ -139,18 +156,20 @@ const PartnerConnectionModal = ({
                 setDisplayName(e.nativeEvent.text)
               }
             />
-            <TextInput
-              key={"email"}
-              keyboardType={"email-address"}
-              autoCapitalize="none"
-              numberOfLines={1}
-              style={partnerConnectionModalStyle.editableInput}
-              placeholder={`Email`}
-              value={email}
-              onChange={(e: TextInputChangeEvent) =>
-                setEmail(e.nativeEvent.text)
-              }
-            />
+            {!connection && (
+              <TextInput
+                key={"email"}
+                keyboardType={"email-address"}
+                autoCapitalize="none"
+                numberOfLines={1}
+                style={partnerConnectionModalStyle.editableInput}
+                placeholder={`Email`}
+                value={email}
+                onChange={(e: TextInputChangeEvent) =>
+                  setEmail(e.nativeEvent.text)
+                }
+              />
+            )}
           </View>
 
           {/* Action Buttons */}

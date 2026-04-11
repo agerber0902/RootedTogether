@@ -13,11 +13,23 @@ const PartnerConnectionsView = () => {
   const { connectionDisplays } = useAppSelector((state) => state.partnerConnection.value);
 
   const [modalIsVisible, setModalIsVisible] = useState<boolean>(false);
+  const [connectionToEdit, setConnectionToEdit] = useState<PartnerConnectionDisplay | undefined>(undefined);
+
+  const onEdit = (connection: PartnerConnectionDisplay) => {
+    setConnectionToEdit(connection);
+    setModalIsVisible(true);
+  }
+
+  const onCreate = () => {
+    setConnectionToEdit(undefined);
+    setModalIsVisible(true);
+  }
 
   return (
     <>
       <PartnerConnectionModal
-        connection={undefined}
+        connection={connectionToEdit}
+        setConnection={setConnectionToEdit}
         isVisible={modalIsVisible}
         onBackDrop={() => setModalIsVisible(false)}
         onClose={() => setModalIsVisible(false)}
@@ -42,6 +54,7 @@ const PartnerConnectionsView = () => {
                 <EditablePartnerConnectionValue
                   key={connection.connectionId}
                   connection={connection}
+                  onEdit={onEdit}
                 />
               );
             })
@@ -53,7 +66,7 @@ const PartnerConnectionsView = () => {
           <CardButton
             key={"create-connection"}
             title={"Create Connection"}
-            onPress={() => setModalIsVisible(true)}
+            onPress={onCreate}
             isDisabled={false}
           />
         </View>
