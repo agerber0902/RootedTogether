@@ -6,8 +6,42 @@ import { firestore } from "@/config/firebase";
 import { PartnerConnection, PartnerConnectionDisplay, partnerConnectionMap, PartnerUserDetail } from "@/models/partner-connection";
 import { AffirmationUser } from "@/models/user";
 import { FirebaseResponse } from "@/models/firebase";
+import { hasMatchingStringPair, sortStringPair, validateDistinctStringPair } from "./validation-helper";
 
 const collectionName = "partnerConnections";
+
+const validatePartnerIds = (partnerIds: [string, string]): string | undefined => {
+  return validateDistinctStringPair(partnerIds, "Partner connection");
+};
+
+const findDuplicatePartnerConnection = async (
+  partnerIds: [string, string],
+  excludeId?: string,
+): Promise<PartnerConnection | undefined> => {
+  const ref = collection(firestore, collectionName);
+  const duplicateQuery = query(ref, where("partnerIds", "array-contains", partnerIds[0]));
+  const snapshot = await getDocs(duplicateQuery);
+
+  const duplicateDoc = snapshot.docs.find((doc) => {
+    if (excludeId && doc.id === excludeId) {
+      return false;
+    }
+
+    const data = doc.data();
+    const existingPartnerIds = data.partnerIds as [string, string] | undefined;
+    if (!existingPartnerIds || existingPartnerIds.length !== 2) {
+      return false;
+    }
+
+    return hasMatchingStringPair(existingPartnerIds, partnerIds);
+  });
+
+  if (!duplicateDoc) {
+    return undefined;
+  }
+
+  return partnerConnectionMap(duplicateDoc.data(), duplicateDoc.id);
+};
 
 export const getPartnerId = (
   userId: string,
@@ -87,6 +121,23 @@ export const deletePartnerConnection = async (id: string) : Promise<FirebaseResp
 export const editPartnerConnection = async (
   partnerConnection: PartnerConnection,
 ) : Promise<FirebaseResponse<string>> => {
+  const partnerIdsValidationError = validatePartnerIds(partnerConnection.partnerIds);
+  if (partnerIdsValidationError) {
+    return { data: undefined, error: partnerIdsValidationError };
+  }
+
+  const duplicateConnection = await findDuplicatePartnerConnection(
+    partnerConnection.partnerIds,
+    partnerConnection.id,
+  );
+
+  if (duplicateConnection) {
+    return {
+      data: undefined,
+      error: "A partner connection already exists",
+    };
+  }
+
   return await updateData<PartnerConnection>(collectionName, partnerConnection);
 };
 
@@ -116,7 +167,16 @@ const createPartnerConnection = async (
   connectionUserId: string,
   connectionUserDisplayName: string,
 ): Promise<FirebaseResponse<string>> => {
-  const partnerIds: [string, string] = [userId, connectionUserId];
+  const partnerIds = sortStringPair([userId, connectionUserId]);
+  const duplicateConnection = await findDuplicatePartnerConnection(partnerIds);
+
+  if (duplicateConnection) {
+    return {
+      data: undefined,
+      error: "A partner connection already exists",
+    };
+  }
+
   const partnerDetails: PartnerUserDetail[] = [
     { userId: userId, displayName: userDisplayName },
     { userId: connectionUserId, displayName: connectionUserDisplayName },
