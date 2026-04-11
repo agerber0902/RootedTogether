@@ -83,6 +83,7 @@ const LoginModal = () => {
         isVisible={!isAuthenticated}
         onBackDrop={() => {}}
         onClose={() => {}}
+        error={error}
       >
         <View style={loginModalStyle.container}>
           {/* Login Inputs */}
@@ -150,16 +151,6 @@ const LoginModal = () => {
                 </Text>
               )}
             </Pressable>
-            {/* Error Message */}
-            {error && (
-              <Text
-                style={loginModalStyle.error}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {error}
-              </Text>
-            )}
           </View>
         </View>
       </ModalView>

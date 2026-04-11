@@ -4,13 +4,25 @@ import { partnerConnectionsViewStyle } from "@/style/stylesheets/partner-connect
 import { PartnerConnectionDisplay } from "@/models/partner-connection";
 import EmptyListWarning from "../shared/empty-list-warning";
 import EditablePartnerConnectionValue from "./editable-partner-connection-value";
-import { partnerConnectionDisplays } from "@/data/mock";
+import PartnerConnectionModal from "@/app/modals/partner-connection-modal";
+import { useState } from "react";
+import { useAppSelector } from "@/state/hooks";
 
 const PartnerConnectionsView = () => {
-  const connections: PartnerConnectionDisplay[] = partnerConnectionDisplays;
-  
+
+  const { connectionDisplays } = useAppSelector((state) => state.partnerConnection.value);
+
+  const [modalIsVisible, setModalIsVisible] = useState<boolean>(false);
+
   return (
     <>
+      <PartnerConnectionModal
+        connection={undefined}
+        isVisible={modalIsVisible}
+        onBackDrop={() => setModalIsVisible(false)}
+        onClose={() => setModalIsVisible(false)}
+      />
+
       <View style={partnerConnectionsViewStyle.container}>
         {/* Header */}
         <Text
@@ -22,10 +34,10 @@ const PartnerConnectionsView = () => {
         </Text>
 
         <ScrollView scrollEnabled={true}>
-          {!connections || connections.length <= 0 ? (
+          {!connectionDisplays || connectionDisplays.length <= 0 ? (
             <EmptyListWarning text="You do not have any partners yet, create as many as you like." />
           ) : (
-            connections.map((connection: PartnerConnectionDisplay) => {
+            connectionDisplays.map((connection: PartnerConnectionDisplay) => {
               return (
                 <EditablePartnerConnectionValue
                   key={connection.connectionId}
@@ -41,7 +53,7 @@ const PartnerConnectionsView = () => {
           <CardButton
             key={"create-connection"}
             title={"Create Connection"}
-            onPress={() => {}}
+            onPress={() => setModalIsVisible(true)}
             isDisabled={false}
           />
         </View>
