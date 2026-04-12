@@ -99,8 +99,7 @@ export const getTodaysAffirmation = async (
   };
 
   const otherAffirmations = allAffirmations.filter(
-    (a) =>
-      todaysAffirmations.length <= 0 || todaysAffirmations.findIndex((t) => t.id === a.id) !== -1
+    (a) => todaysAffirmations.findIndex((t) => t.id === a.id) === -1
   );
 
   if(otherAffirmations && otherAffirmations.length > 0){
@@ -113,4 +112,12 @@ export const getTodaysAffirmation = async (
 export const getRandomItem = <T>(array: T[]): T => {
   const randomIndex = Math.floor(Math.random() * array.length);
   return array[randomIndex];
+};
+
+export const getLocalDayKey = (date: Date = new Date()): string => {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 };

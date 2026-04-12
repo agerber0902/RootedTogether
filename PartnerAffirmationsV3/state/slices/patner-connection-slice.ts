@@ -25,12 +25,17 @@ const partnerConnectionSlice = createSlice({
     setConnectionDisplays: (state, action: PayloadAction<PartnerConnectionDisplay[]>) => {
         state.value.connectionDisplays = action.payload;
     },
+  resetPartnerConnections: (state) => {
+    state.value.partnerConnections = [];
+    state.value.connectionDisplays = [];
+  },
   },
 });
 
 export const {
     setPartnerConnections,
     setConnectionDisplays,
+  resetPartnerConnections,
 } = partnerConnectionSlice.actions;
 
 export default partnerConnectionSlice.reducer;
