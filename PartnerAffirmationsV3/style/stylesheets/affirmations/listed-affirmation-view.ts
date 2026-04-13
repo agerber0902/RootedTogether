@@ -5,28 +5,26 @@ export const iconSize: number = 20;
 
 export const listedAffirmationViewStyle = StyleSheet.create({
   container: {
-    display: 'flex',
-    width: '100%',
-    height: 'auto',
-
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  messageContainer: {
-    width: "75%",
+    display: "flex",
+    width: "100%",
     height: "auto",
 
-    paddingBottom: 15,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  messageContainer: {
+    display: "flex",
+    width: "75%",
+    height: 'auto',
   },
   actionContainer: {
-    display: 'flex',
-    width: '25%',
-    height: 'auto',
+    display: "flex",
+    width: "25%",
+    height: "auto",
 
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
   affirmationText: {
     ...Theme.baseText,
@@ -43,6 +41,6 @@ export const listedAffirmationViewStyle = StyleSheet.create({
     letterSpacing: 0.5,
   },
   actionIcon: {
-    color: Theme.colorScheme.primaryButton
-  }
+    color: Theme.colorScheme.primaryButton,
+  },
 });

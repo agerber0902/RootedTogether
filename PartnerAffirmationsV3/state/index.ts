@@ -2,13 +2,18 @@ import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import userReducer  from "./slices/user-slice";
 import partnerConnectionReducer from "./slices/patner-connection-slice";
+import affirmationReducer from './slices/affirmation-slice';
 
-const rootReducer = combineReducers({ user: userReducer, partnerConnection: partnerConnectionReducer });
+const rootReducer = combineReducers({ user: userReducer, partnerConnection: partnerConnectionReducer, affirmation: affirmationReducer });
 
 export const makeStore = (preloadedState?: Partial<RootState>) => {
   return configureStore({
     reducer: rootReducer,
     preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false,
+      }),
   });
 };
 

@@ -1,24 +1,49 @@
 import { ScrollView, View } from "react-native";
 import DisplayCard from "../shared/display-card";
-import { affirmations } from "@/data/mock";
 import { userCreatedAffirmationsCardStyle } from "@/style/stylesheets/affirmations/user-created-affirmations-card-style";
 import ListedAffirmationView from "./listed-affirmation-view";
 import CardButton from "../shared/card-button";
 import EmptyListWarning from "../shared/empty-list-warning";
 import { useAppSelector } from "@/state/hooks";
+import AffirmationsModal from "@/app/modals/affirmations-modal";
+import { useState } from "react";
+import { Affirmation } from "@/models/affirmation";
 
 const UserCreatedAffirmationView = () => {
-
-  const { affirmationUser } = useAppSelector((state) => state.user.value);
-
-  const userCreatedAffirmations = affirmations.filter(
-    (a) => a.creatorId === affirmationUser?.id,
-  );;
-
+  const { userCreatedAffirmations } = useAppSelector(
+    (state) => state.affirmation.value,
+  );
   const hasAffirmations = userCreatedAffirmations.length > 0;
+
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const [affirmationToEdit, setAffirmationToEdit] = useState<Affirmation | undefined>();
+
+  const onAdd = () => {
+    setAffirmationToEdit(undefined);
+    setIsModalVisible(true);
+  };
+
+  const onEdit = (affirmation: Affirmation) => {
+    setAffirmationToEdit(affirmation);
+    setIsModalVisible(true);
+  };
+
+  const onModalClose = () => {
+    setAffirmationToEdit(undefined);
+    setIsModalVisible(false);
+  };
 
   return (
     <>
+      <AffirmationsModal
+        isVisible={isModalVisible}
+        onBackDrop={onModalClose}
+        onClose={onModalClose}
+        affirmation={affirmationToEdit}
+        setAffirmation={setAffirmationToEdit}
+      />
+
       <DisplayCard>
         <>
           {/* User Created Affirmations */}
@@ -27,7 +52,9 @@ const UserCreatedAffirmationView = () => {
             scrollEnabled={true}
           >
             {!hasAffirmations && (
-              <View style={userCreatedAffirmationsCardStyle.emptyWarningContainer}>
+              <View
+                style={userCreatedAffirmationsCardStyle.emptyWarningContainer}
+              >
                 <EmptyListWarning text="You do not have any affirmations yet, create as many as you like." />
               </View>
             )}
@@ -36,6 +63,7 @@ const UserCreatedAffirmationView = () => {
                 <ListedAffirmationView
                   key={affirmation.id}
                   affirmation={affirmation}
+                  onEdit={onEdit}
                 />
               ))}
           </ScrollView>
@@ -45,7 +73,7 @@ const UserCreatedAffirmationView = () => {
             <CardButton
               key={"create-affirmation"}
               title="Create Affirmation"
-              onPress={() => {}}
+              onPress={onAdd}
               isDisabled={false}
             />
           </View>

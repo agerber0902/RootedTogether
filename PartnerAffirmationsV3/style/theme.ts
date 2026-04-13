@@ -87,6 +87,14 @@ export const Theme = {
 
       elevation: 1,
     },
+    picker: {
+      shadowColor: colorScheme.accent,
+      shadowOpacity: 0.7,
+      shadowRadius: 16,
+      shadowOffset: { width: 0, height: 10 },
+
+      elevation: 8,
+    },
   },
   // Base Text
   baseText: {

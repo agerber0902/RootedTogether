@@ -15,7 +15,7 @@ const initialState: ProgressState = {
   },
 };
 
-const userSlice = createSlice({
+const partnerConnectionSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
@@ -25,12 +25,17 @@ const userSlice = createSlice({
     setConnectionDisplays: (state, action: PayloadAction<PartnerConnectionDisplay[]>) => {
         state.value.connectionDisplays = action.payload;
     },
+  resetPartnerConnections: (state) => {
+    state.value.partnerConnections = [];
+    state.value.connectionDisplays = [];
+  },
   },
 });
 
 export const {
     setPartnerConnections,
     setConnectionDisplays,
-} = userSlice.actions;
+  resetPartnerConnections,
+} = partnerConnectionSlice.actions;
 
-export default userSlice.reducer;
+export default partnerConnectionSlice.reducer;
