@@ -1,13 +1,13 @@
 import LoadingSpinner from "@/components/shared/loading-spinner";
 import {
   getLocalDayKey,
-  getTodaysAffirmation,
+  getTodaysAffirmations,
   getUserCreatedAffirmations,
 } from "@/helpers/affirmation-helper";
 import { getPartnerConnections } from "@/helpers/partner-connection-helper";
 import { getUser } from "@/helpers/user-helper";
 import { useAuth } from "@/provider/auth-provider";
-import { useAppDispatch } from "@/state/hooks";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import {
   resetTodaysAffirmation,
   resetUserCreatedAffirmations,
@@ -30,6 +30,7 @@ type AppBootstrapProps = {
 const AppBootstrap = ({ children }: AppBootstrapProps) => {
   const { user } = useAuth();
   const dispatch = useAppDispatch();
+  const { connectionDisplays } = useAppSelector((state) => state.partnerConnection.value);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
   const [dailyRefreshToken, setDailyRefreshToken] = useState(0);
   const hasCompletedInitialBootstrapRef = useRef(false);
@@ -69,13 +70,15 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
       }
 
       const dayKey = getLocalDayKey();
-      const [dbUser, affirmations, todaysAffirmation, partnerResult] =
+      const [dbUser, affirmations, partnerResult] =
         await Promise.all([
           getUser(user.uid),
           getUserCreatedAffirmations(user.uid),
-          getTodaysAffirmation(user.uid),
           getPartnerConnections(user.uid),
         ]);
+
+      // Get Today's Affirmations after all the user data is loaded to properly set partner value
+      const todaysAffirmations = await getTodaysAffirmations(user.uid, partnerResult.displays);
 
       if (!isActive) {
         return;
@@ -85,7 +88,7 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
       dispatch(setUserCreatedAffirmations(affirmations));
       dispatch(
         setTodaysAffirmation({
-          affirmation: todaysAffirmation?.affirmation,
+          affirmations: todaysAffirmations,
           dayKey,
         }),
       );
@@ -106,13 +109,13 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
   useEffect(() => {
     let isActive = true;
 
-    const refreshTodaysAffirmation = async () => {
+    const refreshTodaysAffirmations = async () => {
       if (!user || !hasCompletedInitialBootstrapRef.current) {
         return;
       }
 
       const dayKey = getLocalDayKey();
-      const todaysAffirmation = await getTodaysAffirmation(user.uid);
+      const todaysAffirmations = await getTodaysAffirmations(user.uid, connectionDisplays);
 
       if (!isActive) {
         return;
@@ -120,18 +123,18 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
 
       dispatch(
         setTodaysAffirmation({
-          affirmation: todaysAffirmation?.affirmation,
+          affirmations: todaysAffirmations,
           dayKey,
         }),
       );
     };
 
-    refreshTodaysAffirmation();
+    refreshTodaysAffirmations();
 
     return () => {
       isActive = false;
     };
-  }, [user, dailyRefreshToken, dispatch]);
+  }, [user, dailyRefreshToken, connectionDisplays, dispatch]);
 
   if (isBootstrapping) {
     return (

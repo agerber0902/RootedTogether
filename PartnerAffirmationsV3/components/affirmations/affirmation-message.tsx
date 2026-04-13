@@ -4,35 +4,39 @@ import { Text, View } from "react-native";
 
 type AffirmationMessageProp = {
   affirmation: Affirmation | undefined;
-  hasForword: boolean;
+  partnerDisplayName: string | undefined;
 };
 
 const AffirmationMessage = ({
   affirmation,
-  hasForword,
+  partnerDisplayName,
 }: AffirmationMessageProp) => {
   const forword = (): string => {
-    return hasForword ? "You wanted to remind yourself: " : "";
+    return !affirmation || !partnerDisplayName
+      ? ""
+      : partnerDisplayName === "You"
+        ? "You wanted to remind yourself: "
+        : `${partnerDisplayName} wanted to remind you: `;
   };
 
   return (
     <>
       <View style={affirmationMessageStyle.container}>
-        {hasForword && (
-          <Text
-            style={affirmationMessageStyle.forword}
-            numberOfLines={2}
-            ellipsizeMode="tail"
-          >
-            {forword()}
-          </Text>
-        )}
+        <Text
+          style={affirmationMessageStyle.forword}
+          numberOfLines={2}
+          ellipsizeMode="tail"
+        >
+          {forword()}
+        </Text>
+
         <Text
           style={affirmationMessageStyle.message}
           numberOfLines={3}
           ellipsizeMode="tail"
         >
-          {affirmation?.message ?? 'You are the designer of your best life!'}
+          {affirmation?.message ??
+            "You are the designer of your best life!"}
         </Text>
       </View>
     </>
