@@ -7,6 +7,7 @@ import EmptyListWarning from "../shared/empty-list-warning";
 import { useAppSelector } from "@/state/hooks";
 import AffirmationsModal from "@/app/modals/affirmations-modal";
 import { useState } from "react";
+import { Affirmation } from "@/models/affirmation";
 
 const UserCreatedAffirmationView = () => {
   const { userCreatedAffirmations } = useAppSelector(
@@ -15,6 +16,8 @@ const UserCreatedAffirmationView = () => {
   const hasAffirmations = userCreatedAffirmations.length > 0;
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const [affirmationToEdit, setAffirmationToEdit] = useState<Affirmation | undefined>();
 
   const onAdd = () => {
     setIsModalVisible(true);
@@ -26,7 +29,8 @@ const UserCreatedAffirmationView = () => {
         isVisible={isModalVisible}
         onBackDrop={() => setIsModalVisible(false)}
         onClose={() => setIsModalVisible(false)}
-        affirmation={undefined}
+        affirmation={affirmationToEdit}
+        setAffirmation={setAffirmationToEdit}
       />
 
       <DisplayCard>
@@ -57,7 +61,7 @@ const UserCreatedAffirmationView = () => {
             <CardButton
               key={"create-affirmation"}
               title="Create Affirmation"
-              onPress={() => {}}
+              onPress={onAdd}
               isDisabled={false}
             />
           </View>

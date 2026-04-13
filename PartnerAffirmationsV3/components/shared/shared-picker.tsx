@@ -1,4 +1,4 @@
-import { sharedPickerStyle } from "@/style/stylesheets/components/shared/shared-picker-styles";
+import { sharedPickerStyle } from "@/style/stylesheets/components/shared/shared-picker-style";
 import { Picker } from "@react-native-picker/picker";
 import { View } from "react-native";
 
