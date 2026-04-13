@@ -130,27 +130,29 @@ const LoginModal = () => {
 
           {/* Action Buttons */}
           <View style={loginModalStyle.actions}>
-            <CardButton
-              key={"login-button"}
-              title={isCreate ? "Create" : "Login"}
-              onPress={onActionClick}
-              isDisabled={authLoading || isAuthenticated || isLoading}
-            />
-            <Pressable
-              onPress={authLoading || isLoading ? undefined : onToggleClick}
-            >
-              {isLoading ? (
-                <LoadingSpinner viewStyle={{ padding: 5 }} />
-              ) : (
-                <Text
-                  style={loginModalStyle.toggleButton}
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
+            {isLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                <CardButton
+                  key={"login-button"}
+                  title={isCreate ? "Create" : "Login"}
+                  onPress={onActionClick}
+                  isDisabled={authLoading || isAuthenticated || isLoading}
+                />
+                <Pressable
+                  onPress={authLoading || isLoading ? undefined : onToggleClick}
                 >
-                  {isCreate ? "Login user" : "Create new user"}
-                </Text>
-              )}
-            </Pressable>
+                  <Text
+                    style={loginModalStyle.toggleButton}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {isCreate ? "Login user" : "Create new user"}
+                  </Text>
+                </Pressable>
+              </>
+            )}
           </View>
         </View>
       </ModalView>
