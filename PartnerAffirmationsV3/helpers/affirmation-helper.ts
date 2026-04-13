@@ -4,6 +4,7 @@ import {
   getDocs,
   orderBy,
   query,
+  Timestamp,
   where,
 } from "firebase/firestore";
 import { firestore } from "@/config/firebase";
@@ -95,7 +96,7 @@ export const getTodaysAffirmation = async (
   );
 
   if(todaysAffirmations && todaysAffirmations.length > 0){
-    return {date: new Date().toISOString(), affirmation: getRandomItem(todaysAffirmations)};
+    return {date: Timestamp.fromDate(new Date()), affirmation: getRandomItem(todaysAffirmations)};
   };
 
   const otherAffirmations = allAffirmations.filter(
@@ -103,7 +104,7 @@ export const getTodaysAffirmation = async (
   );
 
   if(otherAffirmations && otherAffirmations.length > 0){
-    return {date: new Date().toISOString(), affirmation: getRandomItem(otherAffirmations)};
+    return {date: Timestamp.fromDate(new Date()), affirmation: getRandomItem(otherAffirmations)};
   }
 
   return undefined;

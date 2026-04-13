@@ -30,6 +30,20 @@ export const affirmationModalStyle = StyleSheet.create({
 
     paddingLeft: 5,
   },
+  datePickerContainer: {
+    width: '100%',
+
+    paddingBottom: Theme.spacing.sm,
+  },
+  dateContainer: {
+    width: '100%',
+  },
+  switchContainer: {
+    paddingBottom: 5,
+  },
+  recipientPickerContainer: {
+    width: '100%',
+  },
   actions: {
     display: "flex",
     width: "50%",

@@ -1,5 +1,5 @@
-import { users } from "@/data/mock";
 import { Affirmation } from "@/models/affirmation";
+import { useAppSelector } from "@/state/hooks";
 import {
   iconSize,
   listedAffirmationViewStyle,
@@ -12,6 +12,22 @@ type ListedAffirmationViewProps = {
 };
 
 const ListedAffirmationView = ({ affirmation }: ListedAffirmationViewProps) => {
+  const { affirmationUser } = useAppSelector((state) => state.user.value);
+  const { connectionDisplays } = useAppSelector(
+    (state) => state.partnerConnection.value,
+  );
+
+  const getDisplayName = () => {
+    if (affirmation.recipientId === affirmationUser?.uid) {
+      return "You";
+    }
+    // Check connections
+    return (
+      connectionDisplays.find((dc) => dc.partnerId === affirmation.recipientId)
+        ?.partnerDisplayName ?? ""
+    );
+  };
+
   return (
     <>
       <View style={listedAffirmationViewStyle.container}>
@@ -30,8 +46,7 @@ const ListedAffirmationView = ({ affirmation }: ListedAffirmationViewProps) => {
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {/* TODO: connect to Partner Name */}
-            {users.find((u) => u.id === affirmation.recipientId)?.name}
+            {getDisplayName()}
           </Text>
         </View>
         <View style={listedAffirmationViewStyle.actionContainer}>

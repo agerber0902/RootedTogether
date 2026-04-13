@@ -3,7 +3,7 @@ import { Timestamp } from "firebase/firestore";
 export interface Affirmation {
   id?: string;
   message: string;
-  displayDate?: Timestamp;
+  displayDate: Timestamp | null;
   recipientId: string;
   creatorId: string;
 
@@ -11,7 +11,7 @@ export interface Affirmation {
 }
 
 export interface TodaysAffirmation {
-  date: string;
+  date: Timestamp;
   affirmation: Affirmation | undefined;
 };
 

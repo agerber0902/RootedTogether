@@ -31,4 +31,6 @@ export const colorScheme = {
   primaryButtonText: backgroundColor,
   secondaryButton: backgroundColor,
   secondaryButtonText: primaryColor, 
+
+  picker: backgroundColor,
 };

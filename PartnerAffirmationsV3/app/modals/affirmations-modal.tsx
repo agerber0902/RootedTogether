@@ -1,7 +1,7 @@
 import ModalView from "./modal-view";
 import { Affirmation } from "@/models/affirmation";
 import { useState } from "react";
-import { Text, TextInput, TextInputChangeEvent, View } from "react-native";
+import { TextInput, TextInputChangeEvent, View } from "react-native";
 import { affirmationModalStyle } from "@/style/stylesheets/modals/affirmation-modal-style";
 import LoadingSpinner from "@/components/shared/loading-spinner";
 import CardButton from "@/components/shared/card-button";
@@ -9,7 +9,11 @@ import DatePicker from "@/components/shared/date-picker";
 import SharedSwitch from "@/components/shared/shared-switch";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import SharedPicker from "../../components/shared/shared-picker";
-import { addAffirmation, editAffirmation, getUserCreatedAffirmations } from "@/helpers/affirmation-helper";
+import {
+  addAffirmation,
+  editAffirmation,
+  getUserCreatedAffirmations,
+} from "@/helpers/affirmation-helper";
 import { Timestamp } from "firebase/firestore";
 import { setUserCreatedAffirmations } from "@/state/slices/affirmation-slice";
 
@@ -40,6 +44,7 @@ const AffirmationsModal = ({
   const [message, setMessage] = useState<string>(affirmation?.message ?? "");
   const [isSetDate, setIsSetDate] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [isSetRecipient, setIsSetRecipient] = useState<boolean>(false);
   const [recipientId, setRecipientId] = useState<string | undefined>(
     affirmation?.recipientId,
   );
@@ -58,6 +63,8 @@ const AffirmationsModal = ({
     setSelectedDate(undefined);
     setIsSetDate(false);
     setIsLoading(false);
+    setIsSetRecipient(false);
+    setRecipientId(undefined);
   };
 
   const onToggleSetDate = (value: boolean) => {
@@ -68,6 +75,16 @@ const AffirmationsModal = ({
       setSelectedDate(new Date());
     }
   };
+
+  const onToggleSetRecipient = (value: boolean) => {
+    setIsSetRecipient(value);
+
+    // Ensure a recipient is available even if the user opens date selection but does not change pickers.
+    if (value && !recipientId) {
+      setSelectedDate(new Date());
+    }
+
+  }
 
   const onSave = async (): Promise<void> => {
     let hasSaveError = false;
@@ -89,7 +106,7 @@ const AffirmationsModal = ({
         affirmationToEdit.displayDate = isSetDate
           ? selectedDate
             ? Timestamp.fromDate(selectedDate)
-            : undefined
+            : null
           : affirmation.displayDate;
 
         await editAffirmation(affirmationToEdit);
@@ -100,8 +117,8 @@ const AffirmationsModal = ({
           displayDate: isSetDate
             ? selectedDate
               ? Timestamp.fromDate(selectedDate)
-              : undefined
-            : undefined,
+              : null
+            : null,
           recipientId: recipientId ?? affirmationUser!.uid,
           creatorId: affirmationUser!.uid,
           createdAt: Timestamp.fromDate(new Date()),
@@ -109,8 +126,11 @@ const AffirmationsModal = ({
       }
 
       // update user created affitmations
-      dispatch(setUserCreatedAffirmations(await getUserCreatedAffirmations(affirmationUser!.uid)));
-
+      dispatch(
+        setUserCreatedAffirmations(
+          await getUserCreatedAffirmations(affirmationUser!.uid),
+        ),
+      );
     } catch {
       hasSaveError = true;
       setError("Unable to save partner connection.");
@@ -151,20 +171,13 @@ const AffirmationsModal = ({
             }
           />
 
-          <View>
-            <View style={{ paddingBottom: 5 }}>
+          <View style={affirmationModalStyle.dateContainer}>
+            <View style={affirmationModalStyle.switchContainer}>
               <SharedSwitch text="Add Date" onPress={onToggleSetDate} />
             </View>
 
             {isSetDate && (
-              <View>
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={affirmationModalStyle.subHeader}
-                >
-                  Affirmation Date:{" "}
-                </Text>
+              <View style={affirmationModalStyle.dateContainer}>
                 <DatePicker
                   selectedDate={selectedDate}
                   setSelectedDate={setSelectedDate}
@@ -173,19 +186,15 @@ const AffirmationsModal = ({
             )}
           </View>
 
-          <View style={{ width: "100%" }}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={affirmationModalStyle.subHeader}
-            >
-              Affirmation Recipient:{" "}
-            </Text>
-            <SharedPicker
+          <View style={affirmationModalStyle.recipientPickerContainer}>
+            <View style={affirmationModalStyle.switchContainer}>
+              <SharedSwitch text="Add Recipient" onPress={onToggleSetRecipient} />
+            </View>
+            {isSetRecipient && <SharedPicker
               pickerValues={recipientPickerValues}
               selectedValue={recipientId}
               onValueChange={setRecipientId}
-            />
+            />}
           </View>
         </View>
 

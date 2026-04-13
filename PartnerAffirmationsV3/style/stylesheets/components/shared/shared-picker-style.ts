@@ -9,7 +9,7 @@ export const sharedPickerStyle = StyleSheet.create({
     backgroundColor: "#0000",
   },
   picker: {
-    backgroundColor: Theme.colorScheme.background,
+    backgroundColor: Theme.colorScheme.picker,
     color: Theme.colorScheme.primaryText,
     borderRadius: Theme.borders.inputRadius,
 
