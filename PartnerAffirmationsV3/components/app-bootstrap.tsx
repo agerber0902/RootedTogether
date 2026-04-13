@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/shared/loading-spinner";
 import {
   getLocalDayKey,
   getTodaysAffirmation,
@@ -6,7 +7,7 @@ import {
 import { getPartnerConnections } from "@/helpers/partner-connection-helper";
 import { getUser } from "@/helpers/user-helper";
 import { useAuth } from "@/provider/auth-provider";
-import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { useAppDispatch } from "@/state/hooks";
 import {
   resetTodaysAffirmation,
   resetUserCreatedAffirmations,
@@ -19,20 +20,19 @@ import {
   setPartnerConnections,
 } from "@/state/slices/patner-connection-slice";
 import { setUser } from "@/state/slices/user-slice";
-import { useEffect, useRef, useState } from "react";
-import { AppState } from "react-native";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { AppState, StyleSheet, View } from "react-native";
 
-const AppBootstrap = () => {
+type AppBootstrapProps = {
+  children: ReactNode;
+};
+
+const AppBootstrap = ({ children }: AppBootstrapProps) => {
   const { user } = useAuth();
-  const { affirmationUser } = useAppSelector((state) => state.user.value);
-  const { todaysAffirmationDayKey } = useAppSelector(
-    (state) => state.affirmation.value,
-  );
-  const loadedAffirmationsUserIdRef = useRef<string | undefined>(undefined);
-  const loadedPartnersUserIdRef = useRef<string | undefined>(undefined);
-  const [dailyRefreshToken, setDailyRefreshToken] = useState(0);
-
   const dispatch = useAppDispatch();
+  const [isBootstrapping, setIsBootstrapping] = useState(true);
+  const [dailyRefreshToken, setDailyRefreshToken] = useState(0);
+  const hasCompletedInitialBootstrapRef = useRef(false);
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextState) => {
@@ -47,64 +47,76 @@ const AppBootstrap = () => {
   }, []);
 
   useEffect(() => {
-    const bootstrapUser = async () => {
+    let isActive = true;
+
+    const bootstrap = async () => {
       if (!user) {
         dispatch(setUser(undefined));
-        loadedPartnersUserIdRef.current = undefined;
         dispatch(resetPartnerConnections());
-        loadedAffirmationsUserIdRef.current = undefined;
         dispatch(resetUserCreatedAffirmations());
         dispatch(resetTodaysAffirmation());
-        return;
-      }
 
-      if (!affirmationUser || affirmationUser.uid !== user.uid) {
-        const dbUser = await getUser(user.uid);
-
-        if (dbUser) {
-          dispatch(setUser(dbUser));
+        if (isActive) {
+          hasCompletedInitialBootstrapRef.current = true;
+          setIsBootstrapping(false);
         }
-      }
-    };
 
-    bootstrapUser();
-  }, [user, affirmationUser, dispatch]);
-
-  useEffect(() => {
-    const bootstrapAffirmations = async () => {
-      if (!user) {
-        loadedAffirmationsUserIdRef.current = undefined;
-        dispatch(resetUserCreatedAffirmations());
         return;
       }
 
-      if (loadedAffirmationsUserIdRef.current === user.uid) {
+      if (isActive) {
+        setIsBootstrapping(true);
+      }
+
+      const dayKey = getLocalDayKey();
+      const [dbUser, affirmations, todaysAffirmation, partnerResult] =
+        await Promise.all([
+          getUser(user.uid),
+          getUserCreatedAffirmations(user.uid),
+          getTodaysAffirmation(user.uid),
+          getPartnerConnections(user.uid),
+        ]);
+
+      if (!isActive) {
         return;
       }
 
-      const affirmations = await getUserCreatedAffirmations(user.uid);
-      loadedAffirmationsUserIdRef.current = user.uid;
-
+      dispatch(setUser(dbUser));
       dispatch(setUserCreatedAffirmations(affirmations));
+      dispatch(
+        setTodaysAffirmation({
+          affirmation: todaysAffirmation?.affirmation,
+          dayKey,
+        }),
+      );
+      dispatch(setPartnerConnections(partnerResult.connections));
+      dispatch(setConnectionDisplays(partnerResult.displays));
+
+      hasCompletedInitialBootstrapRef.current = true;
+      setIsBootstrapping(false);
     };
 
-    bootstrapAffirmations();
+    bootstrap();
+
+    return () => {
+      isActive = false;
+    };
   }, [user, dispatch]);
 
   useEffect(() => {
-    const bootstrapTodaysAffirmation = async () => {
-      if (!user) {
-        dispatch(resetTodaysAffirmation());
+    let isActive = true;
+
+    const refreshTodaysAffirmation = async () => {
+      if (!user || !hasCompletedInitialBootstrapRef.current) {
         return;
       }
 
       const dayKey = getLocalDayKey();
+      const todaysAffirmation = await getTodaysAffirmation(user.uid);
 
-      if (todaysAffirmationDayKey === dayKey) {
+      if (!isActive) {
         return;
       }
-
-      const todaysAffirmation = await getTodaysAffirmation(user.uid);
 
       dispatch(
         setTodaysAffirmation({
@@ -114,32 +126,33 @@ const AppBootstrap = () => {
       );
     };
 
-    bootstrapTodaysAffirmation();
-  }, [user, todaysAffirmationDayKey, dailyRefreshToken, dispatch]);
+    refreshTodaysAffirmation();
 
-  useEffect(() => {
-    const bootstrapPartners = async () => {
-      if (!user) {
-        loadedPartnersUserIdRef.current = undefined;
-        dispatch(resetPartnerConnections());
-        return;
-      }
-
-      if (loadedPartnersUserIdRef.current === user.uid) {
-        return;
-      }
-
-      const { connections, displays } = await getPartnerConnections(user.uid);
-      loadedPartnersUserIdRef.current = user.uid;
-
-      dispatch(setPartnerConnections(connections));
-      dispatch(setConnectionDisplays(displays));
+    return () => {
+      isActive = false;
     };
+  }, [user, dailyRefreshToken, dispatch]);
 
-    bootstrapPartners();
-  }, [user, dispatch]);
+  if (isBootstrapping) {
+    return (
+      <View style={styles.loadingContainer}>
+        <LoadingSpinner viewStyle={styles.spinnerContainer} />
+      </View>
+    );
+  }
 
-  return <></>;
+  return <>{children}</>;
 };
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  spinnerContainer: {
+    padding: 0,
+  },
+});
 
 export default AppBootstrap;

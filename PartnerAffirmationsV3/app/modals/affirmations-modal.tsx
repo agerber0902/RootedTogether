@@ -53,7 +53,7 @@ const AffirmationsModal = ({
 
   const recipientPickerValues = [
     // { label: "-- Choose Recipient --", value: affirmationUser!.uid },
-    { label: "Personal", value: affirmationUser!.uid },
+    { label: "Personal", value: affirmationUser?.uid ?? '' },
     ...connectionDisplays.map((c) => {
       return { label: c.partnerDisplayName, value: c.partnerId };
     }),

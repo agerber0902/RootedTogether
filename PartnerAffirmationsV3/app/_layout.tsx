@@ -16,7 +16,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/provider/auth-provider";
 import LayoutWrapper from "./layoutWrapper";
 import LoginModal from "./modals/login-modal";
-import AppBootstrap from "@/components/app-bootstrap";
+import AppBootstrap from "../components/app-bootstrap";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -30,8 +30,7 @@ const RootNavigator = () => {
   }
 
   return (
-    <>
-      <AppBootstrap />
+    <AppBootstrap>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
@@ -40,7 +39,7 @@ const RootNavigator = () => {
         />
       </Stack>
       <StatusBar style="auto" />
-    </>
+    </AppBootstrap>
   );
 };
 
