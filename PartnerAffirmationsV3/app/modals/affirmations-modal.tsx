@@ -1,6 +1,6 @@
 import ModalView from "./modal-view";
 import { Affirmation } from "@/models/affirmation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextInput, TextInputChangeEvent, View } from "react-native";
 import { affirmationModalStyle } from "@/style/stylesheets/modals/affirmation-modal-style";
 import LoadingSpinner from "@/components/shared/loading-spinner";
@@ -43,7 +43,7 @@ const AffirmationsModal = ({
 
   const [message, setMessage] = useState<string>(affirmation?.message ?? "");
   const [isSetDate, setIsSetDate] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(affirmation?.displayDate?.toDate());
   const [isSetRecipient, setIsSetRecipient] = useState<boolean>(false);
   const [recipientId, setRecipientId] = useState<string | undefined>(
     affirmation?.recipientId,
@@ -67,6 +67,16 @@ const AffirmationsModal = ({
     setRecipientId(undefined);
   };
 
+  // Sync modal state when affirmation prop changes
+  useEffect(() => {
+    if (affirmation) {
+      setMessage(affirmation.message);
+      // setRecipientId(affirmation.recipientId);
+      // setIsSetRecipient(true);
+      // Keep other fields at their reset state for new edits
+    }
+  }, [affirmation]);
+
   const onToggleSetDate = (value: boolean) => {
     setIsSetDate(value);
 
@@ -79,11 +89,10 @@ const AffirmationsModal = ({
   const onToggleSetRecipient = (value: boolean) => {
     setIsSetRecipient(value);
 
-    // Ensure a recipient is available even if the user opens date selection but does not change pickers.
+    // Ensure a recipient is available even if the user opens recipient selection but does not change pickers.
     if (value && !recipientId) {
-      setSelectedDate(new Date());
+      setRecipientId(affirmationUser!.uid);
     }
-
   }
 
   const onSave = async (): Promise<void> => {
@@ -173,7 +182,7 @@ const AffirmationsModal = ({
 
           <View style={affirmationModalStyle.dateContainer}>
             <View style={affirmationModalStyle.switchContainer}>
-              <SharedSwitch text="Add Date" onPress={onToggleSetDate} />
+              <SharedSwitch text={affirmation ? 'Edit Date' : 'Add Date'} onPress={onToggleSetDate} />
             </View>
 
             {isSetDate && (
@@ -188,7 +197,7 @@ const AffirmationsModal = ({
 
           <View style={affirmationModalStyle.recipientPickerContainer}>
             <View style={affirmationModalStyle.switchContainer}>
-              <SharedSwitch text="Add Recipient" onPress={onToggleSetRecipient} />
+              <SharedSwitch text={affirmation ? 'Edit Recipient' : 'Add Recipient'} onPress={onToggleSetRecipient} />
             </View>
             {isSetRecipient && <SharedPicker
               pickerValues={recipientPickerValues}

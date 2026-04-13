@@ -20,6 +20,12 @@ const UserCreatedAffirmationView = () => {
   const [affirmationToEdit, setAffirmationToEdit] = useState<Affirmation | undefined>();
 
   const onAdd = () => {
+    setAffirmationToEdit(undefined);
+    setIsModalVisible(true);
+  };
+
+  const onEdit = (affirmation: Affirmation) => {
+    setAffirmationToEdit(affirmation);
     setIsModalVisible(true);
   };
 
@@ -52,6 +58,7 @@ const UserCreatedAffirmationView = () => {
                 <ListedAffirmationView
                   key={affirmation.id}
                   affirmation={affirmation}
+                  onEdit={onEdit}
                 />
               ))}
           </ScrollView>
