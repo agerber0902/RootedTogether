@@ -29,12 +29,17 @@ const UserCreatedAffirmationView = () => {
     setIsModalVisible(true);
   };
 
+  const onModalClose = () => {
+    setAffirmationToEdit(undefined);
+    setIsModalVisible(false);
+  };
+
   return (
     <>
       <AffirmationsModal
         isVisible={isModalVisible}
-        onBackDrop={() => setIsModalVisible(false)}
-        onClose={() => setIsModalVisible(false)}
+        onBackDrop={onModalClose}
+        onClose={onModalClose}
         affirmation={affirmationToEdit}
         setAffirmation={setAffirmationToEdit}
       />

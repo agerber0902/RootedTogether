@@ -43,7 +43,9 @@ const AffirmationsModal = ({
 
   const [message, setMessage] = useState<string>(affirmation?.message ?? "");
   const [isSetDate, setIsSetDate] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(affirmation?.displayDate?.toDate());
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    affirmation?.displayDate?.toDate(),
+  );
   const [isSetRecipient, setIsSetRecipient] = useState<boolean>(false);
   const [recipientId, setRecipientId] = useState<string | undefined>(
     affirmation?.recipientId,
@@ -57,25 +59,28 @@ const AffirmationsModal = ({
     }),
   ];
 
-  const resetInput = () => {
-    setError(undefined);
-    setMessage("");
-    setSelectedDate(undefined);
-    setIsSetDate(false);
-    setIsLoading(false);
-    setIsSetRecipient(false);
-    setRecipientId(undefined);
-  };
+  // Reset state when modal closes
+  useEffect(() => {
+    if (!isVisible) {
+      setError(undefined);
+      setMessage("");
+      setSelectedDate(undefined);
+      setIsSetDate(false);
+      setIsLoading(false);
+      setIsSetRecipient(false);
+      setRecipientId(undefined);
+      setAffirmation(undefined);
+    }
+  }, [isVisible, setAffirmation]);
 
   // Sync modal state when affirmation prop changes
   useEffect(() => {
     if (affirmation) {
       setMessage(affirmation.message);
       // setRecipientId(affirmation.recipientId);
-      // setIsSetRecipient(true);
       // Keep other fields at their reset state for new edits
     }
-  }, [affirmation]);
+  }, [affirmation, isVisible]);
 
   const onToggleSetDate = (value: boolean) => {
     setIsSetDate(value);
@@ -93,7 +98,7 @@ const AffirmationsModal = ({
     if (value && !recipientId) {
       setRecipientId(affirmationUser!.uid);
     }
-  }
+  };
 
   const onSave = async (): Promise<void> => {
     let hasSaveError = false;
@@ -149,8 +154,6 @@ const AffirmationsModal = ({
 
         // close modal
         if (!hasSaveError) {
-          resetInput();
-
           // Reset connection to edit
           setAffirmation(undefined);
           onClose();
@@ -182,7 +185,10 @@ const AffirmationsModal = ({
 
           <View style={affirmationModalStyle.dateContainer}>
             <View style={affirmationModalStyle.switchContainer}>
-              <SharedSwitch text={affirmation ? 'Edit Date' : 'Add Date'} onPress={onToggleSetDate} />
+              <SharedSwitch
+                text={affirmation ? "Edit Date" : "Add Date"}
+                onPress={onToggleSetDate}
+              />
             </View>
 
             {isSetDate && (
@@ -197,13 +203,18 @@ const AffirmationsModal = ({
 
           <View style={affirmationModalStyle.recipientPickerContainer}>
             <View style={affirmationModalStyle.switchContainer}>
-              <SharedSwitch text={affirmation ? 'Edit Recipient' : 'Add Recipient'} onPress={onToggleSetRecipient} />
+              <SharedSwitch
+                text={affirmation ? "Edit Recipient" : "Add Recipient"}
+                onPress={onToggleSetRecipient}
+              />
             </View>
-            {isSetRecipient && <SharedPicker
-              pickerValues={recipientPickerValues}
-              selectedValue={recipientId}
-              onValueChange={setRecipientId}
-            />}
+            {isSetRecipient && (
+              <SharedPicker
+                pickerValues={recipientPickerValues}
+                selectedValue={recipientId}
+                onValueChange={setRecipientId}
+              />
+            )}
           </View>
         </View>
 
