@@ -8,7 +8,12 @@ import {
   where,
 } from "firebase/firestore";
 import { firestore } from "@/config/firebase";
-import { Affirmation, affirmationMap, TodaysAffirmation } from "@/models/affirmation";
+import {
+  Affirmation,
+  affirmationMap,
+  TodaysAffirmation,
+} from "@/models/affirmation";
+import { PartnerConnectionDisplay } from "@/models/partner-connection";
 
 const collectionName = "affirmations";
 
@@ -22,7 +27,57 @@ export const editAffirmation = async (affirmation: Affirmation) => {
   await updateData<Affirmation>(collectionName, affirmation);
 };
 
-export const getUserCreatedAffirmations = async (creatorId: string): Promise<Affirmation[]> => {
+// Helper function to get affirmation for a creator
+const getAffirmationForCreator = (
+  creatorId: string,
+  allAffirmations: Affirmation[],
+): Affirmation[] | undefined => {
+  const today = new Date();
+  const startOfDay = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    0,
+    0,
+    0,
+  );
+
+  const endOfDay = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    23,
+    59,
+    59,
+  );
+
+  // Filter affirmations by creator
+  const creatorAffirmations = allAffirmations.filter(
+    (a) => a.creatorId === creatorId,
+  );
+
+  if (creatorAffirmations.length === 0) {
+    return undefined;
+  }
+
+  // Try to get today's affirmations
+  const todaysAffirmations = creatorAffirmations.filter((a) => {
+    if (!a.displayDate) return false;
+    const d = new Date(a.displayDate.toDate());
+    return d >= startOfDay && d <= endOfDay;
+  });
+
+  if (todaysAffirmations.length > 0) {
+    return todaysAffirmations;
+  }
+
+  // Fallback to random affirmation
+  return [getRandomItem(creatorAffirmations)];
+};
+
+export const getUserCreatedAffirmations = async (
+  creatorId: string,
+): Promise<Affirmation[]> => {
   const affirmationRef = collection(firestore, collectionName);
 
   const affirmationsQuery = query(
@@ -46,31 +101,13 @@ export const getUserCreatedAffirmations = async (creatorId: string): Promise<Aff
   return userCreatorAffirmations;
 };
 
-export const getTodaysAffirmation = async (
+export const getTodaysAffirmations = async (
   userId: string,
-): Promise<TodaysAffirmation | undefined> => {
+  partnerConnectionDisplays: PartnerConnectionDisplay[],
+): Promise<TodaysAffirmation[]> => {
   const affirmationsRef = collection(firestore, collectionName);
 
-  const today = new Date();
-  const startOfDay = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-    0,
-    0,
-    0,
-  );
-
-  const endOfDay = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-    23,
-    59,
-    59,
-  );
-
-  // get affirmations with a recipient id of the user uid
+  // Get all affirmations by recipientId
   const userAffirmationsQuery = query(
     affirmationsRef,
     where("recipientId", "==", userId),
@@ -78,7 +115,7 @@ export const getTodaysAffirmation = async (
   const snapshot = await getDocs(userAffirmationsQuery);
 
   if (snapshot.empty) {
-    return undefined;
+    return [];
   }
 
   const allAffirmations: Affirmation[] = snapshot.docs.map((doc) => {
@@ -86,28 +123,34 @@ export const getTodaysAffirmation = async (
     return affirmationMap(data, doc.id);
   });
 
-  // filter by date
-  const todaysAffirmations = allAffirmations.filter(
-    (a) => {
-      if (!a.displayDate) return false;
-      const d = new Date(a.displayDate.toDate());
-      return d >= startOfDay && d <= endOfDay;
-    }
-  );
+  const result: TodaysAffirmation[] = [];
 
-  if(todaysAffirmations && todaysAffirmations.length > 0){
-    return {date: Timestamp.fromDate(new Date()), affirmation: getRandomItem(todaysAffirmations)};
-  };
-
-  const otherAffirmations = allAffirmations.filter(
-    (a) => todaysAffirmations.findIndex((t) => t.id === a.id) === -1
-  );
-
-  if(otherAffirmations && otherAffirmations.length > 0){
-    return {date: Timestamp.fromDate(new Date()), affirmation: getRandomItem(otherAffirmations)};
+  // Add user's affirmations first
+  const userAffirmation = getAffirmationForCreator(userId, allAffirmations);
+  if (userAffirmation) {
+    result.push({
+      date: Timestamp.fromDate(new Date()),
+      partnerDisplayName: "You",
+      affirmation: userAffirmation,
+    });
   }
 
-  return undefined;
+  // Add each partner's affirmations
+  for (const partnerDisplay of partnerConnectionDisplays) {
+    const partnerAffirmation = getAffirmationForCreator(
+      partnerDisplay.partnerId,
+      allAffirmations
+    );
+    if (partnerAffirmation) {
+      result.push({
+        date: Timestamp.fromDate(new Date()),
+        partnerDisplayName: partnerDisplay.partnerDisplayName,
+        affirmation: partnerAffirmation,
+      });
+    }
+  }
+
+  return result;
 };
 
 export const getRandomItem = <T>(array: T[]): T => {

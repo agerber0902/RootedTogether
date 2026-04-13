@@ -12,7 +12,8 @@ export interface Affirmation {
 
 export interface TodaysAffirmation {
   date: Timestamp;
-  affirmation: Affirmation | undefined;
+  partnerDisplayName: string;
+  affirmation: Affirmation[] | undefined;
 };
 
 export type CreateAffirmation = Omit<Affirmation, "id" | "createdAt">;

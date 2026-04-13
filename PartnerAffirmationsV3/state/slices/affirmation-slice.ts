@@ -1,10 +1,10 @@
-import { Affirmation } from '@/models/affirmation';
+import { Affirmation, TodaysAffirmation } from '@/models/affirmation';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ProgressState {
   value: {
     userCreatedAffirmations: Affirmation[];
-    todaysAffirmation: Affirmation | undefined;
+    todaysAffirmations: TodaysAffirmation[];
     todaysAffirmationDayKey: string | undefined;
   };
 }
@@ -12,7 +12,7 @@ export interface ProgressState {
 const initialState: ProgressState = {
   value: {
     userCreatedAffirmations: [],
-    todaysAffirmation: undefined,
+    todaysAffirmations: [],
     todaysAffirmationDayKey: undefined,
   },
 };
@@ -24,15 +24,15 @@ const affirmationSlice = createSlice({
     setUserCreatedAffirmations: (state, action: PayloadAction<Affirmation[]>) => {
         state.value.userCreatedAffirmations = action.payload;
     },
-    setTodaysAffirmation: (state, action: PayloadAction<{ affirmation: Affirmation | undefined; dayKey: string }>) => {
-      state.value.todaysAffirmation = action.payload.affirmation;
+    setTodaysAffirmation: (state, action: PayloadAction<{ affirmations: TodaysAffirmation[]; dayKey: string }>) => {
+      state.value.todaysAffirmations = action.payload.affirmations;
       state.value.todaysAffirmationDayKey = action.payload.dayKey;
     },
     resetUserCreatedAffirmations: (state) => {
         state.value.userCreatedAffirmations = [];
     },
     resetTodaysAffirmation: (state) => {
-      state.value.todaysAffirmation = undefined;
+      state.value.todaysAffirmations = [];
       state.value.todaysAffirmationDayKey = undefined;
     },
   },
