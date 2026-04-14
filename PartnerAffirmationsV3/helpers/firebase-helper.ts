@@ -66,7 +66,7 @@ export const signOut = async (): Promise<boolean> => {
     .then(() => {
       return true;
     })
-    .catch((error) => {
+    .catch(() => {
       return false;
     });
 
