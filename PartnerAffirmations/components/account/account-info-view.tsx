@@ -1,126 +1,156 @@
-import { AffirmationUser } from "@/constants/models/user";
-import { accountInfoStyles } from "@/constants/stylesheets/components/account/account-info-styles";
-import { useAuth } from "@/providers/auth-provider";
+import { ScrollView, Text, View } from "react-native";
+import CardButton from "../shared/card-button";
+import { accountInfoViewStyle } from "@/style/stylesheets/account/account-info-view-style";
+import EditableAccountValue from "./editable-account-value";
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { useEffect, useState } from "react";
-import { View, ViewStyle } from "react-native";
-import AccountInfoValueView from "./account-info-value-view";
-import Button from "../shared/button";
+import { stringExists } from "@/helpers/validation-helper";
 import { updateUser } from "@/helpers/user-helper";
-import { setUser } from "@/state/slices/user";
+import { AffirmationUser } from "@/models/user";
+import { setUser } from "@/state/slices/user-slice";
 import LoadingSpinner from "../shared/loading-spinner";
 
 const AccountInfoView = () => {
-  const dispatch = useAppDispatch();
   const { affirmationUser } = useAppSelector((state) => state.user.value);
-  const { user } = useAuth();
+  const dispatch = useAppDispatch();
 
-  const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [fullName, setFullName] = useState<string>(affirmationUser?.name ?? "");
-  const [firstName, setFirstName] = useState<string>(
-    affirmationUser?.first ?? "",
-  );
-  const [lastName, setLastName] = useState<string>(affirmationUser?.last ?? "");
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | undefined>();
 
-  useEffect(() => {
-    if (affirmationUser) {
-      setFullName(affirmationUser.name ?? "");
-      setFirstName(affirmationUser.first ?? "");
-      setLastName(affirmationUser.last ?? "");
-    }
-  }, [affirmationUser]);
+  // editable account details
+  const [name, setName] = useState<string>(affirmationUser?.name ?? "");
+  const [first, setFirst] = useState<string>(affirmationUser?.first ?? "");
+  const [last, setLast] = useState<string>(affirmationUser?.last ?? "");
+  const [email, setEmail] = useState<string>(affirmationUser?.email ?? "");
 
-  const onEditPressed = () => {
-    setIsEditMode(!isEditMode);
+  const resetDetails = () => {
+    setName(affirmationUser?.name ?? "");
+    setFirst(affirmationUser?.first ?? "");
+    setLast(affirmationUser?.last ?? "");
+    setEmail(affirmationUser?.email ?? "");
   };
+
   const onCancel = () => {
-    resetValues();
-    setIsEditMode(false);
+    resetDetails();
+    setIsEdit(false);
   };
-
-  const resetValues = () => {
-    setFullName(affirmationUser?.name ?? '');
-    setFirstName(affirmationUser?.first ?? '');
-    setLastName(affirmationUser?.last ?? '');
-  }
 
   const onSave = async () => {
-    if (!affirmationUser) {
-      return;
-    }
-
-    setIsEditLoading(true);
+    setIsLoading(true);
+    setError(undefined);
 
     try {
-      const updatedUser: AffirmationUser = {
-        ...affirmationUser,
-        first: firstName,
-        last: lastName,
-        name: fullName,
+      if (!affirmationUser?.id) {
+        setError("Unable to update account right now.");
+        return;
+      }
+
+      // Validate values
+      if (!stringExists(name)) {
+        setError("Name is invalid.");
+        return;
+      } else if (!stringExists(first)) {
+        setError("First Name is invalid.");
+        return;
+      } else if (!stringExists(last)) {
+        setError("Last Name is invalid.");
+        return;
+      } else if (!stringExists(email)) {
+        setError("Email is invalid.");
+        return;
+      }
+
+      const updatedUserPayload: AffirmationUser = {
+        id: affirmationUser.id,
+        uid: affirmationUser.uid,
+        name: name.trim(),
+        first: first.trim(),
+        last: last.trim(),
+        email: email.trim(),
       };
 
-      const user = await updateUser(updatedUser);
-      console.log(user);
+      const user = await updateUser(updatedUserPayload);
+
+      if (!user) {
+        setError("Unable to update account right now.");
+        return;
+      }
+
       dispatch(setUser(user));
+      setIsEdit(false);
+      setError(undefined);
+    } catch {
+      setError("An error occurred, please try again.");
     } finally {
-      setIsEditLoading(false);
-      setIsEditMode(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <>
-      <View style={accountInfoStyles.infoContainer}>
-        <AccountInfoValueView
-          valueField="Full Name"
-          value={fullName}
-          isEdit={isEditMode}
-          onChange={setFullName}
+    <View style={accountInfoViewStyle.container}>
+      <ScrollView scrollEnabled={true}>
+        {/* Full Name */}
+        <EditableAccountValue
+          title="Name"
+          value={name}
+          setValue={setName}
+          isEdit={isEdit}
         />
-        <AccountInfoValueView
-          valueField="First Name"
-          value={firstName}
-          isEdit={isEditMode}
-          onChange={setFirstName}
+        {/* First Name */}
+        <EditableAccountValue
+          title="First"
+          value={first}
+          setValue={setFirst}
+          isEdit={isEdit}
         />
-        <AccountInfoValueView
-          valueField="Last Name"
-          value={lastName}
-          isEdit={isEditMode}
-          onChange={setLastName}
+        {/* Last Name */}
+        <EditableAccountValue
+          title="Last"
+          value={last}
+          setValue={setLast}
+          isEdit={isEdit}
         />
-        <AccountInfoValueView
-          valueField="Email"
-          value={user?.email ?? ""}
+        {/* Email */}
+        <EditableAccountValue
+          title="Email"
+          value={email}
+          setValue={setEmail}
           isEdit={false}
-          onChange={() => {}}
         />
+      </ScrollView>
 
-        {isEditLoading ? (
-          <LoadingSpinner viewStyle={{ padding: 5 }} />
-        ) : (
-          <View style={accountInfoStyles.actions}>
-            {isEditMode && (
-              <Button
-                viewStyle={accountInfoStyles.cancelButton as ViewStyle}
-                textStyle={accountInfoStyles.cancelButtonText}
-                onPress={onCancel}
-                title="Cancel"
-              />
-            )}
-            <Button
-              title={isEditMode ? "Save" : "Edit"}
-              onPress={isEditMode ? onSave : onEditPressed}
-              viewStyle={{
-                ...accountInfoStyles.editButtonView,
-                width: isEditMode ? "35%" : "50%",
-              }}
+      {/* Edit Button */}
+      {!isEdit ? (
+        <CardButton
+          title={"Edit Account"}
+          onPress={() => setIsEdit(!isEdit)}
+          isDisabled={isEdit || isLoading}
+        />
+      ) : isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <View style={accountInfoViewStyle.editActions}>
+          <View style={accountInfoViewStyle.actionWrapper}>
+            <CardButton
+              title="Cancel"
+              onPress={onCancel}
+              isDisabled={!isEdit || isLoading}
+              isSecondary={true}
             />
           </View>
-        )}
-      </View>
-    </>
+          <View style={accountInfoViewStyle.actionWrapper}>
+            <CardButton
+              title={"Save"}
+              onPress={onSave}
+              isDisabled={isLoading}
+            />
+          </View>
+        </View>
+      )}
+
+      {!!error && <Text style={accountInfoViewStyle.errorText}>{error}</Text>}
+    </View>
   );
 };
 export default AccountInfoView;

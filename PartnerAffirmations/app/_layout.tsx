@@ -1,13 +1,52 @@
-import { AuthProvider } from "@/providers/auth-provider";
-import StoreProvder from "@/state/StateProvider";
-import { Stack } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
-import { useFonts, Cormorant_300Light, Cormorant_400Regular, Cormorant_500Medium } from "@expo-google-fonts/cormorant";
-import { SourceSans3_400Regular, SourceSans3_500Medium } from "@expo-google-fonts/source-sans-3";
-import * as SplashScreen from "expo-splash-screen";
+
+import {
+  Cormorant_300Light,
+  Cormorant_400Regular,
+  Cormorant_500Medium,
+  useFonts,
+} from "@expo-google-fonts/cormorant";
+import {
+  SourceSans3_400Regular,
+  SourceSans3_500Medium,
+} from "@expo-google-fonts/source-sans-3";
 import { useEffect } from "react";
-import {StatusBar} from 'expo-status-bar';
-import UserBootStrap from "@/components/user-bootstrap";
+import { useAuth } from "@/provider/auth-provider";
+import LayoutWrapper from "./layoutWrapper";
+import LoginModal from "./modals/login-modal";
+import AppBootstrap from "../components/app-bootstrap";
+import LoadingSpinner from "@/components/shared/loading-spinner";
+
+export const unstable_settings = {
+  anchor: "(tabs)",
+};
+
+const RootNavigator = () => {
+  const { isAuthenticated, authLoading } = useAuth();
+
+  if (authLoading) {
+    return <LoadingSpinner viewStyle={{ flex: 1 }} />;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginModal/>;
+  }
+
+  return (
+    <AppBootstrap>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="modal"
+          options={{ presentation: "modal", title: "Modal" }}
+        />
+      </Stack>
+      <StatusBar style="auto" />
+    </AppBootstrap>
+  );
+};
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -29,15 +68,10 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <StoreProvder>
-        <UserBootStrap/>
-        <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-      </StoreProvder>
-    </AuthProvider>
+    <>
+      <LayoutWrapper>
+        <RootNavigator />
+      </LayoutWrapper>
+    </>
   );
 }

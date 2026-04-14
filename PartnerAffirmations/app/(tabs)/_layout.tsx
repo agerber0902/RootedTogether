@@ -1,26 +1,32 @@
-import { radius, Theme } from "@/constants/theme";
 import { Tabs } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { tabStyle } from "@/style/stylesheets/tab-style";
+import { Ionicons } from '@expo/vector-icons';
 
-const TabLayout = () => {
+export default function TabLayout() {
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-            borderTopLeftRadius: radius.tabs,
-            borderTopRightRadius: radius.tabs,
+          borderTopLeftRadius: tabStyle.screenOptions.borderRadius,
+          borderTopRightRadius: tabStyle.screenOptions.borderRadius,
         },
-        tabBarActiveTintColor: Theme.colors.tabActive,
-        tabBarInactiveTintColor: Theme.colors.tabInactive,
+        tabBarActiveTintColor: tabStyle.screenOptions.tabActiveColor,
+        tabBarInactiveTintColor: tabStyle.screenOptions.tabInactiveColor,
       }}
     >
       <Tabs.Screen
         name="affirmations"
         options={{
           title: "Affirmations",
-          tabBarIcon: ({focused, color, size }) => (
-            <Ionicons name="albums-outline" size={size + (focused ? 3 : 0)} color={color} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "albums" : 'albums-outline'}
+              size={size + (focused ? tabStyle.screenOptions.selectedIconSize : 0)}
+              color={color}
+            />
           ),
         }}
       />
@@ -28,8 +34,12 @@ const TabLayout = () => {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({focused, color, size }) => (
-            <Ionicons name="home" size={size + (focused ? 3 : 0)} color={color} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "home" : "home-outline"}
+              size={size + (focused ? tabStyle.screenOptions.selectedIconSize : 0)}
+              color={color}
+            />
           ),
         }}
       />
@@ -38,11 +48,14 @@ const TabLayout = () => {
         options={{
           title: "Account",
           tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name="person" size={size + (focused ? 3 : 0)} color={color} />
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              size={size + (focused ? tabStyle.screenOptions.selectedIconSize : 0)}
+              color={color}
+            />
           ),
         }}
       />
     </Tabs>
   );
-};
-export default TabLayout;
+}

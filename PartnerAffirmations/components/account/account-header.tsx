@@ -1,21 +1,26 @@
 import { View } from "react-native";
-import Header from "../shared/header";
-import { accountHeaderStyles } from "@/constants/stylesheets/components/account/account-header-styles";
-import SignOutButton from "../shared/sign-out-button";
+import HeaderView from "../shared/header-view";
+import SignOutButton from "./sign-out-button";
+import { accountHeaderStyle } from "@/style/stylesheets/account/account-header-style";
+import FadeInView from "../shared/fade-in-view";
+import { animationStyle } from "@/style/stylesheets/components/shared/animation-style";
 
 const AccountHeader = () => {
   return (
-    <>
-      <View style={accountHeaderStyles.mainContainer}>
-        <View style={accountHeaderStyles.headerContainer}>
-          <Header headerText="Account Information" subHeaderText="" />
-        </View>
-
-        <View style={accountHeaderStyles.signOutContainer}>
-          <SignOutButton />
-        </View>
+    <View style={accountHeaderStyle.container}>
+      <View style={accountHeaderStyle.headerContainer}>
+        <HeaderView title="Account Information" />
       </View>
-    </>
+      <View style={accountHeaderStyle.actionContainer}>
+        <FadeInView
+          visible={true}
+          delay={animationStyle.delay.headerDelay}
+          duration={animationStyle.duration.headerDuration}
+        >
+          <SignOutButton />
+        </FadeInView>
+      </View>
+    </View>
   );
 };
 export default AccountHeader;

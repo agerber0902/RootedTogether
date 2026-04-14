@@ -1,65 +1,50 @@
-# Partner Affirmations
+# Welcome to your Expo app 👋
 
-## Description
-Partner Affirmations is a way to experience mindfulness and gratitude through re affirming messages. You can create affirmations for not only yourself, but also a partner. You are able to send yourself or someone else, a meaningful message on a specific date, or be suprised by a random affirmation.
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Theme
-### Theme notes
-organic, yoga, mindful, grounded, and calm
+## Get started
 
-### Colors
-Dusty Olive (#6A8D73)
-Vanilla Cream (#F4E9CD) ("#EDEBE6", //"#E8E1D3",)
-Parchment (#F4F3EE)
-Olive Wood (#7A542E)
-Taupe (#46F3A)
+1. Install dependencies
 
-Generated with coolors
+   ```bash
+   npm install
+   ```
 
-New Color Pallette
-background: "#F6F0EA",
-surface: "#e8e1d3fa",
-card: "#F8F2EE",
-header: #564f44
+2. Start the app
 
-### Design
+   ```bash
+   npx expo start
+   ```
 
-#### Background
-Background Color: Vanilla Cream
+In the output, you'll find options to open the app in a
 
-### Card
-Background Color: Parchment
-Shadow Color: Olive Wood
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-### Primary Call To Actions
-Background Color: Dusty Olive
-fontFamily: "SourceSans3_500Medium",
-fontSize: 15,
-letterSpacing: 0.5,
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-### Greeting (used as Welcome message or header text)
-fontFamily: "Cormorant_400Regular",
-fontSize: 28,
-lineHeight: 34,
-letterSpacing: -0.2,
-color: "#463F3A"
+## Get a fresh project
 
-### Subline
-fontFamily: "SourceSans3_400Regular",
-fontSize: 16,
-lineHeight: 24,
-letterSpacing: 0.2,
-color: "rgba(70,63,58,0.75)"
+When you're ready, run:
 
-### Affirmation Text
-fontFamily: "Cormorant_400Regular",
-fontSize: 22,
-lineHeight: 32,
-letterSpacing: 0,
-color: "#463F3A"
+```bash
+npm run reset-project
+```
 
-## Spacing
-### Affirmation Card Spacing
-Top padding: 48–64px
-Side padding: 24–32px
-Bottom padding: 48–64px
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+
+## Learn more
+
+To learn more about developing your project with Expo, look at the following resources:
+
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+
+## Join the community
+
+Join our community of developers creating universal apps.
+
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

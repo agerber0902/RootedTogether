@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import SharedPicker from "./shared-picker";
 import { useState } from "react";
-import { datePickerStyles } from "@/constants/stylesheets/components/shared/date-picker";
+import { datePickerStyle } from "@/style/stylesheets/components/shared/date-picker-style";
 
 type pickerOption = {
   label: string;
@@ -64,8 +64,8 @@ const DatePicker = ({ selectedDate, setSelectedDate} : DatePickerProps) => {
   };
 
   return (
-    <View style={datePickerStyles.container}>
-      <View style={datePickerStyles.monthPicker}>
+    <View style={datePickerStyle.container}>
+      <View style={datePickerStyle.monthPicker}>
         <SharedPicker
           pickerValues={months}
           selectedValue={selectedMonth.value}
@@ -73,7 +73,7 @@ const DatePicker = ({ selectedDate, setSelectedDate} : DatePickerProps) => {
         />
       </View>
 
-      <View style={datePickerStyles.dayPicker}>
+      <View style={datePickerStyle.dayPicker}>
         <SharedPicker
           pickerValues={days}
           selectedValue={selectedDay}

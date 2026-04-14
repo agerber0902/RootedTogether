@@ -1,0 +1,111 @@
+import {
+  deleteAffirmation,
+  getUserCreatedAffirmations,
+} from "@/helpers/affirmation-helper";
+import { Affirmation } from "@/models/affirmation";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { setUserCreatedAffirmations } from "@/state/slices/affirmation-slice";
+import {
+  iconSize,
+  listedAffirmationViewStyle,
+} from "@/style/stylesheets/affirmations/listed-affirmation-view";
+import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { Pressable, Text, View } from "react-native";
+import LoadingSpinner from "../shared/loading-spinner";
+
+type ListedAffirmationViewProps = {
+  affirmation: Affirmation;
+  onEdit: (affirmation: Affirmation) => void;
+};
+
+const ListedAffirmationView = ({
+  affirmation,
+  onEdit,
+}: ListedAffirmationViewProps) => {
+  const dispatch = useAppDispatch();
+  const { affirmationUser } = useAppSelector((state) => state.user.value);
+  const { connectionDisplays } = useAppSelector(
+    (state) => state.partnerConnection.value,
+  );
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const getDisplayName = () => {
+    if (affirmation.recipientId === affirmationUser?.uid) {
+      return "You";
+    }
+    // Check connections
+    return (
+      connectionDisplays.find((dc) => dc.partnerId === affirmation.recipientId)
+        ?.partnerDisplayName ?? ""
+    );
+  };
+
+  const onDelete = async () => {
+    setIsLoading(true);
+
+    try {
+      await deleteAffirmation(affirmation.id ?? "");
+
+      // update affirmations
+      dispatch(
+        setUserCreatedAffirmations(
+          await getUserCreatedAffirmations(affirmationUser!.uid),
+        ),
+      );
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
+    }
+  };
+
+  return (
+    <>
+      <View style={listedAffirmationViewStyle.container}>
+        <View style={listedAffirmationViewStyle.messageContainer}>
+          <Text
+            style={listedAffirmationViewStyle.affirmationText}
+            key={affirmation.id}
+            numberOfLines={2}
+            ellipsizeMode="tail"
+          >
+            {affirmation?.message}
+          </Text>
+          <Text
+            style={listedAffirmationViewStyle.recipientText}
+            key={`sub-${affirmation.id}`}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {getDisplayName()}
+          </Text>
+        </View>
+        <View style={listedAffirmationViewStyle.actionContainer}>
+          {isLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <>
+              <Pressable onPress={() => onEdit(affirmation)}>
+                <Ionicons
+                  name="pencil"
+                  size={iconSize}
+                  color={listedAffirmationViewStyle.actionIcon.color}
+                />
+              </Pressable>
+              <Pressable onPress={onDelete}>
+                <Ionicons
+                  name="trash"
+                  size={iconSize}
+                  color={listedAffirmationViewStyle.actionIcon.color}
+                />
+              </Pressable>
+            </>
+          )}
+        </View>
+      </View>
+    </>
+  );
+};
+export default ListedAffirmationView;
