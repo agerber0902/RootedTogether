@@ -1,35 +1,22 @@
-import { accountInfoStyles } from "@/constants/stylesheets/components/account/account-info-styles";
+import { View } from "react-native";
+import PartnerConnectionsView from "../partner-connections/partner-connections-view";
+import DisplayCard from "../shared/display-card";
 import AccountInfoView from "./account-info-view";
-import React from "react";
-import { ScrollView } from "react-native";
-import PartnerInfoView from "./partner/partner-info-view";
-import FadeInView from "../shared/fade-in-animated-view";
-import {
-  baseAnimationDelayDuration,
-  baseAnimationDuration,
-} from "@/constants/theme";
-import SharedCard from "../shared/shared-card";
+import { accountInfoCardStyle } from "@/style/stylesheets/account/account-info-card-style";
 
 const AccountInfoCard = () => {
   return (
     <>
-      <FadeInView
-        duration={baseAnimationDuration}
-        delay={baseAnimationDelayDuration * 1}
-        visible={true}
-        style={accountInfoStyles.infoContainer}
-      >
-        <SharedCard containerStyle={accountInfoStyles.card} contentStyle={accountInfoStyles.cardContent}>
-          <ScrollView
-            style={accountInfoStyles.infoScrollViewContainer}
-            contentContainerStyle={accountInfoStyles.infoCardContent}
-            showsVerticalScrollIndicator={false}
-          >
+      <DisplayCard style={accountInfoCardStyle.displayCard}>
+        <View style={accountInfoCardStyle.cardContainer}>
+          <View style={accountInfoCardStyle.accountInfoContainer}>
             <AccountInfoView />
-            <PartnerInfoView />
-          </ScrollView>
-        </SharedCard>
-      </FadeInView>
+          </View>
+          <View style={accountInfoCardStyle.partnerConnectionsContainer}>
+            <PartnerConnectionsView />
+          </View>
+        </View>
+      </DisplayCard>
     </>
   );
 };

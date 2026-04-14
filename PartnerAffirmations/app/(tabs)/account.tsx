@@ -1,27 +1,32 @@
 import AccountHeader from "@/components/account/account-header";
+import { safeAreaStyle } from "@/style/stylesheets/pages/safe-area-style";
+import { SafeAreaView } from "react-native-safe-area-context";
+import AccountModal from "../modals/account-modal";
+import { useState } from "react";
 import AccountInfoCard from "@/components/account/account-info-card";
-import LoginModal from "@/components/modals/login-modal";
-import SharedSafeView from "@/components/shared/shared-safe-view";
-import { accountInfoStyles } from "@/constants/stylesheets/components/account/account-info-styles";
-import { useAuth } from "@/providers/auth-provider";
-import { View } from "react-native";
 
 const AccountScreen = () => {
-  const { isAuthenticated } = useAuth();
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const onBackDrop = () => {
+    setIsModalVisible(false);
+  };
+
+  const onModalClose = () => {
+    setIsModalVisible(false);
+  };
 
   return (
     <>
-      {!isAuthenticated ? (
-        <LoginModal />
-      ) : (
-        <SharedSafeView header={<AccountHeader />}>
-          <>
-            <View style={accountInfoStyles.mainContainer}>
-              <AccountInfoCard />
-            </View>
-          </>
-        </SharedSafeView>
-      )}
+      <AccountModal
+        isVisible={isModalVisible}
+        onClose={onModalClose}
+        onBackDrop={onBackDrop}
+      />
+      <SafeAreaView style={safeAreaStyle.safeArea}>
+        <AccountHeader />
+        <AccountInfoCard/>
+      </SafeAreaView>
     </>
   );
 };

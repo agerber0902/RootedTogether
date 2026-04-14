@@ -1,10 +1,9 @@
-import {
-  sharedSwitchStyles,
-  switchColors,
-} from "@/constants/stylesheets/components/shared/shared-switch-styles";
-import { Pressable, View } from "react-native";
-import SharedText from "./shared-text";
+import { Pressable, Text, View } from "react-native";
 import { useState } from "react";
+import {
+  sharedSwitchStyle,
+  switchColors,
+} from "@/style/stylesheets/components/shared/shared-switch-style";
 
 type SharedSwitchProps = {
   text: string;
@@ -20,7 +19,7 @@ const SharedSwitch = ({ text, onPress }: SharedSwitchProps) => {
   };
 
   return (
-    <View style={sharedSwitchStyles.container}>
+    <View style={sharedSwitchStyle.container}>
       <Pressable
         onPress={onPressed}
         style={{
@@ -44,7 +43,13 @@ const SharedSwitch = ({ text, onPress }: SharedSwitchProps) => {
           }}
         />
       </Pressable>
-      <SharedText style={sharedSwitchStyles.text} text={text}></SharedText>
+      <Text
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        style={sharedSwitchStyle.text}
+      >
+        {text}
+      </Text>
     </View>
   );
 };
