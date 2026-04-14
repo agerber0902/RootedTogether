@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/state/hooks";
 import DisplayCard from "../shared/display-card";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import AffirmationMessage from "./affirmation-message";
 import { affirmationCardStyle } from "@/style/stylesheets/affirmations/affirmation-card-style";
 import CardButton from "../shared/card-button";
