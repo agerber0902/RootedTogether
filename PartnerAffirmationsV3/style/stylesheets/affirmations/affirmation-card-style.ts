@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 export const affirmationCardStyle = StyleSheet.create({
+    wrapper: {
+        height: '90%',
+    },
     container: {
         display: 'flex',
         width: '100%',
