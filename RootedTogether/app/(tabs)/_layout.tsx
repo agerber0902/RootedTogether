@@ -20,10 +20,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="affirmations"
         options={{
-          title: "Affirmations",
+          title: "Create",
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
-              name={focused ? "albums" : 'albums-outline'}
+              name={focused ? "create" : 'create-outline'}
               size={size + (focused ? tabStyle.screenOptions.selectedIconSize : 0)}
               color={color}
             />
@@ -33,10 +33,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Today",
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons
-              name={focused ? "home" : "home-outline"}
+              name={focused ? "leaf" : "leaf-outline"}
               size={size + (focused ? tabStyle.screenOptions.selectedIconSize : 0)}
               color={color}
             />
