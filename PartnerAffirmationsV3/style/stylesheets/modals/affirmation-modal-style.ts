@@ -2,6 +2,10 @@ import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 
 export const affirmationModalStyle = StyleSheet.create({
+  scrollView: {
+    width: '100%',
+    height: 'auto'
+  },
   inputs: {
     padding: Theme.spacing.sm,
     gap: Theme.spacing.sm,

@@ -1,7 +1,12 @@
 import ModalView from "./modal-view";
 import { Affirmation } from "@/models/affirmation";
 import { useState, useEffect } from "react";
-import { TextInput, TextInputChangeEvent, View } from "react-native";
+import {
+  ScrollView,
+  TextInput,
+  TextInputChangeEvent,
+  View,
+} from "react-native";
 import { affirmationModalStyle } from "@/style/stylesheets/modals/affirmation-modal-style";
 import LoadingSpinner from "@/components/shared/loading-spinner";
 import CardButton from "@/components/shared/card-button";
@@ -53,7 +58,7 @@ const AffirmationsModal = ({
 
   const recipientPickerValues = [
     // { label: "-- Choose Recipient --", value: affirmationUser!.uid },
-    { label: "Personal", value: affirmationUser?.uid ?? '' },
+    { label: "Personal", value: affirmationUser?.uid ?? "" },
     ...connectionDisplays.map((c) => {
       return { label: c.partnerDisplayName, value: c.partnerId };
     }),
@@ -171,64 +176,69 @@ const AffirmationsModal = ({
         onClose={onClose}
         error={error}
       >
-        <View style={affirmationModalStyle.inputs}>
-          <TextInput
-            key={"message"}
-            numberOfLines={1}
-            style={affirmationModalStyle.editableInput}
-            placeholder={`Affirmation Message`}
-            value={message}
-            onChange={(e: TextInputChangeEvent) =>
-              setMessage(e.nativeEvent.text)
-            }
-          />
+        <ScrollView
+          scrollEnabled={true}
+          style={affirmationModalStyle.scrollView}
+        >
+          <View style={affirmationModalStyle.inputs}>
+            <TextInput
+              key={"message"}
+              numberOfLines={1}
+              style={affirmationModalStyle.editableInput}
+              placeholder={`Affirmation Message`}
+              value={message}
+              onChange={(e: TextInputChangeEvent) =>
+                setMessage(e.nativeEvent.text)
+              }
+            />
 
-          <View style={affirmationModalStyle.dateContainer}>
-            <View style={affirmationModalStyle.switchContainer}>
-              <SharedSwitch
-                text={affirmation ? "Edit Date" : "Add Date"}
-                onPress={onToggleSetDate}
-              />
-            </View>
-
-            {isSetDate && (
-              <View style={affirmationModalStyle.dateContainer}>
-                <DatePicker
-                  selectedDate={selectedDate}
-                  setSelectedDate={setSelectedDate}
+            <View style={affirmationModalStyle.dateContainer}>
+              <View style={affirmationModalStyle.switchContainer}>
+                <SharedSwitch
+                  text={affirmation ? "Edit Date" : "Add Date"}
+                  onPress={onToggleSetDate}
                 />
               </View>
-            )}
-          </View>
 
-          <View style={affirmationModalStyle.recipientPickerContainer}>
-            <View style={affirmationModalStyle.switchContainer}>
-              <SharedSwitch
-                text={affirmation ? "Edit Recipient" : "Add Recipient"}
-                onPress={onToggleSetRecipient}
-              />
+              {isSetDate && (
+                <View style={affirmationModalStyle.dateContainer}>
+                  <DatePicker
+                    selectedDate={selectedDate}
+                    setSelectedDate={setSelectedDate}
+                  />
+                </View>
+              )}
             </View>
-            {isSetRecipient && (
-              <SharedPicker
-                pickerValues={recipientPickerValues}
-                selectedValue={recipientId}
-                onValueChange={setRecipientId}
+
+            <View style={affirmationModalStyle.recipientPickerContainer}>
+              <View style={affirmationModalStyle.switchContainer}>
+                <SharedSwitch
+                  text={affirmation ? "Edit Recipient" : "Add Recipient"}
+                  onPress={onToggleSetRecipient}
+                />
+              </View>
+              {isSetRecipient && (
+                <SharedPicker
+                  pickerValues={recipientPickerValues}
+                  selectedValue={recipientId}
+                  onValueChange={setRecipientId}
+                />
+              )}
+            </View>
+          </View>
+
+          <View style={affirmationModalStyle.actions}>
+            {isLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <CardButton
+                title={affirmation ? "Save" : "Add"}
+                onPress={onSave}
+                isDisabled={isLoading}
               />
             )}
           </View>
-        </View>
-
-        <View style={affirmationModalStyle.actions}>
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <CardButton
-              title={affirmation ? "Save" : "Add"}
-              onPress={onSave}
-              isDisabled={isLoading}
-            />
-          )}
-        </View>
+        </ScrollView>
       </ModalView>
     </>
   );
