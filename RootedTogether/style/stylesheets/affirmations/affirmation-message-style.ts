@@ -14,7 +14,7 @@ export const affirmationMessageStyle = StyleSheet.create({
     height: "auto",
 
     ...Theme.baseText,
-    fontFamily: Theme.typography.serif,
+    fontFamily: Theme.typography.serifItalic,
     fontSize: Theme.typography.size.affirmationForword,
     color: Theme.colorScheme.affirmationForword,
     letterSpacing: 0.5,

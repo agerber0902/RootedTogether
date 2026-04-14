@@ -22,7 +22,7 @@ export const headerViewStyle = StyleSheet.create({
   subTitleText: {
     width: "100%",
 
-    fontFamily: Theme.typography.serif,
+    fontFamily: Theme.typography.serifItalic,
     fontSize: Theme.typography.size.subHeader,
     color: Theme.colorScheme.subHeaderText,
     letterSpacing: 0.3,

@@ -6,6 +6,7 @@ import {
   Cormorant_300Light,
   Cormorant_400Regular,
   Cormorant_500Medium,
+  Cormorant_300Light_Italic,
   useFonts,
 } from "@expo-google-fonts/cormorant";
 import {
@@ -53,6 +54,7 @@ export default function RootLayout() {
     Cormorant_300Light,
     Cormorant_400Regular,
     Cormorant_500Medium,
+    Cormorant_300Light_Italic,
     SourceSans3_400Regular,
     SourceSans3_500Medium,
   });
