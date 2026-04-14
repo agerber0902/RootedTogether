@@ -1,65 +1,80 @@
-import { useAuth } from "@/providers/auth-provider";
-import FadeInView from "../shared/fade-in-animated-view";
-import AffirmationText from "./affirmation-text";
-import { affirmationCardStyles } from "@/constants/stylesheets/components/affimations/affirmation-card-styles";
-import {
-  baseAnimationDelayDuration,
-  baseAnimationDuration,
-} from "@/constants/theme";
 import { useAppSelector } from "@/state/hooks";
-import SharedCard from "../shared/shared-card";
+import DisplayCard from "../shared/display-card";
+import { View } from "react-native";
+import AffirmationMessage from "./affirmation-message";
+import { affirmationCardStyle } from "@/style/stylesheets/affirmations/affirmation-card-style";
+import CardButton from "../shared/card-button";
+import { useEffect, useState } from "react";
 
 const AffirmationCard = () => {
-  const { isAuthenticated } = useAuth();
-
-  const { todaysAffirmation } = useAppSelector(
+  const { todaysAffirmations } = useAppSelector(
     (state) => state.affirmation.value,
   );
-  const { affirmationUser } = useAppSelector((state) => state.user.value);
-  const { displayConnections } = useAppSelector(
-    (state) => state.partnerConnection.value,
+
+  const flattenedAffirmations = todaysAffirmations.flatMap(
+    (todayAffirmation) => {
+      const source = todayAffirmation.affirmation;
+
+      if (!source) {
+        return [];
+      }
+
+      const affirmations = Array.isArray(source) ? source : [source];
+
+      return affirmations.map((affirmation) => ({
+        affirmation,
+        partnerDisplayName: todayAffirmation.partnerDisplayName,
+      }));
+    },
   );
 
-  const message: string =
-    todaysAffirmation?.affirmation?.message ??
-    "You are the designer of your best life";
+  const [affirmationIndex, setAffirmationIndex] = useState<number>(0);
+  const currentAffirmation = flattenedAffirmations[affirmationIndex];
+  const canCycleAffirmations = flattenedAffirmations.length > 1;
 
-  const getForword = (): string => {
-    if (!todaysAffirmation?.affirmation?.message) {
-      return "";
+  useEffect(() => {
+    if (affirmationIndex >= flattenedAffirmations.length) {
+      setAffirmationIndex(0);
+    }
+  }, [affirmationIndex, flattenedAffirmations.length]);
+
+  const onNext = () => {
+    if (flattenedAffirmations.length === 0) {
+      return;
     }
 
-    if (todaysAffirmation.affirmation.recipientId === affirmationUser?.uid) {
-      return "You wanted to remind yourself: ";
+    if (affirmationIndex === flattenedAffirmations.length - 1) {
+      // Recycle
+      setAffirmationIndex(0);
+    } else {
+      setAffirmationIndex(affirmationIndex + 1);
     }
-
-    const displayName = displayConnections.find(
-      (dc) => dc.partnerId === todaysAffirmation.affirmation?.recipientId,
-    )?.partnerDisplayName;
-    if (displayName) {
-      return `${displayName} wanted to remind you: `;
-    }
-
-    return "";
   };
 
   return (
-    <>
-      <FadeInView
-        duration={baseAnimationDuration}
-        delay={0}
-        visible={isAuthenticated}
-        style={affirmationCardStyles.cardContainer}
-      >
-        <SharedCard>
-          <AffirmationText text={getForword()} />
-          <AffirmationText
-            style={{ fontSize: 40, paddingTop: 15, lineHeight: 45 }}
-            text={message}
+    <View style={affirmationCardStyle.wrapper}>
+      <DisplayCard>
+        <View style={affirmationCardStyle.container}>
+          <View>{/* Placeholder for styling */}</View>
+          {/* Message */}
+          <AffirmationMessage
+            affirmation={currentAffirmation?.affirmation}
+            partnerDisplayName={currentAffirmation?.partnerDisplayName}
           />
-        </SharedCard>
-      </FadeInView>
-    </>
+          {/* {todaysAffirmations.length > 1 && */}
+          <View style={affirmationCardStyle.actions}>
+            <View style={affirmationCardStyle.nextButton}>
+              <CardButton
+                title="Next Affirmation"
+                onPress={onNext}
+                isDisabled={!canCycleAffirmations}
+              />
+            </View>
+          </View>
+          {/* } */}
+        </View>
+      </DisplayCard>
+    </View>
   );
 };
 export default AffirmationCard;

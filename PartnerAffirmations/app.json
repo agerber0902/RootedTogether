@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "PartnerAffirmations",
-    "slug": "PartnerAffirmations",
+    "name": "PartnerAffirmationsV3",
+    "slug": "PartnerAffirmationsV3",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "partneraffirmations",
+    "scheme": "partneraffirmationsv3",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -37,18 +37,6 @@
           "dark": {
             "backgroundColor": "#000000"
           }
-        }
-      ],
-      [
-        "expo-font",
-        {
-          "fonts": [
-            "node_modules/@expo-google-fonts/cormorant/300Light/Cormorant_300Light.ttf",
-            "node_modules/@expo-google-fonts/cormorant/400Regular/Cormorant_400Regular.ttf",
-            "node_modules/@expo-google-fonts/cormorant/500Medium/Cormorant_500Medium.ttf",
-            "node_modules/@expo-google-fonts/source-sans-3/400Regular/SourceSans3_400Regular.ttf",
-            "node_modules/@expo-google-fonts/source-sans-3/500Medium/SourceSans3_500Medium.ttf"
-          ]
         }
       ]
     ],

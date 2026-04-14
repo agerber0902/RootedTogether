@@ -1,9 +1,9 @@
-import Header from "../shared/header";
+import HeaderView from "../shared/header-view"
 
 const AffirmationHeader = () => {
-  return (
+    return (
     <>
-      <Header headerText="Affirmations" subHeaderText=""/>
+      <HeaderView title="Affirmations"/>
     </>
   );
 };
