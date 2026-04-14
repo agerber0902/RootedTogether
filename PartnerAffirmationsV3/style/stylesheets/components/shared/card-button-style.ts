@@ -26,6 +26,8 @@ export const cardButtonStyle = StyleSheet.create({
     color: Theme.colorScheme.primaryButtonText,
 
     textAlign: "center",
+
+    ...Theme.baseText,
   },
   secondaryContainer: {
     // Style for the secondary button, which will be the same as primary, other than colors

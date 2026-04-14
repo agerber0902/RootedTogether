@@ -10,5 +10,7 @@ export const emptyListWarningStyle = StyleSheet.create({
         fontFamily: Theme.typography.serif,
 
         textAlign: 'center',
+
+        ...Theme.baseText,
     },
 });

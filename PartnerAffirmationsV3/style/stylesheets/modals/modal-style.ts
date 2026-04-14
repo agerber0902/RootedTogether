@@ -26,6 +26,15 @@ export const modalStyle = StyleSheet.create({
 
     ...Theme.baseText,
   },
+  bodyText: {
+    width: "100%",
+
+    fontFamily: Theme.typography.sans,
+    fontSize: 16,
+    color: Theme.colorScheme.primaryText,
+
+    ...Theme.baseText,
+  },
   error: {
     paddingTop: 16,
 
@@ -34,5 +43,7 @@ export const modalStyle = StyleSheet.create({
     fontFamily: Theme.typography.sans,
     color: Theme.colorScheme.error,
     fontSize: 16,
+
+    ...Theme.baseText,
   },
 });

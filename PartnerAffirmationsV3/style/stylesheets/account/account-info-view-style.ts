@@ -21,4 +21,15 @@ export const accountInfoViewStyle = StyleSheet.create({
 
         gap: Theme.spacing.sm,
     },
+        errorText: {
+            paddingTop: Theme.spacing.sm,
+
+            color: Theme.colorScheme.error,
+            fontFamily: Theme.typography.sans,
+            fontSize: 16,
+
+            textAlign: 'center',
+
+            ...Theme.baseText,
+        },
 });
