@@ -65,7 +65,7 @@ const PartnerConnectionsView = () => {
         <View style={partnerConnectionsViewStyle.actions}>
           <CardButton
             key={"create-connection"}
-            title={"Create Connection"}
+            title={"Plant Connection"}
             onPress={onCreate}
             isDisabled={false}
           />
