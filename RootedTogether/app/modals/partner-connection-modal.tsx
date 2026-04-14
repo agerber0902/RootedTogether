@@ -137,7 +137,7 @@ const PartnerConnectionModal = ({
   return (
     <>
       <ModalView
-        headerTitle={connection ? "Edit Partner" : "Add Partner"}
+        headerTitle={connection ? "Edit Friend" : "Add Friend"}
         isVisible={isVisible}
         onBackDrop={onBackDrop}
         onClose={onClose}

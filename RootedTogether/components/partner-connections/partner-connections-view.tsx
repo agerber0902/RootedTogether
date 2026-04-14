@@ -42,12 +42,12 @@ const PartnerConnectionsView = () => {
           numberOfLines={1}
           ellipsizeMode="tail"
         >
-          Partner Connections
+          Invited Friends
         </Text>
 
         <ScrollView scrollEnabled={true}>
           {!connectionDisplays || connectionDisplays.length <= 0 ? (
-            <EmptyListWarning text="You do not have any partners yet, create as many as you like." />
+            <EmptyListWarning text="You do not have any friends yet, create as many as you like." />
           ) : (
             connectionDisplays.map((connection: PartnerConnectionDisplay) => {
               return (
@@ -65,7 +65,7 @@ const PartnerConnectionsView = () => {
         <View style={partnerConnectionsViewStyle.actions}>
           <CardButton
             key={"create-connection"}
-            title={"Create Connection"}
+            title={"Add Friend"}
             onPress={onCreate}
             isDisabled={false}
           />
