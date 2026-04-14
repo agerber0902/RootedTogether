@@ -17,6 +17,7 @@ import { useAuth } from "@/provider/auth-provider";
 import LayoutWrapper from "./layoutWrapper";
 import LoginModal from "./modals/login-modal";
 import AppBootstrap from "../components/app-bootstrap";
+import LoadingSpinner from "@/components/shared/loading-spinner";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -25,7 +26,11 @@ export const unstable_settings = {
 const RootNavigator = () => {
   const { isAuthenticated, authLoading } = useAuth();
 
-  if (authLoading || !isAuthenticated) {
+  if (authLoading) {
+    return <LoadingSpinner viewStyle={{ flex: 1 }} />;
+  }
+
+  if (!isAuthenticated) {
     return <LoginModal/>;
   }
 
