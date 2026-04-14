@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "PartnerAffirmationsV3",
-    "slug": "PartnerAffirmationsV3",
+    "name": "RootedTogether",
+    "slug": "RootedTogether",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "partneraffirmationsv3",
+    "scheme": "RootedTogether",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
