@@ -9,6 +9,7 @@ export const Theme = {
   //   App Fonts
   typography: {
     serif: "Cormorant_300Light",
+    serifItalic: "Cormorant_300Light_Italic",
     serifMedium: "Cormorant_500Medium",
     sans: "SourceSans3_400Regular",
 
