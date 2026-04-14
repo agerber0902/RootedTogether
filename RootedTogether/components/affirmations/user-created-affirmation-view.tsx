@@ -72,7 +72,7 @@ const UserCreatedAffirmationView = () => {
           <View style={userCreatedAffirmationsCardStyle.buttonContainer}>
             <CardButton
               key={"create-affirmation"}
-              title="Plant Affirmation"
+              title="Plant an Affirmation"
               onPress={onAdd}
               isDisabled={false}
             />
