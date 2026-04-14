@@ -170,7 +170,7 @@ const AffirmationsModal = ({
   return (
     <>
       <ModalView
-        headerTitle={affirmation ? "Edit Affirmation" : "Add Affirmation"}
+        headerTitle={affirmation ? "Edit Affirmation" : "Plant Affirmation"}
         isVisible={isVisible}
         onBackDrop={onBackDrop}
         onClose={onClose}
@@ -232,7 +232,7 @@ const AffirmationsModal = ({
               <LoadingSpinner />
             ) : (
               <CardButton
-                title={affirmation ? "Save" : "Add"}
+                title={affirmation ? "Save" : "Plant"}
                 onPress={onSave}
                 isDisabled={isLoading}
               />
