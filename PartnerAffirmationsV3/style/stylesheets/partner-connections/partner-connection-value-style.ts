@@ -21,7 +21,7 @@ export const partnerConnectionValueStyle = StyleSheet.create({
   },
   displayName: {
     color: Theme.colorScheme.primaryText,
-    fontFamily: Theme.typography.serifMedium,
+    fontFamily: Theme.typography.serif,
     fontSize: Theme.typography.size.partnerDisplayName,
 
     ...Theme.baseText,

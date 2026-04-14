@@ -17,5 +17,7 @@ export const sharedSwitchStyle = StyleSheet.create({
     color: Theme.colorScheme.primaryButton,
     textAlign: "left",
     paddingLeft: 5,
+
+    ...Theme.baseText,
   },
 });

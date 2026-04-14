@@ -1,3 +1,4 @@
+import { modalStyle } from "@/style/stylesheets/modals/modal-style";
 import { Text } from "react-native";
 import ModalView from "./modal-view";
 
@@ -19,8 +20,9 @@ const AccountModal = ({
         isVisible={isVisible}
         onBackDrop={onBackDrop}
         onClose={onClose}
+        error={undefined}
       >
-        <Text>Account Modal</Text>
+        <Text style={modalStyle.bodyText}>Account Modal</Text>
       </ModalView>
     </>
   );

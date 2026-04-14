@@ -149,7 +149,7 @@ const AccountInfoView = () => {
         </View>
       )}
 
-      {!!error && <Text>{error}</Text>}
+      {!!error && <Text style={accountInfoViewStyle.errorText}>{error}</Text>}
     </View>
   );
 };

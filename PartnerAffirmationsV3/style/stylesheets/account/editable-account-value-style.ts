@@ -24,6 +24,8 @@ export const editableAccountValueStyle = StyleSheet.create({
     fontSize: Theme.typography.size.accountInfoTitle,
 
     textAlign: "left",
+
+    ...Theme.baseText,
   },
   value: {
     width: valueWidth,
@@ -35,6 +37,8 @@ export const editableAccountValueStyle = StyleSheet.create({
     padding: inputPadding,
 
     textAlign: "left",
+
+    ...Theme.baseText,
   },
   editableInput: {
     width: valueWidth,
