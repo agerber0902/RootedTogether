@@ -40,10 +40,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser(currentUser);
       setDisplayName(currentUser?.displayName ?? "");
 
-      setTimeout(() => {
-        setAuthLoading(false);
-        setIsAuthenticated(currentUser !== null);
-      }, 1000);
+      setAuthLoading(false);
+      setIsAuthenticated(currentUser !== null);
     });
     return unsubscribe;
   }, [setAuthLoading]);
