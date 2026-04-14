@@ -187,7 +187,7 @@ const PartnerConnectionModal = ({
               </View>
               <View style={partnerConnectionModalStyle.actionWrapper}>
                 <CardButton
-                  title={"Save"}
+                  title={connection ? "Save" : "Add"}
                   onPress={onSave}
                   isDisabled={isLoading}
                 />

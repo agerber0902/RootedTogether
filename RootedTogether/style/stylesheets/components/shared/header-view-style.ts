@@ -20,7 +20,7 @@ export const headerViewStyle = StyleSheet.create({
     ...Theme.baseText,
   },
   subTitleText: {
-    width: "90%",
+    width: "100%",
 
     fontFamily: Theme.typography.serif,
     fontSize: Theme.typography.size.subHeader,
