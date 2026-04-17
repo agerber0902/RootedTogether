@@ -69,7 +69,7 @@ const FriendModal = ({
     try {
       if (friend) {
         const friendToEdit = friends.find(
-          (p) => p.id === friend?.friendId,
+          (p) => p.id === friend?.invitedFriendId,
         );
 
         if (!friendToEdit) return;

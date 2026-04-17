@@ -154,10 +154,14 @@ export const addFriend = async (
     return {data: '', error: 'User does not exist'};
   }
 
+  if (friendUser.uid === user.uid) {
+    return {data: '', error: 'You cannot add yourself as a friend.'};
+  }
+
   return await createFriend(
     user.uid,
     user.name,
-    friendUser.uid!,
+    friendUser.uid,
     displayName,
   );
 };
@@ -169,6 +173,11 @@ const createFriend = async (
   friendUserDisplayName: string,
 ): Promise<FirebaseResponse<string>> => {
   const friendIds = sortStringPair([userId, friendUserId]);
+  const friendIdsValidationError = validateFriendIds(friendIds);
+  if (friendIdsValidationError) {
+    return {data: undefined, error: friendIdsValidationError};
+  }
+
   const duplicateFriend = await findDuplicateFriend(friendIds);
 
   if (duplicateFriend) {
