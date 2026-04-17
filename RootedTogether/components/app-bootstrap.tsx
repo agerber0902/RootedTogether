@@ -46,6 +46,8 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
   useEffect(() => {
     let isActive = true;
 
+    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
     const bootstrap = async () => {
       if (!user) {
         dispatch(setUser(undefined));
@@ -66,12 +68,20 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
       }
 
       const dayKey = getLocalDayKey();
-      const [dbUser, affirmations, friendResult] =
-        await Promise.all([
-          getUser(user.uid),
-          getUserCreatedAffirmations(user.uid),
-          getFriends(user.uid),
-        ]);
+
+      let dbUser = await getUser(user.uid);
+      if (!dbUser) {
+        // Race condition: auth state can fire before the Firestore user doc is fully written.
+        for (let attempt = 0; attempt < 3 && !dbUser; attempt += 1) {
+          await wait(300);
+          dbUser = await getUser(user.uid);
+        }
+      }
+
+      const [affirmations, friendResult] = await Promise.all([
+        getUserCreatedAffirmations(user.uid),
+        getFriends(user.uid),
+      ]);
 
       // Get Today's Affirmations after all the user data is loaded to properly set friend value
       const todaysAffirmations = await getTodaysAffirmations(user.uid, friendResult.displays);
