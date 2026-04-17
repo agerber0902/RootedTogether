@@ -40,7 +40,7 @@ const EditableFriendValue = ({
     setIsLoading(true);
 
     try {
-      await deleteFriend(friend.friendId);
+      await deleteFriend(friend.invitedFriendId);
 
       const { friends, displays } = await getFriends(
               affirmationUser!.uid,
