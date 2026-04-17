@@ -39,8 +39,8 @@ const AffirmationsModal = ({
 }: AffirmationsModalProps) => {
   const dispatch = useAppDispatch();
   const { affirmationUser } = useAppSelector((state) => state.user.value);
-  const { connectionDisplays } = useAppSelector(
-    (state) => state.partnerConnection.value,
+  const { friendDisplays } = useAppSelector(
+    (state) => state.friend.value,
   );
 
   const [error, setError] = useState<string | undefined>();
@@ -59,8 +59,8 @@ const AffirmationsModal = ({
   const recipientPickerValues = [
     // { label: "-- Choose Recipient --", value: affirmationUser!.uid },
     { label: "Personal", value: affirmationUser?.uid ?? "" },
-    ...connectionDisplays.map((c) => {
-      return { label: c.partnerDisplayName, value: c.partnerId };
+    ...friendDisplays.map((c) => {
+      return { label: c.friendDisplayName, value: c.friendId };
     }),
   ];
 
@@ -152,14 +152,14 @@ const AffirmationsModal = ({
       );
     } catch {
       hasSaveError = true;
-      setError("Unable to save partner connection.");
+      setError("Unable to save friend.");
     } finally {
       setTimeout(() => {
         setIsLoading(false);
 
         // close modal
         if (!hasSaveError) {
-          // Reset connection to edit
+          // Reset friend to edit
           setAffirmation(undefined);
           onClose();
         }

@@ -29,8 +29,8 @@ export const Theme = {
       accountInfoTitle: 18,
       accountInfoValue: 18,
 
-      partnerDisplayName: 24,
-      partnerName: 16,
+      friendDisplayName: 24,
+      friendName: 16,
 
       emptyWarning: 24,
     },

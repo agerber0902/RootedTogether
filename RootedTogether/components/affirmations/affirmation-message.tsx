@@ -4,19 +4,19 @@ import { Text, View } from "react-native";
 
 type AffirmationMessageProp = {
   affirmation: Affirmation | undefined;
-  partnerDisplayName: string | undefined;
+  friendDisplayName: string | undefined;
 };
 
 const AffirmationMessage = ({
   affirmation,
-  partnerDisplayName,
+  friendDisplayName,
 }: AffirmationMessageProp) => {
   const forword = (): string => {
-    return !affirmation || !partnerDisplayName
+    return !affirmation || !friendDisplayName
       ? ""
-      : partnerDisplayName === "You"
+      : friendDisplayName === "You"
         ? "You wanted to remind yourself: "
-        : `${partnerDisplayName} wanted to remind you: `;
+        : `${friendDisplayName} wanted to remind you: `;
   };
 
   return (

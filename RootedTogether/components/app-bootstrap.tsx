@@ -4,7 +4,7 @@ import {
   getTodaysAffirmations,
   getUserCreatedAffirmations,
 } from "@/helpers/affirmation-helper";
-import { getPartnerConnections } from "@/helpers/partner-connection-helper";
+import { getFriends } from "@/helpers/friends-helper";
 import { getUser } from "@/helpers/user-helper";
 import { useAuth } from "@/provider/auth-provider";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
@@ -14,11 +14,7 @@ import {
   setTodaysAffirmation,
   setUserCreatedAffirmations,
 } from "@/state/slices/affirmation-slice";
-import {
-  resetPartnerConnections,
-  setConnectionDisplays,
-  setPartnerConnections,
-} from "@/state/slices/patner-connection-slice";
+import { resetfriends, setFriendDisplays, setFriends } from "@/state/slices/friend-slice";
 import { setUser } from "@/state/slices/user-slice";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { AppState, StyleSheet, View } from "react-native";
@@ -30,7 +26,7 @@ type AppBootstrapProps = {
 const AppBootstrap = ({ children }: AppBootstrapProps) => {
   const { user } = useAuth();
   const dispatch = useAppDispatch();
-  const { connectionDisplays } = useAppSelector((state) => state.partnerConnection.value);
+  const { friendDisplays } = useAppSelector((state) => state.friend.value);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
   const [dailyRefreshToken, setDailyRefreshToken] = useState(0);
   const hasCompletedInitialBootstrapRef = useRef(false);
@@ -53,7 +49,7 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
     const bootstrap = async () => {
       if (!user) {
         dispatch(setUser(undefined));
-        dispatch(resetPartnerConnections());
+        dispatch(resetfriends());
         dispatch(resetUserCreatedAffirmations());
         dispatch(resetTodaysAffirmation());
 
@@ -70,15 +66,15 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
       }
 
       const dayKey = getLocalDayKey();
-      const [dbUser, affirmations, partnerResult] =
+      const [dbUser, affirmations, friendResult] =
         await Promise.all([
           getUser(user.uid),
           getUserCreatedAffirmations(user.uid),
-          getPartnerConnections(user.uid),
+          getFriends(user.uid),
         ]);
 
-      // Get Today's Affirmations after all the user data is loaded to properly set partner value
-      const todaysAffirmations = await getTodaysAffirmations(user.uid, partnerResult.displays);
+      // Get Today's Affirmations after all the user data is loaded to properly set friend value
+      const todaysAffirmations = await getTodaysAffirmations(user.uid, friendResult.displays);
 
       if (!isActive) {
         return;
@@ -92,8 +88,8 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
           dayKey,
         }),
       );
-      dispatch(setPartnerConnections(partnerResult.connections));
-      dispatch(setConnectionDisplays(partnerResult.displays));
+      dispatch(setFriends(friendResult.friends));
+      dispatch(setFriendDisplays(friendResult.displays));
 
       hasCompletedInitialBootstrapRef.current = true;
       setIsBootstrapping(false);
@@ -115,7 +111,7 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
       }
 
       const dayKey = getLocalDayKey();
-      const todaysAffirmations = await getTodaysAffirmations(user.uid, connectionDisplays);
+      const todaysAffirmations = await getTodaysAffirmations(user.uid, friendDisplays);
 
       if (!isActive) {
         return;
@@ -134,7 +130,7 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
     return () => {
       isActive = false;
     };
-  }, [user, dailyRefreshToken, connectionDisplays, dispatch]);
+  }, [user, dailyRefreshToken, friendDisplays, dispatch]);
 
   if (isBootstrapping) {
     return (

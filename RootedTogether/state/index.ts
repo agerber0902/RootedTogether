@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import userReducer  from "./slices/user-slice";
-import partnerConnectionReducer from "./slices/patner-connection-slice";
+import friendReducer from "./slices/friend-slice";
 import affirmationReducer from './slices/affirmation-slice';
 
-const rootReducer = combineReducers({ user: userReducer, partnerConnection: partnerConnectionReducer, affirmation: affirmationReducer });
+const rootReducer = combineReducers({ user: userReducer, friend: friendReducer, affirmation: affirmationReducer });
 
 export const makeStore = (preloadedState?: Partial<RootState>) => {
   return configureStore({

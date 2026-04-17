@@ -2,47 +2,40 @@ import { TextInput, TextInputChangeEvent, View } from "react-native";
 import ModalView from "./modal-view";
 import CardButton from "@/components/shared/card-button";
 import LoadingSpinner from "@/components/shared/loading-spinner";
-import { partnerConnectionModalStyle } from "@/style/stylesheets/modals/partner-connection-modal.style";
+import { friendModalStyle } from "@/style/stylesheets/modals/friend-modal.style";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import {
-  PartnerConnection,
-  PartnerConnectionDisplay,
-} from "@/models/partner-connection";
-import {
-  addPartnerConnection,
-  editPartnerConnection,
-  getPartnerConnections,
-} from "@/helpers/partner-connection-helper";
-import {
-  setConnectionDisplays,
-  setPartnerConnections,
-} from "@/state/slices/patner-connection-slice";
+  InvitedFriend,
+  FriendDisplay
+} from "@/models/friends";
+import { addFriend, editFriend, getFriends } from "@/helpers/friends-helper";
+import { setFriendDisplays, setFriends } from "@/state/slices/friend-slice";
 
-type PartnerConnectionModalProps = {
+type FriendModalProps = {
   isVisible: boolean;
   onBackDrop: () => void;
   onClose: () => void;
-  connection?: PartnerConnectionDisplay;
-  setConnection: (connection: PartnerConnectionDisplay | undefined) => void;
+  friend?: FriendDisplay;
+  setFriend: (friend: FriendDisplay | undefined) => void;
 };
 
-const PartnerConnectionModal = ({
+const FriendModal = ({
   isVisible,
   onBackDrop,
   onClose,
-  connection,
-  setConnection,
-}: PartnerConnectionModalProps) => {
+  friend,
+  setFriend,
+}: FriendModalProps) => {
   const dispatch = useAppDispatch();
-  const { partnerConnections } = useAppSelector(
-    (state) => state.partnerConnection.value,
+  const { friends } = useAppSelector(
+    (state) => state.friend.value,
   );
 
   const { affirmationUser } = useAppSelector((state) => state.user.value);
 
   const [displayName, setDisplayName] = useState<string>(
-    connection?.partnerDisplayName ?? "",
+    friend?.friendDisplayName ?? "",
   );
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -51,10 +44,10 @@ const PartnerConnectionModal = ({
   useEffect(() => {
     if (!isVisible) return;
 
-    setDisplayName(connection?.partnerDisplayName ?? "");
+    setDisplayName(friend?.friendDisplayName ?? "");
     setEmail("");
     setError(undefined);
-  }, [connection, isVisible]);
+  }, [friend, isVisible]);
 
   const resetInput = (): void => {
     setDisplayName("");
@@ -74,31 +67,31 @@ const PartnerConnectionModal = ({
     setError(undefined);
     setIsLoading(true);
     try {
-      if (connection) {
-        const connectionToEdit = partnerConnections.find(
-          (p) => p.id === connection?.connectionId,
+      if (friend) {
+        const friendToEdit = friends.find(
+          (p) => p.id === friend?.friendId,
         );
 
-        if (!connectionToEdit) return;
+        if (!friendToEdit) return;
 
-        const updatedPartnerDetails = connectionToEdit.partnerDetails.map(
+        const updatedDetails = friendToEdit.friendDetails.map(
           (d) =>
-            d.userId === connection?.partnerId ? { ...d, displayName } : d,
+            d.userId === friend?.friendId ? { ...d, displayName } : d,
         );
 
-        // create updated connection object
-        const partnerConnection: PartnerConnection = {
-          ...connectionToEdit,
-          partnerDetails: updatedPartnerDetails,
+        // create updated friend object
+        const invitedFriend: InvitedFriend = {
+          ...friendToEdit,
+          friendDetails: updatedDetails,
         };
 
-        const response = await editPartnerConnection(partnerConnection);
+        const response = await editFriend(invitedFriend);
         if (response.error) {
           hasSaveError = true;
           setError(response.error);
         }
       } else {
-        const response = await addPartnerConnection(
+        const response = await addFriend(
           affirmationUser!,
           email,
           displayName,
@@ -109,15 +102,15 @@ const PartnerConnectionModal = ({
         }
       }
 
-      const { connections, displays } = await getPartnerConnections(
+      const friendValues = await getFriends(
         affirmationUser!.uid,
       );
 
-      dispatch(setPartnerConnections(connections));
-      dispatch(setConnectionDisplays(displays));
+      dispatch(setFriends(friendValues.friends));
+      dispatch(setFriendDisplays(friendValues.displays));
     } catch {
       hasSaveError = true;
-      setError("Unable to save partner connection.");
+      setError("Unable to save friend.");
     } finally {
       setTimeout(() => {
         setIsLoading(false);
@@ -126,8 +119,8 @@ const PartnerConnectionModal = ({
         if (!hasSaveError) {
           resetInput();
 
-          // Reset connection to edit
-          setConnection(undefined);
+          // Reset friend to edit
+          setFriend(undefined);
           onClose();
         }
       }, 1000);
@@ -137,32 +130,32 @@ const PartnerConnectionModal = ({
   return (
     <>
       <ModalView
-        headerTitle={connection ? "Edit Partner" : "Add Partner"}
+        headerTitle={friend ? "Edit Friend" : "Add Friend"}
         isVisible={isVisible}
         onBackDrop={onBackDrop}
         onClose={onClose}
         error={error}
       >
-        <View style={partnerConnectionModalStyle.container}>
+        <View style={friendModalStyle.container}>
           {/* Login Inputs */}
-          <View style={partnerConnectionModalStyle.inputs}>
+          <View style={friendModalStyle.inputs}>
             <TextInput
               key={"displayName"}
               numberOfLines={1}
-              style={partnerConnectionModalStyle.editableInput}
+              style={friendModalStyle.editableInput}
               placeholder={`Name`}
               value={displayName}
               onChange={(e: TextInputChangeEvent) =>
                 setDisplayName(e.nativeEvent.text)
               }
             />
-            {!connection && (
+            {!friend && (
               <TextInput
                 key={"email"}
                 keyboardType={"email-address"}
                 autoCapitalize="none"
                 numberOfLines={1}
-                style={partnerConnectionModalStyle.editableInput}
+                style={friendModalStyle.editableInput}
                 placeholder={`Email`}
                 value={email}
                 onChange={(e: TextInputChangeEvent) =>
@@ -176,8 +169,8 @@ const PartnerConnectionModal = ({
           {isLoading ? (
             <LoadingSpinner />
           ) : (
-            <View style={partnerConnectionModalStyle.actions}>
-              <View style={partnerConnectionModalStyle.actionWrapper}>
+            <View style={friendModalStyle.actions}>
+              <View style={friendModalStyle.actionWrapper}>
                 <CardButton
                   title="Cancel"
                   onPress={onCancel}
@@ -185,9 +178,9 @@ const PartnerConnectionModal = ({
                   isSecondary={true}
                 />
               </View>
-              <View style={partnerConnectionModalStyle.actionWrapper}>
+              <View style={friendModalStyle.actionWrapper}>
                 <CardButton
-                  title={connection ? "Save" : "Add"}
+                  title={friend ? "Save" : "Add"}
                   onPress={onSave}
                   isDisabled={isLoading}
                 />
@@ -199,4 +192,4 @@ const PartnerConnectionModal = ({
     </>
   );
 };
-export default PartnerConnectionModal;
+export default FriendModal;

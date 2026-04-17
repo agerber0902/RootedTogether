@@ -17,7 +17,7 @@ export const accountInfoCardStyle = StyleSheet.create({
         width: '100%',
         height: '50%',
     },
-    partnerConnectionsContainer:{
+    friendsContainer:{
         width: '100%',
         height: '48%',
     },

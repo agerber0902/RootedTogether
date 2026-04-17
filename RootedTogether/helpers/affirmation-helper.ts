@@ -13,7 +13,7 @@ import {
   affirmationMap,
   TodaysAffirmation,
 } from "@/models/affirmation";
-import { PartnerConnectionDisplay } from "@/models/partner-connection";
+import { FriendDisplay } from "@/models/friends";
 
 const collectionName = "affirmations";
 
@@ -103,7 +103,7 @@ export const getUserCreatedAffirmations = async (
 
 export const getTodaysAffirmations = async (
   userId: string,
-  partnerConnectionDisplays: PartnerConnectionDisplay[],
+  friendDisplays: FriendDisplay[],
 ): Promise<TodaysAffirmation[]> => {
   const affirmationsRef = collection(firestore, collectionName);
 
@@ -130,22 +130,22 @@ export const getTodaysAffirmations = async (
   if (userAffirmation) {
     result.push({
       date: Timestamp.fromDate(new Date()),
-      partnerDisplayName: "You",
+      friendDisplayName: "You",
       affirmation: userAffirmation,
     });
   }
 
-  // Add each partner's affirmations
-  for (const partnerDisplay of partnerConnectionDisplays) {
-    const partnerAffirmation = getAffirmationForCreator(
-      partnerDisplay.partnerId,
+  // Add each friend's affirmations
+  for (const friendDisplay of friendDisplays) {
+    const friendAffirmation = getAffirmationForCreator(
+      friendDisplay.friendId,
       allAffirmations
     );
-    if (partnerAffirmation) {
+    if (friendAffirmation) {
       result.push({
         date: Timestamp.fromDate(new Date()),
-        partnerDisplayName: partnerDisplay.partnerDisplayName,
-        affirmation: partnerAffirmation,
+        friendDisplayName: friendDisplay.friendDisplayName,
+        affirmation: friendAffirmation,
       });
     }
   }

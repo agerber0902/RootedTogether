@@ -23,7 +23,7 @@ const AffirmationCard = () => {
 
       return affirmations.map((affirmation) => ({
         affirmation,
-        partnerDisplayName: todayAffirmation.partnerDisplayName,
+        friendDisplayName: todayAffirmation.friendDisplayName,
       }));
     },
   );
@@ -59,7 +59,7 @@ const AffirmationCard = () => {
           {/* Message */}
           <AffirmationMessage
             affirmation={currentAffirmation?.affirmation}
-            partnerDisplayName={currentAffirmation?.partnerDisplayName}
+            friendDisplayName={currentAffirmation?.friendDisplayName}
           />
           {/* {todaysAffirmations.length > 1 && */}
           <View style={affirmationCardStyle.actions}>

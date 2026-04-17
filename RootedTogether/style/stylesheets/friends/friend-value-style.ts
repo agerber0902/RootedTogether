@@ -1,7 +1,7 @@
 import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 
-export const partnerConnectionValueStyle = StyleSheet.create({
+export const friendValueStyle = StyleSheet.create({
   container: {
     display: 'flex',
     width: '100%',
@@ -22,14 +22,14 @@ export const partnerConnectionValueStyle = StyleSheet.create({
   displayName: {
     color: Theme.colorScheme.primaryText,
     fontFamily: Theme.typography.serif,
-    fontSize: Theme.typography.size.partnerDisplayName,
+    fontSize: Theme.typography.size.friendDisplayName,
 
     ...Theme.baseText,
   },
   name: {
     color: Theme.colorScheme.primaryText,
     fontFamily: Theme.typography.serif,
-    fontSize: Theme.typography.size.partnerName,
+    fontSize: Theme.typography.size.friendName,
 
     ...Theme.baseText,
   },

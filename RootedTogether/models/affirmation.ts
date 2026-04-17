@@ -12,7 +12,7 @@ export interface Affirmation {
 
 export interface TodaysAffirmation {
   date: Timestamp;
-  partnerDisplayName: string;
+  friendDisplayName: string;
   affirmation: Affirmation[] | undefined;
 };
 
