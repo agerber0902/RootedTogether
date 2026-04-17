@@ -1,7 +1,7 @@
 import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 
-export const partnerConnectionModalStyle = StyleSheet.create({
+export const friendModalStyle = StyleSheet.create({
   container: {
     display: "flex",
     width: "100%",

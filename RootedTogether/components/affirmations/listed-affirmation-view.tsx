@@ -25,8 +25,8 @@ const ListedAffirmationView = ({
 }: ListedAffirmationViewProps) => {
   const dispatch = useAppDispatch();
   const { affirmationUser } = useAppSelector((state) => state.user.value);
-  const { connectionDisplays } = useAppSelector(
-    (state) => state.partnerConnection.value,
+  const { friendDisplays } = useAppSelector(
+    (state) => state.friend.value,
   );
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -35,10 +35,10 @@ const ListedAffirmationView = ({
     if (affirmation.recipientId === affirmationUser?.uid) {
       return "You";
     }
-    // Check connections
+    // Check friends
     return (
-      connectionDisplays.find((dc) => dc.partnerId === affirmation.recipientId)
-        ?.partnerDisplayName ?? ""
+      friendDisplays.find((dc) => dc.friendId === affirmation.recipientId)
+        ?.friendDisplayName ?? ""
     );
   };
 

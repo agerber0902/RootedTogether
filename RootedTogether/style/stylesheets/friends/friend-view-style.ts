@@ -1,7 +1,7 @@
 import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 
-export const partnerConnectionsViewStyle = StyleSheet.create({
+export const friendViewStyle = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%",

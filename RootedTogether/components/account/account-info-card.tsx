@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import PartnerConnectionsView from "../partner-connections/partner-connections-view";
+import FriendView from "../friends/friend-view";
 import DisplayCard from "../shared/display-card";
 import AccountInfoView from "./account-info-view";
 import { accountInfoCardStyle } from "@/style/stylesheets/account/account-info-card-style";
@@ -12,8 +12,8 @@ const AccountInfoCard = () => {
           <View style={accountInfoCardStyle.accountInfoContainer}>
             <AccountInfoView />
           </View>
-          <View style={accountInfoCardStyle.partnerConnectionsContainer}>
-            <PartnerConnectionsView />
+          <View style={accountInfoCardStyle.friendsContainer}>
+            <FriendView />
           </View>
         </View>
       </DisplayCard>
