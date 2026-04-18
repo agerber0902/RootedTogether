@@ -5,7 +5,9 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <AuthProvider>
-        <StoreProvder>{children}</StoreProvder>
+        <StoreProvder>
+          {children}
+          </StoreProvder>
       </AuthProvider>
     </>
   );

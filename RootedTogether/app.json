@@ -1,17 +1,26 @@
 {
   "expo": {
     "name": "RootedTogether",
-    "slug": "RootedTogether",
+    "slug": "rootedtogether-expo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
     "scheme": "RootedTogether",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "extra": {
+      "eas": {
+        "projectId": "64a3e283-5e00-4d33-9d78-63baef70e35f"
+      },
+      "router": {}
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.RootedTogether",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "NSUserNotificationUsageDescription": "We use notifications to send you updates and reminders."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -61,6 +70,7 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "owner": "agerber0902"
   }
 }
