@@ -96,72 +96,55 @@ export const helloWorld = onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
+async function scheduleAffirmationNotifications() {
+  console.log("Triggering all user notification on scheduler...");
+
+  const users = await getAllUsers();
+
+  console.log("Iterating through users to send notifications..");
+  const allMessages = await Promise.all(
+    users.map(async (user) => {
+      const notifications = await getUserNotifications(user);
+
+      return notifications.map((n) => ({
+        to: user.notificationToken,
+        sound: "default",
+        title: n.title,
+        body: n.body,
+        data: { date: n.date },
+      }));
+    }),
+  );
+  const messages = allMessages.flat();
+  if (!messages.length) {
+    console.log("No messages to send.");
+    return;
+  }
+
+  console.log(`Preparing to send ${messages.length} messages...`);
+
+  const res = await fetch("https://exp.host/--/api/v2/push/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(messages),
+  });
+
+  const data = await res.json();
+  console.log("Expo response:", JSON.stringify(data, null, 2));
+  console.log("Notifications sent");
+};
+
 export const scheduledNotificationTest = onRequest(
-  async (request, response) => {
-    console.log("Triggering all user notification on scheduler...");
-
-    const users = await getAllUsers();
-
-    console.log("Iterating through users to send notifications..");
-    const allMessages = await Promise.all(
-      users.map(async (user) => {
-        const notifications = await getUserNotifications(user);
-
-        return notifications.map((n) => ({
-          to: user.notificationToken,
-          sound: "default",
-          title: n.title,
-          body: n.body,
-          data: { date: n.date },
-        }));
-      }),
-    );
-    const messages = allMessages.flat();
-    if (!messages.length) {
-      console.log("No messages to send.");
-      return;
-    }
-
-    console.log(`Preparing to send ${messages.length} messages...`);
-
-    const res = await fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(messages),
-    });
-
-    const data = await res.json();
-    console.log("Expo response:", JSON.stringify(data, null, 2));
-    console.log("Notifications sent");
-  },
+  async (request, response) => {scheduleAffirmationNotifications()},
 );
 
 export const scheduledNotification = onSchedule(
   {
-    schedule: "15 12 * * *",
+    schedule: "0 18 * * *",
     timeZone: "America/New_York",
   },
   async () => {
-    console.log("Triggering all user notification on scheduler...");
-
-    const users = await getAllUsers();
-
-    console.log("Iterating through users to send notifications..");
-    const messages = users.map((user) => ({
-      ...getUserNotifications(user),
-    }));
-
-    console.log(`Preparing to send ${messages.length} messages...`);
-
-    await fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(messages),
-    });
-
-    console.log("Notifications sent");
+    scheduleAffirmationNotifications()
   },
 );
 
@@ -310,7 +293,8 @@ async function getUserAffirmationsFromFriends(
             f.friendDetails?.some((fd: any) => fd.userId === user.uid),
           )
           ?.friendDetails?.find((detail: any) => detail.userId === user.uid)
-          ?.displayName ?? user.first ??
+          ?.displayName ??
+        user.first ??
         user.name;
 
       // Add notifications for all affirmations returned (can be multiple if all have today's date)
