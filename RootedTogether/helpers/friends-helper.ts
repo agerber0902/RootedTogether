@@ -1,12 +1,27 @@
-
 import { addData, deleteData, updateData } from "./firebase-helper";
 import { getUser, getUserByEmail } from "./user-helper";
-import { collection, getDocs, query, Timestamp, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  Timestamp,
+  where,
+} from "firebase/firestore";
 import { firestore } from "@/config/firebase";
-import { FriendDisplay, FriendUserDetail, InvitedFriend, invitedFriendMap } from "@/models/friends";
+import {
+  FriendDisplay,
+  FriendUserDetail,
+  InvitedFriend,
+  invitedFriendMap,
+} from "@/models/friends";
 import { AffirmationUser } from "@/models/user";
 import { FirebaseResponse } from "@/models/firebase";
-import { hasMatchingStringPair, sortStringPair, validateDistinctStringPair } from "./validation-helper";
+import {
+  hasMatchingStringPair,
+  sortStringPair,
+  validateDistinctStringPair,
+} from "./validation-helper";
 
 const collectionName = "friends";
 
@@ -24,7 +39,10 @@ const findDuplicateFriend = async (
   excludeId?: string,
 ): Promise<InvitedFriend | undefined> => {
   const ref = collection(firestore, collectionName);
-  const duplicateQuery = query(ref, where("friendIds", "array-contains", friendIds[0]));
+  const duplicateQuery = query(
+    ref,
+    where("friendIds", "array-contains", friendIds[0]),
+  );
   const snapshot = await getDocs(duplicateQuery);
 
   const duplicateDoc = snapshot.docs.find((doc) => {
@@ -46,6 +64,31 @@ const findDuplicateFriend = async (
   }
 
   return invitedFriendMap(duplicateDoc.data(), duplicateDoc.id);
+};
+
+export const listenToFriends = (
+  userId: string,
+  callback: (friends: FriendOutput) => void,
+) => {
+
+  const friendQuery = query(
+    collection(firestore, "friends"),
+    where("friendIds", "array-contains", userId)
+  );
+
+  return onSnapshot(friendQuery, async(snapshot) => {
+    console.log("🔥 snapshot fired:", snapshot.docs.length);
+    const data = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    const mappedFriends = data.map((d) => invitedFriendMap(d, d.id));
+
+    const displays = await getFriendsForDisplay(userId, mappedFriends);
+
+    callback({friends: mappedFriends, displays});
+  });
 };
 
 export const getFriendId = (
@@ -70,24 +113,20 @@ export const getFriendInfo = async (
     friendDisplayName:
       invitedFriend.friendDetails.find((d) => d.userId === friendId)
         ?.displayName ?? "",
+    isAccepted: invitedFriend.isAccepted,
+    creatorId: invitedFriend.createdById,
   };
 };
 
-
-export const getFriends = async (
-  userId: string,
-): Promise<FriendOutput> => {
+export const getFriends = async (userId: string): Promise<FriendOutput> => {
   const ref = collection(firestore, collectionName);
 
-  const friendQuery = query(
-    ref,
-    where("friendIds", "array-contains", userId),
-  );
+  const friendQuery = query(ref, where("friendIds", "array-contains", userId));
 
   const snapshot = await getDocs(friendQuery);
 
   if (snapshot.empty) {
-    return {friends: [], displays: []};
+    return { friends: [], displays: [] };
   }
 
   let friends: InvitedFriend[] = snapshot.docs.map((doc) => {
@@ -96,9 +135,9 @@ export const getFriends = async (
   });
 
   // Get display friends
-  const displays = await getFriendsForDisplay(userId, friends)
+  const displays = await getFriendsForDisplay(userId, friends);
 
-  return {friends, displays};
+  return { friends, displays };
 };
 
 const getFriendsForDisplay = async (
@@ -116,12 +155,14 @@ const getFriendsForDisplay = async (
   }
 };
 
-export const deleteFriend = async (id: string) : Promise<FirebaseResponse<string>> => {
+export const deleteFriend = async (
+  id: string,
+): Promise<FirebaseResponse<string>> => {
   return await deleteData(collectionName, id);
 };
 export const editFriend = async (
   friend: InvitedFriend,
-) : Promise<FirebaseResponse<string>> => {
+): Promise<FirebaseResponse<string>> => {
   const friendIdsValidationError = validateFriendIds(friend.friendIds);
   if (friendIdsValidationError) {
     return { data: undefined, error: friendIdsValidationError };
@@ -146,24 +187,19 @@ export const addFriend = async (
   user: AffirmationUser,
   email: string,
   displayName: string,
-) : Promise<FirebaseResponse<string>>  => {
+): Promise<FirebaseResponse<string>> => {
   // Verify the user with that email exists
   const friendUser = await getUserByEmail(email);
 
   if (!friendUser) {
-    return {data: '', error: 'User does not exist'};
+    return { data: "", error: "User does not exist" };
   }
 
   if (friendUser.uid === user.uid) {
-    return {data: '', error: 'You cannot add yourself as a friend.'};
+    return { data: "", error: "You cannot add yourself as a friend." };
   }
 
-  return await createFriend(
-    user.uid,
-    user.name,
-    friendUser.uid,
-    displayName,
-  );
+  return await createFriend(user.uid, user.name, friendUser.uid, displayName);
 };
 
 const createFriend = async (
@@ -175,7 +211,7 @@ const createFriend = async (
   const friendIds = sortStringPair([userId, friendUserId]);
   const friendIdsValidationError = validateFriendIds(friendIds);
   if (friendIdsValidationError) {
-    return {data: undefined, error: friendIdsValidationError};
+    return { data: undefined, error: friendIdsValidationError };
   }
 
   const duplicateFriend = await findDuplicateFriend(friendIds);
@@ -196,6 +232,7 @@ const createFriend = async (
     createdById: userId,
     friendIds: friendIds,
     friendDetails: friendDetails,
+    isAccepted: false, //on create this is set to false until friend accepts
   };
   return await addData<InvitedFriend>(collectionName, invitedFriend);
 };

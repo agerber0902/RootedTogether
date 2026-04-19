@@ -33,4 +33,5 @@ export const colorScheme = {
   secondaryButtonText: primaryColor, 
 
   picker: backgroundColor,
+  pending: primaryColor,
 };

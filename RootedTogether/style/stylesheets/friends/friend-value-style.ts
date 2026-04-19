@@ -48,5 +48,11 @@ export const friendValueStyle = StyleSheet.create({
   },
   actionIcon: {
     color: Theme.colorScheme.primaryButton
+  },
+  pendingContainer: {},
+  pendingText: {
+    color: Theme.colorScheme.pending,
+    fontFamily: Theme.typography.sans,
+    fontSize: Theme.typography.size.pending,
   }
 });

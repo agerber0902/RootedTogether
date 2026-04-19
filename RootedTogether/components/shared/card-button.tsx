@@ -6,6 +6,7 @@ type CardButtonProps = {
   onPress: () => void;
   isDisabled: boolean;
   isSecondary?: boolean | undefined;
+  hasShadow?: boolean;
 };
 
 const CardButton = ({
@@ -13,16 +14,19 @@ const CardButton = ({
   onPress,
   isDisabled,
   isSecondary = false,
+  hasShadow = true,
 }: CardButtonProps) => {
+  const cardButtonStyles = cardButtonStyle(hasShadow);
+
   return (
     <>
       <Pressable
         onPress={onPress}
         style={[
-          cardButtonStyle.container,
+          cardButtonStyles.container,
           !isSecondary
-            ? cardButtonStyle.container
-            : cardButtonStyle.secondaryContainer,
+            ? cardButtonStyles.container
+            : cardButtonStyles.secondaryContainer,
         ]}
         disabled={isDisabled}
       >
@@ -30,10 +34,10 @@ const CardButton = ({
           numberOfLines={2}
           ellipsizeMode="tail"
           style={[
-          cardButtonStyle.buttonText,
+          cardButtonStyles.buttonText,
           !isSecondary
-            ? cardButtonStyle.buttonText
-            : cardButtonStyle.secondaryText,
+            ? cardButtonStyles.buttonText
+            : cardButtonStyles.secondaryText,
         ]}
         >
           {title}

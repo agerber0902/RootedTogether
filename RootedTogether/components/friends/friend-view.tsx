@@ -65,7 +65,7 @@ const FriendsView = () => {
         <View style={friendViewStyle.actions}>
           <CardButton
             key={"create-friend"}
-            title={"Create Friend"}
+            title={"Invite Friend"}
             onPress={onCreate}
             isDisabled={false}
           />

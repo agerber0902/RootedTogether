@@ -4,7 +4,7 @@ import {
   getTodaysAffirmations,
   getUserCreatedAffirmations,
 } from "@/helpers/affirmation-helper";
-import { getFriends } from "@/helpers/friends-helper";
+import { getFriends, listenToFriends } from "@/helpers/friends-helper";
 import { getUser } from "@/helpers/user-helper";
 import { useAuth } from "@/provider/auth-provider";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
@@ -14,7 +14,11 @@ import {
   setTodaysAffirmation,
   setUserCreatedAffirmations,
 } from "@/state/slices/affirmation-slice";
-import { resetfriends, setFriendDisplays, setFriends } from "@/state/slices/friend-slice";
+import {
+  resetfriends,
+  setFriendDisplays,
+  setFriends,
+} from "@/state/slices/friend-slice";
 import { setUser } from "@/state/slices/user-slice";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { AppState, StyleSheet, View } from "react-native";
@@ -44,9 +48,21 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
   }, []);
 
   useEffect(() => {
+    if (!user?.uid) return;
+
+    const unsubscribe = listenToFriends(user.uid, (data) => {
+      dispatch(setFriends(data.friends));
+      dispatch(setFriendDisplays(data.displays));
+    });
+
+    return () => unsubscribe(); // cleanup on unmount
+  }, [user, dispatch]);
+
+  useEffect(() => {
     let isActive = true;
 
-    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    const wait = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
 
     const bootstrap = async () => {
       if (!user) {
@@ -84,7 +100,10 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
       ]);
 
       // Get Today's Affirmations after all the user data is loaded to properly set friend value
-      const todaysAffirmations = await getTodaysAffirmations(user.uid, friendResult.displays);
+      const todaysAffirmations = await getTodaysAffirmations(
+        user.uid,
+        friendResult.displays,
+      );
 
       if (!isActive) {
         return;
@@ -121,7 +140,10 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
       }
 
       const dayKey = getLocalDayKey();
-      const todaysAffirmations = await getTodaysAffirmations(user.uid, friendDisplays);
+      const todaysAffirmations = await getTodaysAffirmations(
+        user.uid,
+        friendDisplays,
+      );
 
       if (!isActive) {
         return;
