@@ -7,7 +7,7 @@ import { accountInfoCardStyle } from "@/style/stylesheets/account/account-info-c
 const AccountInfoCard = () => {
   return (
     <>
-      <DisplayCard style={accountInfoCardStyle.displayCard}>
+      <DisplayCard style={accountInfoCardStyle.displayCard} wrapperStyle={accountInfoCardStyle.webCardWrapper}>
         <View style={accountInfoCardStyle.cardContainer}>
           <View style={accountInfoCardStyle.accountInfoContainer}>
             <AccountInfoView />
