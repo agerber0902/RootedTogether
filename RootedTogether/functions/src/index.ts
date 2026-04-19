@@ -289,21 +289,39 @@ async function getUserAffirmationsFromFriends(
 
     console.log(`Iterating through affirmations to get data for notification`);
 
-    notificationsFromFriends.push(
-      ...affirmations.map((affirmation) => ({
-        date: Timestamp.fromDate(new Date()),
-        title:
-          friends
-            .find((f) =>
-              f.friendDetails?.some((fd: any) => fd.userId === user.uid),
-            )
-            ?.friendDetails?.find((detail: any) => detail.userId === user.uid)
-            ?.displayName ??
-          user.first ??
-          user.name,
-        body: affirmation.message,
-      })),
-    );
+    // Group affirmations by creatorId
+    const creatorIds = [...new Set(affirmations.map((a) => a.creatorId))];
+
+    // For each unique creatorId, get affirmations using the date logic
+    for (const creatorId of creatorIds) {
+      const creatorAffirmations = getAffirmationForCreator(
+        creatorId,
+        affirmations,
+      );
+
+      if (!creatorAffirmations) {
+        continue;
+      }
+
+      // Get the creator's display name from the friend record
+      const friendDisplayName =
+        friends
+          .find((f) =>
+            f.friendDetails?.some((fd: any) => fd.userId === user.uid),
+          )
+          ?.friendDetails?.find((detail: any) => detail.userId === user.uid)
+          ?.displayName ?? user.first ??
+        user.name;
+
+      // Add notifications for all affirmations returned (can be multiple if all have today's date)
+      notificationsFromFriends.push(
+        ...creatorAffirmations.map((affirmation) => ({
+          date: Timestamp.fromDate(new Date()),
+          title: friendDisplayName,
+          body: affirmation.message,
+        })),
+      );
+    }
 
     return notificationsFromFriends;
   } catch {
