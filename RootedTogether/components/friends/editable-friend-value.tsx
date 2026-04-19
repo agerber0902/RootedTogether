@@ -71,6 +71,7 @@ const EditableFriendValue = ({
         {isLoading ? (
           <LoadingSpinner />
         ) : (
+          friend.isAccepted ? 
           <>
             <Pressable onPress={onEditPress}>
               <Ionicons
@@ -86,6 +87,9 @@ const EditableFriendValue = ({
                 color={friendValueStyle.actionIcon.color}
               />
             </Pressable>
+          </> : 
+          <>
+            <Text style={friendValueStyle.pendingText} numberOfLines={1} ellipsizeMode="tail">Pending</Text>
           </>
         )}
       </View>

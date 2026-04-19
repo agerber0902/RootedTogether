@@ -8,6 +8,7 @@ export interface InvitedFriend {
   createdById: string;
   createdAt?: Timestamp;
   friendDetails: FriendUserDetail[];
+  isAccepted: boolean;
 }
 
 export interface FriendUserDetail {
@@ -21,6 +22,7 @@ export interface FriendDisplay {
   friendId: string;
   friendDisplayName: string;
   createdAt: Timestamp;
+  isAccepted: boolean;
 }
 
 export type CreateInvitedFriend = Omit<
@@ -51,5 +53,6 @@ export const invitedFriendMap = (
     createdById: data.createdById,
     createdAt: data.createdAt?.toMillis?.() ?? data.createdAt,
     friendDetails,
+    isAccepted: data.isAccepted ?? false
   };
 };

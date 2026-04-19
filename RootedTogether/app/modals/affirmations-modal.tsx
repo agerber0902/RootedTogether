@@ -59,7 +59,7 @@ const AffirmationsModal = ({
   const recipientPickerValues = [
     // { label: "-- Choose Recipient --", value: affirmationUser!.uid },
     { label: "Personal", value: affirmationUser?.uid ?? "" },
-    ...friendDisplays.map((c) => {
+    ...friendDisplays.filter((fd) => fd.isAccepted).map((c) => {
       return { label: c.friendDisplayName, value: c.friendId };
     }),
   ];

@@ -70,6 +70,7 @@ export const getFriendInfo = async (
     friendDisplayName:
       invitedFriend.friendDetails.find((d) => d.userId === friendId)
         ?.displayName ?? "",
+    isAccepted: invitedFriend.isAccepted,
   };
 };
 
@@ -196,6 +197,7 @@ const createFriend = async (
     createdById: userId,
     friendIds: friendIds,
     friendDetails: friendDetails,
+    isAccepted: false, //on create this is set to false until friend accepts
   };
   return await addData<InvitedFriend>(collectionName, invitedFriend);
 };

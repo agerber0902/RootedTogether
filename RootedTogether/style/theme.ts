@@ -33,6 +33,7 @@ export const Theme = {
       friendName: 16,
 
       emptyWarning: 24,
+      pending: 18,
     },
   },
   //   Heights
