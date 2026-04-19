@@ -1,7 +1,7 @@
 import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 
-export const cardButtonStyle = StyleSheet.create({
+export const cardButtonStyle = (hasShadow: boolean) => StyleSheet.create({
   container: {
     width: "100%",
 
@@ -14,7 +14,7 @@ export const cardButtonStyle = StyleSheet.create({
     color: Theme.colorScheme.primaryButtonText,
 
     // Shadow
-    ...Theme.shadows.button,
+    ...(hasShadow && Theme.shadows.button ? Theme.shadows.button : {}),
 
     // Radius
     borderRadius: 16,

@@ -23,6 +23,7 @@ export interface FriendDisplay {
   friendDisplayName: string;
   createdAt: Timestamp;
   isAccepted: boolean;
+  creatorId: string;
 }
 
 export type CreateInvitedFriend = Omit<

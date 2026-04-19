@@ -71,6 +71,7 @@ export const getFriendInfo = async (
       invitedFriend.friendDetails.find((d) => d.userId === friendId)
         ?.displayName ?? "",
     isAccepted: invitedFriend.isAccepted,
+    creatorId: invitedFriend.createdById
   };
 };
 
