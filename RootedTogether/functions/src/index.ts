@@ -1,30 +1,92 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-
 import { setGlobalOptions } from "firebase-functions";
 import { onRequest } from "firebase-functions/https";
 import * as logger from "firebase-functions/logger";
 import admin from "firebase-admin";
+// import { onSchedule } from "firebase-functions/scheduler";
+import { Timestamp } from "firebase-admin/firestore";
+import { onSchedule } from "firebase-functions/scheduler";
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+interface Affirmation {
+  id?: string;
+  message: string;
+  displayDate: Timestamp | null;
+  recipientId: string;
+  creatorId: string;
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
+  createdAt: Timestamp;
+}
+
+interface NotificationAffirmation {
+  date: Timestamp;
+  title?: string;
+  body?: string;
+  friendDisplayName?: string;
+  affirmation?: Affirmation | Affirmation[];
+}
+
+const getRandomItem = <T>(array: T[]): T => {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+};
+
+const getAffirmationForCreator = (
+  creatorId: string,
+  allAffirmations: Affirmation[],
+): Affirmation[] | undefined => {
+  const today = new Date();
+  const startOfDay = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    0,
+    0,
+    0,
+  );
+
+  const endOfDay = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    23,
+    59,
+    59,
+  );
+
+  // Filter affirmations by creator
+  const creatorAffirmations = allAffirmations.filter(
+    (a) => a.creatorId === creatorId,
+  );
+
+  if (creatorAffirmations.length === 0) {
+    return undefined;
+  }
+
+  // Try to get today's affirmations
+  const todaysAffirmations = creatorAffirmations.filter((a) => {
+    if (!a.displayDate) return false;
+    const d = new Date(a.displayDate.toDate());
+    return d >= startOfDay && d <= endOfDay;
+  });
+
+  if (todaysAffirmations.length > 0) {
+    return todaysAffirmations;
+  }
+
+  // Fallback to random affirmation
+  return [getRandomItem(creatorAffirmations)];
+};
+
+const affirmationMap = (data: any, id: string): Affirmation => {
+  return {
+    id: id,
+    message: data.message,
+    displayDate: data.displayDate,
+    recipientId: data.recipientId,
+    creatorId: data.creatorId,
+    createdAt: data.createdAt,
+  };
+};
+
 setGlobalOptions({ maxInstances: 10 });
 
 admin.initializeApp();
@@ -34,12 +96,79 @@ export const helloWorld = onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
+export const scheduledNotificationTest = onRequest(async (request, response) => {
+  console.log("Triggering all user notification on scheduler...");
+
+  const users = await getAllUsers();
+
+  console.log("Iterating through users to send notifications..");
+  const allMessages = await Promise.all(
+    users.map(async (user) => {
+      const notifications = await getUserNotifications(user);
+
+      return notifications.map((n) => ({
+        to: user.notificationToken,
+        sound: "default",
+        title: n.title,
+        body: n.body,
+        data: { date: n.date },
+      }));
+    }),
+  );
+  const messages = allMessages.flat();
+  if (!messages.length) {
+    console.log("No messages to send.");
+    return;
+  }
+
+  console.log(`Preparing to send ${messages.length} messages...`);
+
+  const res = await fetch("https://exp.host/--/api/v2/push/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(messages),
+  });
+
+  const data = await res.json();
+  console.log("Expo response:", JSON.stringify(data, null, 2));
+  console.log("Notifications sent");
+});
+
+export const scheduledNotification = onSchedule(
+  {
+    schedule: "15 12 * * *",
+    timeZone: "America/New_York",
+  },
+  async () => {
+    console.log("Triggering all user notification on scheduler...");
+
+    const users = await getAllUsers();
+
+    console.log("Iterating through users to send notifications..");
+    const messages = users.map((user) => ({
+      ...getUserNotifications(user),
+    }));
+
+    console.log(`Preparing to send ${messages.length} messages...`);
+
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(messages),
+    });
+
+    console.log("Notifications sent");
+  },
+);
+
 export const sendTestNotification = onRequest(async (request, response) => {
   try {
     console.log("Attempting to send a test notification.");
 
     const users = await getAllUsers();
-    const user = users.find((u) => u.uid = 'CefgXpU8ccf0Af2P0jo5RPI4GCl1');
+    const user = users.find((u) => u.uid === "CefgXpU8ccf0Af2P0jo5RPI4GCl1");
 
     if (!user || !user.notificationToken) {
       console.log("No valid user/token found");
@@ -79,6 +208,102 @@ export const sendTestNotification = onRequest(async (request, response) => {
   }
 });
 
+// Get all the affirmations for the user
+async function getUserNotifications(user: any) {
+  console.log(`Attempting to get all the notifications for ${user.uid}...`);
+
+  console.log(`Gathering affirmations where user is recipient`);
+  try {
+    const affirmationSnapShot = await admin
+      .firestore()
+      .collection("affirmations")
+      .where("recipientId", "==", user.uid)
+      .get();
+
+    if (affirmationSnapShot.empty) {
+      return [];
+    }
+
+    let affirmations: Affirmation[] = affirmationSnapShot.docs.map(
+      (doc: any) => {
+        const data = doc.data();
+        return affirmationMap(data, doc.id);
+      },
+    );
+    console.log(`Mapped affirmations:`, affirmations);
+
+    const result: NotificationAffirmation[] = [];
+
+    // Add user's affirmations first
+    const userAffirmation = getAffirmationForCreator(user.uid, affirmations);
+    if (userAffirmation) {
+      result.push(
+        ...userAffirmation.map((affirmation) => ({
+          date: Timestamp.fromDate(new Date()),
+          title: "Remind yourself",
+          body: affirmation.message,
+        })),
+      );
+      console.log(`User affirmations added.`);
+    }
+
+    // Add each friend's affirmations
+    result.push(...(await getUserAffirmationsFromFriends(user, affirmations)));
+
+    return result;
+  } catch {
+    console.error("An error occured gathering notifications");
+    return [];
+  }
+}
+
+async function getUserAffirmationsFromFriends(
+  user: any,
+  affirmations: Affirmation[],
+): Promise<NotificationAffirmation[]> {
+  console.log(
+    `Gathering user affirmations for ${affirmations.length} affirmations...`,
+  );
+  try {
+    console.log(`Gathering Friend data...`);
+
+    const friendsSnapShot = await admin
+      .firestore()
+      .collection("friends")
+      .where("friendIds", "array-contains", user.uid)
+      .get();
+
+    if (friendsSnapShot.empty) {
+      return [];
+    }
+    const friends = friendsSnapShot.docs.map((doc) => doc.data());
+
+    const notificationsFromFriends: NotificationAffirmation[] = [];
+
+    console.log(`Iterating through affirmations to get data for notification`);
+
+    notificationsFromFriends.push(
+      ...affirmations.map((affirmation) => ({
+        date: Timestamp.fromDate(new Date()),
+        title:
+          friends
+            .find((f) =>
+              f.friendDetails?.some((fd: any) => fd.userId === user.uid),
+            )
+            ?.friendDetails?.find((detail: any) => detail.userId === user.uid)
+            ?.displayName ??
+          user.first ??
+          user.name,
+        body: affirmation.message,
+      })),
+    );
+
+    return notificationsFromFriends;
+  } catch {
+    return [];
+  }
+}
+
 // Get All the users
 // eslint-disable-next-line require-jsdoc
 async function getAllUsers() {
@@ -99,6 +324,16 @@ async function getAllUsers() {
 
     const seen = new Set();
     users = users.filter((user) => {
+      if (
+        user.notificationToken &&
+        !user.notificationToken?.startsWith("ExponentPushToken")
+      ) {
+        // Filter out users that do not have notifications properly configured
+        console.log(
+          `User ${user.uid} does not have the proper notification token`,
+        );
+        return false;
+      }
       if (seen.has(user.uid)) {
         return false; // Filter out if `uid` is already seen
       }
