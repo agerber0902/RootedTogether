@@ -96,43 +96,45 @@ export const helloWorld = onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
-export const scheduledNotificationTest = onRequest(async (request, response) => {
-  console.log("Triggering all user notification on scheduler...");
+export const scheduledNotificationTest = onRequest(
+  async (request, response) => {
+    console.log("Triggering all user notification on scheduler...");
 
-  const users = await getAllUsers();
+    const users = await getAllUsers();
 
-  console.log("Iterating through users to send notifications..");
-  const allMessages = await Promise.all(
-    users.map(async (user) => {
-      const notifications = await getUserNotifications(user);
+    console.log("Iterating through users to send notifications..");
+    const allMessages = await Promise.all(
+      users.map(async (user) => {
+        const notifications = await getUserNotifications(user);
 
-      return notifications.map((n) => ({
-        to: user.notificationToken,
-        sound: "default",
-        title: n.title,
-        body: n.body,
-        data: { date: n.date },
-      }));
-    }),
-  );
-  const messages = allMessages.flat();
-  if (!messages.length) {
-    console.log("No messages to send.");
-    return;
-  }
+        return notifications.map((n) => ({
+          to: user.notificationToken,
+          sound: "default",
+          title: n.title,
+          body: n.body,
+          data: { date: n.date },
+        }));
+      }),
+    );
+    const messages = allMessages.flat();
+    if (!messages.length) {
+      console.log("No messages to send.");
+      return;
+    }
 
-  console.log(`Preparing to send ${messages.length} messages...`);
+    console.log(`Preparing to send ${messages.length} messages...`);
 
-  const res = await fetch("https://exp.host/--/api/v2/push/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(messages),
-  });
+    const res = await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(messages),
+    });
 
-  const data = await res.json();
-  console.log("Expo response:", JSON.stringify(data, null, 2));
-  console.log("Notifications sent");
-});
+    const data = await res.json();
+    console.log("Expo response:", JSON.stringify(data, null, 2));
+    console.log("Notifications sent");
+  },
+);
 
 export const scheduledNotification = onSchedule(
   {
@@ -248,7 +250,12 @@ async function getUserNotifications(user: any) {
     }
 
     // Add each friend's affirmations
-    result.push(...(await getUserAffirmationsFromFriends(user, affirmations)));
+    result.push(
+      ...(await getUserAffirmationsFromFriends(
+        user,
+        affirmations.filter((a) => a.creatorId !== user.uid),
+      )),
+    );
 
     return result;
   } catch {
