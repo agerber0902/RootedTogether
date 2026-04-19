@@ -7,81 +7,58 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import {onRequest} from "firebase-functions/https";
-import * as functions from "firebase-functions";
+import { setGlobalOptions } from "firebase-functions";
+import { onRequest } from "firebase-functions/https";
 import * as logger from "firebase-functions/logger";
-import * as admin from "firebase-admin";
+import admin from "firebase-admin";
 
-type User = {
-  uid?: unknown;
-  name?: unknown;
-  email?: unknown;
-  first?: unknown;
-  last?: unknown;
-};
+// Start writing functions
+// https://firebase.google.com/docs/functions/typescript
 
-exports.helloWorld = onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
-});
+// For cost control, you can set the maximum number of containers that can be
+// running at the same time. This helps mitigate the impact of unexpected
+// traffic spikes by instead downgrading performance. This limit is a
+// per-function limit. You can override the limit for each function using the
+// `maxInstances` option in the function's options, e.g.
+// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
+// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
+// functions should each use functions.runWith({ maxInstances: 10 }) instead.
+// In the v1 API, each function can only serve one request per container, so
+// this will be the maximum concurrent request count.
+setGlobalOptions({ maxInstances: 10 });
 
 admin.initializeApp();
 
-functions.setGlobalOptions({maxInstances: 10});
-
-exports.helloWorld = onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
+export const helloWorld = onRequest((request, response) => {
+  logger.info("Hello logs!", { structuredData: true });
   response.send("Hello from Firebase!");
 });
 
-exports.sendTestNotification = functions.https.onRequest(
-  async (
-    _req: functions.https.Request,
-    res: any,
-  ) => {
-    try {
-      //  Get all the users with their fcm tokens
-      console.log("Attempting to send a test notification.");
+export const sendTestNotification = onRequest(async (request, response) => {
+  try {
+    //  Get all the users with their fcm tokens
+    console.log("Attempting to send a test notification.");
 
-      const users = await getAllUsers();
+    const users = await getAllUsers();
 
-      const user = users.find(
-        (u: User) => u.uid === "CefgXpU8ccf0Af2P0jo5RPI4GCl1",
-      );
-      console.log(`Total users returned: ${users.length}, 
+    const user = users[0];
+    console.log(`Total users returned: ${users.length}, 
       Test user: ${user.fcmToken} : ${user.uid}`);
-      const message = {
-        notification: {
-          title: "Test",
-          body: "Test Notification",
-        },
-        token: user.fcmToken,
-      };
+    const message = {
+      notification: {
+        title: "Test",
+        body: "Test Notification",
+      },
+      token: user.fcmToken,
+    };
 
-      admin.messaging().send(message);
+    admin.messaging().send(message);
 
-      res.status(200).send("Notifications sent.");
-    } catch (error) {
-      res.status(500).send("Failed to send notifications.");
-    }
-  },
-);
-
-// export const generateTodaysAffirmations = functions.pubsub
-//   .schedule("0 6 * * *")
-//   .timezone("America/New_York")
-//   .onRun(async () => {
-//     const message = {
-//       notification: {
-//         title: "Test Notification",
-//         body: "Soon to be affirmation message",
-//       },
-//       topic: "todays-affirmations",
-//     };
-
-//     await admin.messaging().send(message);
-//     return;
-//   });
+    response.status(200).send("Notifications sent.");
+  } catch (error) {
+    response.status(500).send("Failed to send notifications.");
+  }
+});
 
 // Get All the users
 // eslint-disable-next-line require-jsdoc
@@ -98,11 +75,11 @@ async function getAllUsers() {
     //   console.log(`User ${index + 1}:`, doc.id, doc.data());
     // });
 
-    let users = usersSnapshot.docs.map((doc: any) => doc.data());
-    console.log("Mapped users:", users);
+    let users = usersSnapshot.docs.map((doc) => doc.data());
+    console.log(`Mapped users:`, users);
 
     const seen = new Set();
-    users = users.filter((user: User) => {
+    users = users.filter((user) => {
       if (seen.has(user.uid)) {
         return false; // Filter out if `uid` is already seen
       }
