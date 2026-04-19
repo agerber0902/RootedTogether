@@ -1,8 +1,12 @@
-import { useState, useEffect } from "react";
-import { Button, Platform, Text, View } from "react-native";
+import { useEffect } from "react";
+import { Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { updateUser } from "@/helpers/user-helper";
+import { AffirmationUser } from "@/models/user";
+import { setUser } from "@/state/slices/user-slice";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -33,12 +37,9 @@ async function sendPushNotification(expoPushToken: string) {
   });
 }
 
-function handleRegistrationError(errorMessage: string) {
-  alert(errorMessage);
-  throw new Error(errorMessage);
-}
-
-async function registerForPushNotificationsAsync() {
+const registerForPushNotificationsAsync = async (): Promise<
+  string | undefined
+> => {
   if (Platform.OS === "android") {
     await Notifications.setNotificationChannelAsync("default", {
       name: "default",
@@ -57,16 +58,13 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
-      handleRegistrationError(
-        "Permission not granted to get push token for push notification!",
-      );
       return;
     }
     const projectId =
       Constants?.expoConfig?.extra?.eas?.projectId ??
       Constants?.easConfig?.projectId;
     if (!projectId) {
-      handleRegistrationError("Project ID not found");
+      return;
     }
     try {
       const pushTokenString = (
@@ -74,30 +72,47 @@ async function registerForPushNotificationsAsync() {
           projectId,
         })
       ).data;
-      console.log(pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
-      handleRegistrationError(`${e}`);
+      return;
     }
   } else {
-    handleRegistrationError("Must use physical device for push notifications");
+    return;
   }
-}
+};
 
-export default function NotificationHandler() {
-  const [expoPushToken, setExpoPushToken] = useState("");
-  const [notification, setNotification] = useState<
-    Notifications.Notification | undefined
-  >(undefined);
+const NotificationHandler = () => {
+  const dispatch = useAppDispatch();
+  const { affirmationUser } = useAppSelector((state) => state.user.value);
+
+  const addTokenToUser = async (token: string) => {
+
+    if(affirmationUser?.notificationToken === token){
+      return;
+    }
+
+    const updatedUser: AffirmationUser = {
+      id: affirmationUser?.id,
+      uid: affirmationUser?.uid ?? '',
+      name: affirmationUser?.name ?? '',
+      first: affirmationUser?.first ?? '',
+      last: affirmationUser?.last ?? '',
+      email: affirmationUser?.email ?? '',
+      notificationToken: token,
+    };
+    const user = await updateUser(updatedUser);
+
+    dispatch(setUser(user));
+  };
 
   useEffect(() => {
     registerForPushNotificationsAsync()
-      .then((token) => setExpoPushToken(token ?? ""))
-      .catch((error: any) => setExpoPushToken(`${error}`));
+      .then((token) => addTokenToUser(token ?? ""))
+      .catch();
 
     const notificationListener = Notifications.addNotificationReceivedListener(
       (notification) => {
-        setNotification(notification);
+        // setNotification(notification);
       },
     );
 
@@ -112,27 +127,6 @@ export default function NotificationHandler() {
     };
   }, []);
 
-  return (
-    <View
-      style={{ flex: 1, alignItems: "center", justifyContent: "space-around" }}
-    >
-      <Text>Your Expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text>
-          Title: {notification && notification.request.content.title}{" "}
-        </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>
-          Data:{" "}
-          {notification && JSON.stringify(notification.request.content.data)}
-        </Text>
-      </View>
-      <Button
-        title="Press to Send Notification"
-        onPress={async () => {
-          await sendPushNotification(expoPushToken);
-        }}
-      />
-    </View>
-  );
-}
+  return <></>;
+};
+export default NotificationHandler;

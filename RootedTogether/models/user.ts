@@ -5,6 +5,7 @@ export interface AffirmationUser {
     email: string;
     first: string;
     last: string;
+    notificationToken?: string;
 }
 
 export type CreateAffirmationUser = Omit<AffirmationUser, "id">;
@@ -17,6 +18,7 @@ type AffirmationUserRaw = {
     email?: unknown;
     first?: unknown;
     last?: unknown;
+    notificationToken?: unknown;
 };
 
 export const AffirmationUserMap = (
@@ -30,5 +32,6 @@ export const AffirmationUserMap = (
         first: typeof data.first === "string" ? data.first : "",
         last: typeof data.last === "string" ? data.last : "",
         email: typeof data.email === "string" ? data.email : "",
+        notificationToken: typeof data.notificationToken === "string" ? data.notificationToken : "",
     };
 };

@@ -36,26 +36,45 @@ export const helloWorld = onRequest((request, response) => {
 
 export const sendTestNotification = onRequest(async (request, response) => {
   try {
-    //  Get all the users with their fcm tokens
     console.log("Attempting to send a test notification.");
 
     const users = await getAllUsers();
+    const user = users.find((u) => u.uid = 'CefgXpU8ccf0Af2P0jo5RPI4GCl1');
 
-    const user = users[0];
-    console.log(`Total users returned: ${users.length}, 
-      Test user: ${user.fcmToken} : ${user.uid}`);
+    if (!user || !user.notificationToken) {
+      console.log("No valid user/token found");
+      response.status(400).send("No token");
+      return;
+    }
+
+    if (!user.notificationToken.startsWith("ExponentPushToken")) {
+      console.log("Invalid Expo token");
+      response.status(400).send("Invalid token");
+      return;
+    }
+
     const message = {
-      notification: {
-        title: "Test",
-        body: "Test Notification",
-      },
-      token: user.fcmToken,
+      to: user.notificationToken,
+      sound: "default",
+      title: "Test",
+      body: "Test Notification",
+      data: { test: true },
     };
 
-    admin.messaging().send(message);
+    const res = await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
 
-    response.status(200).send("Notifications sent.");
+    const data = await res.json();
+    console.log("Expo response:", data);
+
+    response.status(200).send("Notification sent.");
   } catch (error) {
+    console.error(error);
     response.status(500).send("Failed to send notifications.");
   }
 });
