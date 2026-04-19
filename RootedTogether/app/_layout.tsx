@@ -19,6 +19,7 @@ import LayoutWrapper from "./layoutWrapper";
 import LoginModal from "./modals/login-modal";
 import AppBootstrap from "../components/app-bootstrap";
 import LoadingSpinner from "@/components/shared/loading-spinner";
+import NotificationHandler from "./notificationHandler";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -37,6 +38,7 @@ const RootNavigator = () => {
 
   return (
     <AppBootstrap>
+      {isAuthenticated && <NotificationHandler />}
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
