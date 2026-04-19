@@ -53,7 +53,7 @@ const AffirmationCard = () => {
 
   return (
     <View style={affirmationCardStyle.wrapper}>
-      <DisplayCard>
+      <DisplayCard wrapperStyle={affirmationCardStyle.webCardWrapper}>
         <View style={affirmationCardStyle.container}>
           <View>{/* Placeholder for styling */}</View>
           {/* Message */}

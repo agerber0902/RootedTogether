@@ -6,9 +6,10 @@ import { animationStyle } from "@/style/stylesheets/components/shared/animation-
 type DisplayCardProps = {
   children: React.ReactNode;
   style?: ViewStyle | undefined;
+  wrapperStyle?: ViewStyle | undefined;
 };
 
-const DisplayCard = ({ children, style }: DisplayCardProps) => {
+const DisplayCard = ({ children, style, wrapperStyle }: DisplayCardProps) => {
   return (
     <>
       <FadeInView
@@ -16,8 +17,10 @@ const DisplayCard = ({ children, style }: DisplayCardProps) => {
         delay={animationStyle.delay.cardDelay}
         duration={animationStyle.duration.cardDuration}
       >
-        <View style={[displayCardStyle.cardContainer, style]}>
-          <View style={displayCardStyle.cardContent}>{children}</View>
+        <View style={wrapperStyle}>
+          <View style={[displayCardStyle.cardContainer, style]}>
+            <View style={displayCardStyle.cardContent}>{children}</View>
+          </View>
         </View>
       </FadeInView>
     </>
