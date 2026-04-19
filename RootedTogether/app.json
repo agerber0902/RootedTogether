@@ -19,7 +19,8 @@
       "bundleIdentifier": "com.anonymous.RootedTogether",
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
-        "NSUserNotificationUsageDescription": "We use notifications to send you updates and reminders."
+        "NSUserNotificationUsageDescription": "We use notifications to send you updates and reminders.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
