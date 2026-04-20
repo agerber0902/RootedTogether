@@ -1,4 +1,4 @@
-import { DimensionValue, Platform, TextStyle } from "react-native";
+import { Platform, TextStyle } from "react-native";
 import { colorScheme } from "./colorScheme";
 
 // Main Theme Object
@@ -36,12 +36,9 @@ export const Theme = {
       pending: 18,
     },
   },
-  //   Heights
-  componentHeights: {
-    cardHeight: (Platform.OS === "web" ? "95%" : "90%") as DimensionValue,
-  },
   //   Spacing
   spacing: {
+    xs: 8,
     sm: 16,
     md: 24,
     lg: 30,
@@ -85,7 +82,7 @@ export const Theme = {
       shadowRadius: 16,
       shadowOffset: { width: 0, height: 4 },
 
-      elevation: 4,
+      // elevation: 4,
     },
     textInput: {
       shadowColor: colorScheme.accent,

@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export const headerViewStyle = StyleSheet.create({
   headerView: {
     width: "100%",
-    height: "auto",
+    // height: "auto",
 
     padding: Theme.spacing.sm,
   },

@@ -4,8 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AccountModal from "../modals/account-modal";
 import { useState } from "react";
 import AccountInfoCard from "@/components/account/account-info-card";
+import { View } from "react-native";
 
 const AccountScreen = () => {
+  const safeAreaStyles = safeAreaStyle('account');
+
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const onBackDrop = () => {
@@ -23,9 +26,13 @@ const AccountScreen = () => {
         onClose={onModalClose}
         onBackDrop={onBackDrop}
       />
-      <SafeAreaView style={safeAreaStyle.safeArea}>
-        <AccountHeader />
-        <AccountInfoCard/>
+      <SafeAreaView style={safeAreaStyles.safeArea}>
+        <View style={safeAreaStyles.headerContainer}>
+          <AccountHeader />
+        </View>
+        <View style={safeAreaStyles.contentContainer}>
+          <AccountInfoCard />
+        </View>
       </SafeAreaView>
     </>
   );
