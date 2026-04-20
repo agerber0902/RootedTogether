@@ -19,7 +19,7 @@ const DisplayCard = ({ children, style, wrapperStyle }: DisplayCardProps) => {
         finalElevation={animationStyle.elevation}
         useElevation={true}
       >
-        <View style={wrapperStyle}>
+        <View style={[wrapperStyle, {flex: 1}]}>
           <View style={[displayCardStyle.cardContainer, style]}>
             <View style={displayCardStyle.cardContent}>{children}</View>
           </View>

@@ -1,11 +1,8 @@
-import { Platform, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 export const accountInfoCardStyle = StyleSheet.create({
   displayCard: {
     height: "95%",
-  },
-  webCardWrapper: {
-    ...(Platform.OS === "web" ? { minHeight: "130%" } : {}),
   },
   cardContainer: {
     display: "flex",

@@ -1,17 +1,24 @@
-import { Platform, StyleSheet } from "react-native";
+import { Theme } from "@/style/theme";
+import { StyleSheet } from "react-native";
 
 export const affirmationCardStyle = StyleSheet.create({
     wrapper: {
-        height: '90%',
+        display: 'flex',
+
+        // height: '90%',
+        flex: 1,
+        width: '100%',
+        alignItems: 'stretch',
     },
-    webCardWrapper: {
-        ...(Platform.OS === "web" ? {minHeight: '500%'} : {}),
+    cardWrapper: {
+        flex: 1,
     },
     container: {
         display: 'flex',
         width: '100%',
-        height: '100%',
-borderWidth: 1,
+        // height: '100%',
+        flex: 1,
+        
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
@@ -25,6 +32,8 @@ borderWidth: 1,
         justifyContent: 'center',
 
         gap: 15,
+
+        paddingTop: Theme.spacing.sm,
     },
     nextButton: {
         width: '50%',

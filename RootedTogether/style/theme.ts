@@ -36,10 +36,6 @@ export const Theme = {
       pending: 18,
     },
   },
-  //   Heights
-  componentHeights: {
-    cardHeight: (Platform.OS === "web" ? "95%" : "90%") as DimensionValue,
-  },
   //   Spacing
   spacing: {
     sm: 16,
