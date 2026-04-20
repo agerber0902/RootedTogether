@@ -1,4 +1,4 @@
-import { DimensionValue, Platform, TextStyle } from "react-native";
+import { Platform, TextStyle } from "react-native";
 import { colorScheme } from "./colorScheme";
 
 // Main Theme Object
@@ -36,12 +36,9 @@ export const Theme = {
       pending: 18,
     },
   },
-  //   Heights
-  componentHeights: {
-    cardHeight: (Platform.OS === "web" ? "95%" : "90%") as DimensionValue,
-  },
   //   Spacing
   spacing: {
+    xs: 8,
     sm: 16,
     md: 24,
     lg: 30,
@@ -53,15 +50,23 @@ export const Theme = {
     tabRadius: 24,
     inputRadius: 8,
   },
+  elevation: {
+    card: 6,
+    modal: 6,
+    button: 4,
+    textInput: 1,
+    picker: 8,
+  },
+
   //   Shadows
   shadows: {
     card: {
       shadowColor: colorScheme.accent,
       shadowOpacity: 0.4,
       shadowRadius: 20,
-      shadowOffset: { width: 0, height: 8 },
+      shadowOffset: { width: 8, height: 8 },
 
-      elevation: 6,
+      // elevation: 6,
     },
     modal: {
       shadowColor: colorScheme.accent,
@@ -75,9 +80,9 @@ export const Theme = {
       shadowColor: colorScheme.accent,
       shadowOpacity: 0.4,
       shadowRadius: 16,
-      shadowOffset: { width: 0, height: 8 },
+      shadowOffset: { width: 0, height: 4 },
 
-      elevation: 4,
+      // elevation: 4,
     },
     textInput: {
       shadowColor: colorScheme.accent,

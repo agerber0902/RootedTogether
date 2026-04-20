@@ -1,16 +1,16 @@
-import { Platform, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 export const accountInfoCardStyle = StyleSheet.create({
   displayCard: {
-    height: "95%",
-  },
-  webCardWrapper: {
-    ...(Platform.OS === "web" ? { minHeight: "130%" } : {}),
+    // height: "95%",
+    display: 'flex',
+    flex: 1,
   },
   cardContainer: {
     display: "flex",
     width: "100%",
-    height: "100%",
+    // height: "100%",
+    flex: 1,
 
     flexDirection: "column",
 
@@ -18,10 +18,12 @@ export const accountInfoCardStyle = StyleSheet.create({
   },
   accountInfoContainer: {
     width: "100%",
-    height: "50%",
+    // height: "50%",
+    flex: 5.5,
   },
   friendsContainer: {
     width: "100%",
-    height: "48%",
+    // height: "48%",
+    flex: 4.5,
   },
 });

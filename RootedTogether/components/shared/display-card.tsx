@@ -16,8 +16,10 @@ const DisplayCard = ({ children, style, wrapperStyle }: DisplayCardProps) => {
         visible={true}
         delay={animationStyle.delay.cardDelay}
         duration={animationStyle.duration.cardDuration}
+        finalElevation={animationStyle.elevation}
+        useElevation={true}
       >
-        <View style={wrapperStyle}>
+        <View style={[wrapperStyle, {flex: 1}]}>
           <View style={[displayCardStyle.cardContainer, style]}>
             <View style={displayCardStyle.cardContent}>{children}</View>
           </View>

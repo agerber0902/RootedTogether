@@ -4,14 +4,14 @@ import { StyleSheet } from "react-native";
 export const affirmationMessageStyle = StyleSheet.create({
   container: {
     width: '95%',
-    height: '100%',
+    // height: '100%',
 
     alignItems: 'center',
     justifyContent: 'center'
   },
   forword: {
     width: "100%",
-    height: "auto",
+    // height: "auto",
 
     ...Theme.baseText,
     fontFamily: Theme.typography.serifItalic,
@@ -23,7 +23,7 @@ export const affirmationMessageStyle = StyleSheet.create({
   },
   message: {
     width: "100%",
-    height: "auto",
+    // height: "auto",
 
     ...Theme.baseText,
     fontFamily: Theme.typography.serif,

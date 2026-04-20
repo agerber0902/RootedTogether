@@ -9,7 +9,7 @@ const AccountHeader = () => {
   return (
     <View style={accountHeaderStyle.container}>
       <View style={accountHeaderStyle.headerContainer}>
-        <HeaderView title="Account Information" />
+        <HeaderView title="Account Information" subText=""/>
       </View>
       <View style={accountHeaderStyle.actionContainer}>
         <FadeInView
@@ -17,7 +17,9 @@ const AccountHeader = () => {
           delay={animationStyle.delay.headerDelay}
           duration={animationStyle.duration.headerDuration}
         >
-          <SignOutButton />
+          <View style={{flex: 1, justifyContent: 'flex-end'}}>
+            <SignOutButton />
+          </View>
         </FadeInView>
       </View>
     </View>

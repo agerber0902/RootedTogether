@@ -53,27 +53,29 @@ const AffirmationCard = () => {
 
   return (
     <View style={affirmationCardStyle.wrapper}>
-      <DisplayCard wrapperStyle={affirmationCardStyle.webCardWrapper}>
-        <View style={affirmationCardStyle.container}>
-          <View>{/* Placeholder for styling */}</View>
-          {/* Message */}
-          <AffirmationMessage
-            affirmation={currentAffirmation?.affirmation}
-            friendDisplayName={currentAffirmation?.friendDisplayName}
-          />
-          {/* {todaysAffirmations.length > 1 && */}
-          <View style={affirmationCardStyle.actions}>
-            <View style={affirmationCardStyle.nextButton}>
-              <CardButton
-                title="Next Affirmation"
-                onPress={onNext}
-                isDisabled={!canCycleAffirmations}
-              />
-            </View>
+      <View style={affirmationCardStyle.cardWrapper}>
+        <DisplayCard>
+          <View style={affirmationCardStyle.container}>
+            {/* <Text>test</Text> */}
+            {/* Message */}
+            <AffirmationMessage
+              affirmation={currentAffirmation?.affirmation}
+              friendDisplayName={currentAffirmation?.friendDisplayName}
+            />
+            {todaysAffirmations.length > 1 && (
+              <View style={affirmationCardStyle.actions}>
+                <View style={affirmationCardStyle.nextButton}>
+                  <CardButton
+                    title="Next Affirmation"
+                    onPress={onNext}
+                    isDisabled={!canCycleAffirmations}
+                  />
+                </View>
+              </View>
+            )}
           </View>
-          {/* } */}
-        </View>
-      </DisplayCard>
+        </DisplayCard>
+      </View>
     </View>
   );
 };
