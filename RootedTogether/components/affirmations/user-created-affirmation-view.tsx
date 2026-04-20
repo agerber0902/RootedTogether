@@ -14,7 +14,8 @@ const UserCreatedAffirmationView = () => {
     (state) => state.affirmation.value,
   );
   const hasAffirmations = userCreatedAffirmations.length > 0;
-
+console.log(userCreatedAffirmations)
+console.log(userCreatedAffirmations.length > 0)
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const [affirmationToEdit, setAffirmationToEdit] = useState<Affirmation | undefined>();

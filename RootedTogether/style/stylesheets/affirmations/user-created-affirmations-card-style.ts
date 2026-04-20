@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 
 export const userCreatedAffirmationsCardStyle = StyleSheet.create({
   scrollView: {
-    height: "auto",
     width: "100%",
 
     padding: Theme.spacing.sm,
@@ -22,8 +21,5 @@ export const userCreatedAffirmationsCardStyle = StyleSheet.create({
   emptyWarningContainer: {
     display: 'flex',
     width: '100%',
-    height: '100%',
-
-    paddingTop: '50%',
   },
 });

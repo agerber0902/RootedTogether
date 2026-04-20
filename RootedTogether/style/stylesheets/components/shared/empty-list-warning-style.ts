@@ -7,7 +7,7 @@ export const emptyListWarningStyle = StyleSheet.create({
 
         color: Theme.colorScheme.primaryText,
         fontSize: Theme.typography.size.emptyWarning,
-        fontFamily: Theme.typography.serif,
+        fontFamily: Theme.typography.serifItalic,
 
         textAlign: 'center',
 
