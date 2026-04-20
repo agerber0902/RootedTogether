@@ -1,26 +1,34 @@
-import { StyleSheet } from "react-native";
+import { Theme } from "@/style/theme";
+import { Platform, StyleSheet } from "react-native";
 
 export const accountHeaderStyle = StyleSheet.create({
     container: {
         display: 'flex',
-        width: '100%',
+        flex: 1,
 
         flexDirection: 'row',
-        alignItems: "flex-end",
+        alignItems: "center",
         justifyContent: 'space-between',
         
     },
     headerContainer: {
         display: 'flex',
-        width: '75%',
+        // width: '75%',
+        flex: 6,
 
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
+
+        paddingHorizontal: 15,
     },
     actionContainer: {
-        width: '20%',
+        // width: '20%',
+        display: 'flex',
+        flex: 4,
+        maxWidth: 200,
         
-        paddingBottom: 10,
+        paddingVertical: Theme.spacing.sm,
+        paddingBottom: Platform.OS === 'web' ? 0 : 50,
 
-        marginRight: 5,
+        marginRight: 10,
     },
 });

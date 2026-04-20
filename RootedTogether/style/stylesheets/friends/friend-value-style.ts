@@ -14,7 +14,6 @@ export const friendValueStyle = StyleSheet.create({
   nameContainer: {
     display: "flex",
     width: "75%",
-    height: "auto",
 
     flexDirection: "column",
     alignItems: "flex-start",

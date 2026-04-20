@@ -1,7 +1,7 @@
 import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 
-export const safeAreaStyle = StyleSheet.create({
+export const safeAreaStyle = (screen: 'home' | 'affirmation' | 'account') => StyleSheet.create({
     safeArea: {
         display: 'flex',
 
@@ -13,15 +13,16 @@ export const safeAreaStyle = StyleSheet.create({
         backgroundColor: Theme.colorScheme.background,
 
         // Spacing
-        paddingVertical: Theme.spacing.sm,
+        paddingVertical: Theme.spacing.xs,
         paddingHorizontal: Theme.spacing.md,
 
     },
     headerContainer: {
-        flex: 2.5
+        flex: screen === 'home' ? 2.5 : screen === 'account' ? 2 : 2,
+        width: '100%',
     },
     contentContainer: {
-        flex: 7.5,
+        flex: screen === 'home' ? 7.5 : screen === 'account' ? 8 : 8,
         width: '100%',
     },
 });

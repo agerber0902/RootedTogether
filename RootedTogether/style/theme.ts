@@ -1,4 +1,4 @@
-import { DimensionValue, Platform, TextStyle } from "react-native";
+import { Platform, TextStyle } from "react-native";
 import { colorScheme } from "./colorScheme";
 
 // Main Theme Object
@@ -38,6 +38,7 @@ export const Theme = {
   },
   //   Spacing
   spacing: {
+    xs: 8,
     sm: 16,
     md: 24,
     lg: 30,

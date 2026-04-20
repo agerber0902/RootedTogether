@@ -5,13 +5,15 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
+  const safeAreaStyles = safeAreaStyle('home');
+
   return (
     <>
-      <SafeAreaView style={safeAreaStyle.safeArea}>
-        <View style={safeAreaStyle.headerContainer}>
+      <SafeAreaView style={safeAreaStyles.safeArea}>
+        <View style={safeAreaStyles.headerContainer}>
           <HomeHeader />
         </View>
-        <View style={safeAreaStyle.contentContainer}>
+        <View style={safeAreaStyles.contentContainer}>
           <AffirmationCard/>
         </View>
       </SafeAreaView>
