@@ -82,7 +82,7 @@ export const Theme = {
       shadowRadius: 16,
       shadowOffset: { width: 0, height: 4 },
 
-      elevation: 4,
+      // elevation: 4,
     },
     textInput: {
       shadowColor: colorScheme.accent,

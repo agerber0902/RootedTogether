@@ -18,7 +18,7 @@ export const accountHeaderStyle = StyleSheet.create({
 
         justifyContent: 'flex-start',
 
-        paddingHorizontal: 15,
+        paddingRight: 15,
     },
     actionContainer: {
         // width: '20%',
