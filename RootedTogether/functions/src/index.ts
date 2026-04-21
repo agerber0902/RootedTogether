@@ -4,7 +4,7 @@ import * as logger from "firebase-functions/logger";
 import admin from "firebase-admin";
 // import { onSchedule } from "firebase-functions/scheduler";
 import { Timestamp } from "firebase-admin/firestore";
-import { onSchedule } from "firebase-functions/scheduler";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 
 interface Affirmation {
   id?: string;
@@ -115,7 +115,7 @@ async function scheduleAffirmationNotifications() {
       }));
     }),
   );
-  const messages = allMessages.flat();
+  const messages = allMessages.flat().filter((m) => m && m.to && m.to.startsWith("ExponentPushToken"));
   if (!messages.length) {
     console.log("No messages to send.");
     return;
@@ -123,28 +123,65 @@ async function scheduleAffirmationNotifications() {
 
   console.log(`Preparing to send ${messages.length} messages...`);
 
-  const res = await fetch("https://exp.host/--/api/v2/push/send", {
+  console.log(JSON.stringify(messages));
+
+  return await fetch("https://exp.host/--/api/v2/push/send", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(messages),
   });
-
-  const data = await res.json();
-  console.log("Expo response:", JSON.stringify(data, null, 2));
-  console.log("Notifications sent");
-};
+}
 
 export const scheduledNotificationTest = onRequest(
-  async (request, response) => {scheduleAffirmationNotifications()},
+  async (request, response) => {
+    const resp = await scheduleAffirmationNotifications();
+
+    if (!resp) {
+      response.status(500).send("No response");
+      return;
+    }
+
+    if (!resp.ok) {
+      const text = await resp.text();
+      response.status(500).send(text);
+      return;
+    }
+
+    const data = await resp.json();
+    response.status(200).json(data);
+  },
 );
 
 export const scheduledNotification = onSchedule(
   {
-    schedule: "0 18 * * *",
+    schedule: "0 6 * * *",
     timeZone: "America/New_York",
   },
   async () => {
-    scheduleAffirmationNotifications()
+    const resp = await scheduleAffirmationNotifications();
+
+    if (!resp) {
+      console.error("Scheduler failed: no response");
+      return;
+    }
+
+    if (!resp.ok) {
+      const text = await resp.text();
+      console.error("Expo error:", text);
+      return;
+    }
+
+    const data = await resp.json();
+
+    const errors = data.data?.filter((d: any) => d.status === "error");
+
+    if (errors?.length) {
+      console.error("Expo push errors:", errors);
+    } else {
+      console.log("All notifications accepted by Expo");
+    }
+
+    console.log("Expo finished:", data);
   },
 );
 
