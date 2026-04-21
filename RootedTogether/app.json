@@ -19,13 +19,13 @@
       "bundleIdentifier": "com.anonymous.RootedTogether",
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
-        "NSUserNotificationUsageDescription": "We use notifications to send you updates and reminders.",
+        "NSUserNotificationUsageDescription": "We use notifications to send you affirmations.",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE"
+        "backgroundColor": "#898973"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
