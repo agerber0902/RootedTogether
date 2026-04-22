@@ -65,9 +65,25 @@
         {
           "ios": {
             "useFrameworks": "static",
-            "buildSettings": {
-              "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES": "YES"
-            }
+            "useModularHeaders": true,
+            "forceStaticLinking": [
+              "RNFBApp",
+              "RNFBAnalytics",
+              "RNFBAppCheck",
+              "RNFBAppDistribution",
+              "RNFBAuth",
+              "RNFBCrashlytics",
+              "RNFBDatabase",
+              "RNFBFirestore",
+              "RNFBFunctions",
+              "RNFBInAppMessaging",
+              "RNFBInstallations",
+              "RNFBMessaging",
+              "RNFBML",
+              "RNFBPerf",
+              "RNFBRemoteConfig",
+              "RNFBStorage"
+            ]
           }
         }
       ]
