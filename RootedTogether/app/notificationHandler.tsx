@@ -87,7 +87,7 @@ const NotificationHandler = () => {
 
   const addTokenToUser = async (token: string) => {
 
-    if(affirmationUser?.notificationToken === token){
+    if(affirmationUser?.notificationToken === token || (token === null || token === '')){
       return;
     }
 
