@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "RootedTogether",
+    "name": "RootedTogether: Affirmations",
     "slug": "rootedtogether-expo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
-    "scheme": "RootedTogether",
+    "scheme": "RootedTogether: Affirmations",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "extra": {
