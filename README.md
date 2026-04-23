@@ -41,6 +41,7 @@ RootedTogether is a cross-platform React Native application (Web, iOS, and Andro
 ### Daily Affirmation Engine
 
 * Runs automatically every day at **6:00 AM**
+* Send Push Notification to users
 * Process:
 
   1. Fetch all affirmations where `recipientId == currentUserId`
@@ -63,7 +64,5 @@ RootedTogether is a cross-platform React Native application (Web, iOS, and Andro
 
 ## Future Improvments
 
-* Push notifications for daily affirmations
-* Enhanced friend management
-* Rich media affirmations (images, audio)
+* Push notifications for friend invite
 * Improved scheduling and reminders
