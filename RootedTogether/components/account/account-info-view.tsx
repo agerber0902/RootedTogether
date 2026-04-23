@@ -10,7 +10,11 @@ import { AffirmationUser } from "@/models/user";
 import { setUser } from "@/state/slices/user-slice";
 import LoadingSpinner from "../shared/loading-spinner";
 
-const AccountInfoView = () => {
+type AccountInfoViewProps = {
+  setIsEditMode: (mode: boolean) => void;
+};
+
+const AccountInfoView = ({ setIsEditMode }: AccountInfoViewProps) => {
   const { affirmationUser } = useAppSelector((state) => state.user.value);
   const dispatch = useAppDispatch();
 
@@ -34,6 +38,7 @@ const AccountInfoView = () => {
   const onCancel = () => {
     resetDetails();
     setIsEdit(false);
+    setIsEditMode(false);
   };
 
   const onSave = async () => {
@@ -79,6 +84,7 @@ const AccountInfoView = () => {
 
       dispatch(setUser(user));
       setIsEdit(false);
+      setIsEditMode(false);
       setError(undefined);
     } catch {
       setError("An error occurred, please try again.");
@@ -124,7 +130,10 @@ const AccountInfoView = () => {
       {!isEdit ? (
         <CardButton
           title={"Edit Account"}
-          onPress={() => setIsEdit(!isEdit)}
+          onPress={() => {
+            setIsEdit(!isEdit);
+            setIsEditMode(!isEdit);
+          }}
           isDisabled={isEdit || isLoading}
         />
       ) : isLoading ? (

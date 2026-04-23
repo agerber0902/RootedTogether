@@ -2,16 +2,29 @@ import { auth, firestore } from "../config/firebase";
 import { FirebaseResponse, FirebaseUserResponse } from "@/models/firebase";
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   signInWithEmailAndPassword,
   updateProfile,
+  User,
 } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, Timestamp, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  limit,
+  query,
+  Timestamp,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { addUser } from "./user-helper";
 
 export const addData = async <T extends object>(
   collectionName: string,
   data: T,
-) : Promise<FirebaseResponse<string>> => {
+): Promise<FirebaseResponse<string>> => {
   const { id, ...dataToAdd } = data as T & { id?: string };
   try {
     const docRef = await addDoc(collection(firestore, collectionName), {
@@ -19,7 +32,7 @@ export const addData = async <T extends object>(
       createdAt: Timestamp.fromDate(new Date()),
     });
 
-    return {data: docRef.id };
+    return { data: docRef.id };
   } catch (error) {
     console.error("Error adding document:", error);
     throw error;
@@ -29,11 +42,14 @@ export const addData = async <T extends object>(
 export const updateData = async <T extends { id?: string }>(
   collectionName: string,
   data: T,
-) : Promise<FirebaseResponse<string>> => {
+): Promise<FirebaseResponse<string>> => {
   const { id, ...dataToUpdate } = data;
 
   if (!id) {
-    return {data: undefined, error: 'User with that email could not be found.'};
+    return {
+      data: undefined,
+      error: "User with that email could not be found.",
+    };
   }
 
   try {
@@ -44,20 +60,40 @@ export const updateData = async <T extends { id?: string }>(
       updatedAt: Timestamp.fromDate(new Date()),
     });
 
-    return {data: id};
+    return { data: id };
   } catch {
-    return {data: undefined, error: "An unexpected error occured"};
+    return { data: undefined, error: "An unexpected error occured" };
   }
 };
 
-export const deleteData = async (collectionName: string, id: string) : Promise<FirebaseResponse<string>> => {
+export const deleteData = async (
+  collectionName: string,
+  id: string,
+): Promise<FirebaseResponse<string>> => {
   try {
     const docRef = doc(firestore, collectionName, id);
     await deleteDoc(docRef);
-    return {data: 'deleted'}
+    return { data: "deleted" };
   } catch {
-    return {data: undefined, error: "An unexpected error occured"}
+    return { data: undefined, error: "An unexpected error occured" };
   }
+};
+
+export const deleteUserData = async (user: User): Promise<boolean> => {
+  const ref = collection(firestore, "users");
+  const userQuery = query(ref, where("uid", "==", user.uid), limit(1));
+  const snapshot = await getDocs(userQuery);
+
+  if (snapshot.empty) {
+    return false;
+  }
+
+
+  await deleteData("users", snapshot.docs[0].id);
+
+  await deleteUser(user);
+
+  return true;
 };
 
 export const signOut = async (): Promise<boolean> => {

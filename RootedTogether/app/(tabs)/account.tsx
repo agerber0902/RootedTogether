@@ -11,6 +11,8 @@ const AccountScreen = () => {
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+
   const onBackDrop = () => {
     setIsModalVisible(false);
   };
@@ -28,10 +30,10 @@ const AccountScreen = () => {
       />
       <SafeAreaView style={safeAreaStyles.safeArea}>
         <View style={safeAreaStyles.headerContainer}>
-          <AccountHeader />
+          <AccountHeader isEditMode={isEditMode}/>
         </View>
         <View style={safeAreaStyles.contentContainer}>
-          <AccountInfoCard />
+          <AccountInfoCard setIsEditMode={setIsEditMode}/>
         </View>
       </SafeAreaView>
     </>
