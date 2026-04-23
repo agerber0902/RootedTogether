@@ -1,7 +1,7 @@
 import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 
-export const cardButtonStyle = (hasShadow: boolean) => StyleSheet.create({
+export const cardButtonStyle = (hasShadow: boolean, isDelete: boolean) => StyleSheet.create({
   container: {
     width: "100%",
 
@@ -10,7 +10,7 @@ export const cardButtonStyle = (hasShadow: boolean) => StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 5,
 
-    backgroundColor: Theme.colorScheme.primaryButton,
+    backgroundColor: isDelete ? 'rgba(255, 0, 0, 0.75)' : Theme.colorScheme.primaryButton,
     color: Theme.colorScheme.primaryButtonText,
 
     // Shadow

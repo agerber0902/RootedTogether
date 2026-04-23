@@ -7,6 +7,7 @@ type CardButtonProps = {
   isDisabled: boolean;
   isSecondary?: boolean | undefined;
   hasShadow?: boolean;
+  isDelete?: boolean;
 };
 
 const CardButton = ({
@@ -15,8 +16,9 @@ const CardButton = ({
   isDisabled,
   isSecondary = false,
   hasShadow = true,
+  isDelete = false,
 }: CardButtonProps) => {
-  const cardButtonStyles = cardButtonStyle(hasShadow);
+  const cardButtonStyles = cardButtonStyle(hasShadow, isDelete);
 
   return (
     <>

@@ -4,13 +4,17 @@ import DisplayCard from "../shared/display-card";
 import AccountInfoView from "./account-info-view";
 import { accountInfoCardStyle } from "@/style/stylesheets/account/account-info-card-style";
 
-const AccountInfoCard = () => {
+type AccountInfoCardProps = {
+  setIsEditMode: (mode: boolean) => void;
+}
+
+const AccountInfoCard = ({setIsEditMode}: AccountInfoCardProps) => {
   return (
     <>
       <DisplayCard style={accountInfoCardStyle.displayCard}>
         <View style={accountInfoCardStyle.cardContainer}>
           <View style={accountInfoCardStyle.accountInfoContainer}>
-            <AccountInfoView />
+            <AccountInfoView setIsEditMode={setIsEditMode}/>
           </View>
           <View style={accountInfoCardStyle.friendsContainer}>
             <FriendView />

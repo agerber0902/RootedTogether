@@ -4,8 +4,13 @@ import SignOutButton from "./sign-out-button";
 import { accountHeaderStyle } from "@/style/stylesheets/account/account-header-style";
 import FadeInView from "../shared/fade-in-view";
 import { animationStyle } from "@/style/stylesheets/components/shared/animation-style";
+import DeleteAccountButton from "./delete-account-button";
 
-const AccountHeader = () => {
+type AccountHeaderProps = {
+  isEditMode: boolean;
+}
+
+const AccountHeader = ({isEditMode}: AccountHeaderProps) => {
   return (
     <View style={accountHeaderStyle.container}>
       <View style={accountHeaderStyle.headerContainer}>
@@ -17,8 +22,9 @@ const AccountHeader = () => {
           delay={animationStyle.delay.headerDelay}
           duration={animationStyle.duration.headerDuration}
         >
-          <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          <View style={{flex: 1, flexDirection: 'column', justifyContent: 'flex-end', gap: 5,}}>
             <SignOutButton />
+            {isEditMode && <DeleteAccountButton />}
           </View>
         </FadeInView>
       </View>
