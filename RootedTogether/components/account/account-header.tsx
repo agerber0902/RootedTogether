@@ -23,7 +23,7 @@ const AccountHeader = ({isEditMode}: AccountHeaderProps) => {
           duration={animationStyle.duration.headerDuration}
         >
           <View style={{flex: 1, flexDirection: 'column', justifyContent: 'flex-end', gap: 5,}}>
-            <SignOutButton />
+            {!isEditMode && <SignOutButton />}
             {isEditMode && <DeleteAccountButton />}
           </View>
         </FadeInView>
