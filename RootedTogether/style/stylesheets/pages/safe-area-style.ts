@@ -1,7 +1,7 @@
 import { Theme } from "@/style/theme";
 import { StyleSheet } from "react-native";
 
-export const safeAreaStyle = (screen: 'home' | 'affirmation' | 'account') => StyleSheet.create({
+export const safeAreaStyle = (screen: 'home' | 'affirmation' | 'account' | 'root') => StyleSheet.create({
     safeArea: {
         display: 'flex',
 

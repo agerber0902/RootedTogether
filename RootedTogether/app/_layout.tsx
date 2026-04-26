@@ -20,6 +20,8 @@ import LoginModal from "./modals/login-modal";
 import AppBootstrap from "../components/app-bootstrap";
 import LoadingSpinner from "@/components/shared/loading-spinner";
 import NotificationHandler from "./notificationHandler";
+import { View } from "react-native";
+import { safeAreaStyle } from "@/style/stylesheets/pages/safe-area-style";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -27,13 +29,20 @@ export const unstable_settings = {
 
 const RootNavigator = () => {
   const { isAuthenticated, authLoading } = useAuth();
+  const safeAreaStyles = safeAreaStyle("root");
 
   if (authLoading) {
-    return <LoadingSpinner viewStyle={{ flex: 1 }} />;
+    return (
+      <View style={safeAreaStyles.contentContainer}>
+        <LoadingSpinner
+          viewStyle={{ flex: 1, justifyContent: "center" }}
+        />
+      </View>
+    );
   }
 
   if (!isAuthenticated) {
-    return <LoginModal/>;
+    return <LoginModal />;
   }
 
   return (
