@@ -30,7 +30,7 @@ const AccountScreen = () => {
       />
       <SafeAreaView style={safeAreaStyles.safeArea}>
         <View style={safeAreaStyles.headerContainer}>
-          <AccountHeader isEditMode={isEditMode} />
+          <AccountHeader isEditMode={isEditMode} setIsEditMode={() => setIsEditMode}/>
         </View>
         <View style={safeAreaStyles.contentContainer}>
           <AccountInfoCard setIsEditMode={setIsEditMode} />

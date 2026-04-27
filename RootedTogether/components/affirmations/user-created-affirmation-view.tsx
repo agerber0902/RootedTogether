@@ -8,17 +8,20 @@ import { useAppSelector } from "@/state/hooks";
 import AffirmationsModal from "@/app/modals/affirmations-modal";
 import { useState } from "react";
 import { Affirmation } from "@/models/affirmation";
+import { useAuth } from "@/provider/auth-provider";
+import CreateAccountButtonView from "../shared/create-account-button-view";
 
 const UserCreatedAffirmationView = () => {
+  const { isAuthenticated } = useAuth();
+
   const { userCreatedAffirmations } = useAppSelector(
     (state) => state.affirmation.value,
   );
   const hasAffirmations = userCreatedAffirmations.length > 0;
-console.log(userCreatedAffirmations)
-console.log(userCreatedAffirmations.length > 0)
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
-  const [affirmationToEdit, setAffirmationToEdit] = useState<Affirmation | undefined>();
+  const [affirmationToEdit, setAffirmationToEdit] = useState<
+    Affirmation | undefined
+  >();
 
   const onAdd = () => {
     setAffirmationToEdit(undefined);
@@ -71,14 +74,18 @@ console.log(userCreatedAffirmations.length > 0)
           </ScrollView>
 
           {/* Add Button */}
-          <View style={userCreatedAffirmationsCardStyle.buttonContainer}>
-            <CardButton
-              key={"create-affirmation"}
-              title="Create an Affirmation"
-              onPress={onAdd}
-              isDisabled={false}
-            />
-          </View>
+          {!isAuthenticated ? (
+            <CreateAccountButtonView text="You need an account to add your own affirmations."/>
+          ) : (
+            <View style={userCreatedAffirmationsCardStyle.buttonContainer}>
+              <CardButton
+                key={"create-affirmation"}
+                title="Create an Affirmation"
+                onPress={onAdd}
+                isDisabled={false}
+              />
+            </View>
+          )}
         </>
       </DisplayCard>
     </>

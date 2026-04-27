@@ -30,12 +30,15 @@ const DeleteAccountModal = ({
       }
 
       const isSignedOut = await deleteUserData(user);
+
+      onClose();
       return isSignedOut;
     } catch {
       setIsLoading(false);
     } finally {
       setTimeout(() => {
         setIsLoading(false);
+        
       }, 1000);
     }
   };

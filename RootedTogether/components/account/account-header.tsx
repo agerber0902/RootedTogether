@@ -8,9 +8,11 @@ import DeleteAccountButton from "./delete-account-button";
 
 type AccountHeaderProps = {
   isEditMode: boolean;
+  setIsEditMode: (flag: boolean) => void;
 }
 
-const AccountHeader = ({isEditMode}: AccountHeaderProps) => {
+const AccountHeader = ({isEditMode, setIsEditMode}: AccountHeaderProps) => {
+  console.log(isEditMode)
   return (
     <View style={accountHeaderStyle.container}>
       <View style={accountHeaderStyle.headerContainer}>
@@ -23,8 +25,7 @@ const AccountHeader = ({isEditMode}: AccountHeaderProps) => {
           duration={animationStyle.duration.headerDuration}
         >
           <View style={{flex: 1, flexDirection: 'column', justifyContent: 'flex-end', gap: 5,}}>
-            {!isEditMode && <SignOutButton />}
-            {isEditMode && <DeleteAccountButton />}
+            {!isEditMode ? <SignOutButton /> : <DeleteAccountButton onClick={() => setIsEditMode(false)}/>}
           </View>
         </FadeInView>
       </View>

@@ -5,7 +5,11 @@ import { useState } from "react";
 import LoginModal from "@/app/modals/login-modal";
 import { createAccountButtonViewStyle } from "@/style/stylesheets/components/shared/create-account-button-view-style";
 
-const CreateAccountButtonView = () => {
+type CreateAccountButtonViewProps = {
+  text?: string | undefined;
+};
+
+const CreateAccountButtonView = ({text}: CreateAccountButtonViewProps) => {
   const { isAuthenticated } = useAuth();
 
   const [isShowCreateModal, setIsShowCreateModal] = useState<boolean>(false);
@@ -25,7 +29,7 @@ const CreateAccountButtonView = () => {
       <View style={createAccountButtonViewStyle.container}>
         <View style={createAccountButtonViewStyle.infoTextContainer}>
           <Text style={createAccountButtonViewStyle.infoText} numberOfLines={3} ellipsizeMode="tail">
-            You need to create an account to view this information
+            {text ? text : 'You need to create an account to view this information'}
           </Text>
         </View>
         <View style={createAccountButtonViewStyle.createButtonContainer}>
