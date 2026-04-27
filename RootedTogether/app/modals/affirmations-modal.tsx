@@ -170,7 +170,7 @@ const AffirmationsModal = ({
   return (
     <>
       <ModalView
-        headerTitle={affirmation ? "Edit Affirmation" : "Plant an Affirmation"}
+        headerTitle={affirmation ? "Edit Affirmation" : "Create an Affirmation"}
         isVisible={isVisible}
         onBackDrop={onBackDrop}
         onClose={onClose}

@@ -1,10 +1,13 @@
 import DeleteAccountModal from "@/app/modals/delete-account-modal";
 import CardButton from "../shared/card-button";
 import { useAuth } from "@/provider/auth-provider";
-import { deleteUser } from "@firebase/auth";
 import { useState } from "react";
 
-const DeleteAccountButton = () => {
+type DeleteAccountButtonProps = {
+  onClick: () => void;
+};
+
+const DeleteAccountButton = ({onClick}: DeleteAccountButtonProps) => {
   const { user } = useAuth();
 
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState<boolean>(false);
@@ -17,12 +20,17 @@ const DeleteAccountButton = () => {
     setIsDeleteModalVisible(true);
   };
 
+  const onClose = () => {
+    setIsDeleteModalVisible(false);
+    onClick();
+  }
+
   return (
     <>
       <DeleteAccountModal 
       isVisible={isDeleteModalVisible}
-      onClose={() => setIsDeleteModalVisible(false)}
-      onBackDrop={() => setIsDeleteModalVisible(false)}
+      onClose={onClose}
+      onBackDrop={onClose}
       />
       <CardButton
         title="Delete Account"

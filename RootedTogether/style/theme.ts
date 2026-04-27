@@ -34,6 +34,8 @@ export const Theme = {
 
       emptyWarning: 24,
       pending: 18,
+
+      createAccountHeader: 24,
     },
   },
   //   Spacing

@@ -7,7 +7,7 @@ import AccountInfoCard from "@/components/account/account-info-card";
 import { View } from "react-native";
 
 const AccountScreen = () => {
-  const safeAreaStyles = safeAreaStyle('account');
+  const safeAreaStyles = safeAreaStyle("account");
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -30,10 +30,10 @@ const AccountScreen = () => {
       />
       <SafeAreaView style={safeAreaStyles.safeArea}>
         <View style={safeAreaStyles.headerContainer}>
-          <AccountHeader isEditMode={isEditMode}/>
+          <AccountHeader isEditMode={isEditMode} setIsEditMode={() => setIsEditMode}/>
         </View>
         <View style={safeAreaStyles.contentContainer}>
-          <AccountInfoCard setIsEditMode={setIsEditMode}/>
+          <AccountInfoCard setIsEditMode={setIsEditMode} />
         </View>
       </SafeAreaView>
     </>

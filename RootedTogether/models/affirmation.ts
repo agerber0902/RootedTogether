@@ -4,8 +4,8 @@ export interface Affirmation {
   id?: string;
   message: string;
   displayDate: Timestamp | null;
-  recipientId: string;
-  creatorId: string;
+  recipientId?: string;
+  creatorId?: string;
 
   createdAt: Timestamp;
 }

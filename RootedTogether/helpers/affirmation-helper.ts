@@ -27,6 +27,27 @@ export const editAffirmation = async (affirmation: Affirmation) => {
   await updateData<Affirmation>(collectionName, affirmation);
 };
 
+export const getDefaultAffirmations = async (): Promise<Affirmation[]> => {
+  const affirmationRef = collection(firestore, "defaultAffirmations");
+
+  const affirmationsQuery = query(
+    affirmationRef
+  );
+
+  const snapshot = await getDocs(affirmationsQuery);
+
+  if (snapshot.empty) {
+    return [];
+  }
+
+  const defaultAffirmations: Affirmation[] = snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return affirmationMap(data, doc.id);
+  });
+
+  return defaultAffirmations;
+};
+
 // Helper function to get affirmation for a creator
 const getAffirmationForCreator = (
   creatorId: string,
@@ -139,7 +160,7 @@ export const getTodaysAffirmations = async (
   for (const friendDisplay of friendDisplays) {
     const friendAffirmation = getAffirmationForCreator(
       friendDisplay.friendId,
-      allAffirmations
+      allAffirmations,
     );
     if (friendAffirmation) {
       result.push({

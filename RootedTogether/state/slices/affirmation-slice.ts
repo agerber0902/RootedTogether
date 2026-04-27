@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ProgressState {
   value: {
+    defaultAffirmations: Affirmation[];
     userCreatedAffirmations: Affirmation[];
     todaysAffirmations: TodaysAffirmation[];
     todaysAffirmationDayKey: string | undefined;
@@ -11,6 +12,7 @@ export interface ProgressState {
 
 const initialState: ProgressState = {
   value: {
+    defaultAffirmations: [],
     userCreatedAffirmations: [],
     todaysAffirmations: [],
     todaysAffirmationDayKey: undefined,
@@ -18,9 +20,12 @@ const initialState: ProgressState = {
 };
 
 const affirmationSlice = createSlice({
-  name: 'user',
+  name: 'affirmations',
   initialState,
   reducers: {
+    setDefaultAffirmations: (state, action: PayloadAction<Affirmation[]>) => {
+      state.value.defaultAffirmations = action.payload;
+    },
     setUserCreatedAffirmations: (state, action: PayloadAction<Affirmation[]>) => {
         state.value.userCreatedAffirmations = action.payload;
     },
@@ -43,6 +48,7 @@ export const {
     setTodaysAffirmation,
     resetUserCreatedAffirmations,
     resetTodaysAffirmation,
+    setDefaultAffirmations,
 } = affirmationSlice.actions;
 
 export default affirmationSlice.reducer;
