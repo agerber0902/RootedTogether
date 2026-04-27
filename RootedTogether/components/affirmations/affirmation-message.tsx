@@ -13,7 +13,7 @@ const AffirmationMessage = ({
 }: AffirmationMessageProp) => {
   const forword = (): string => {
     return !affirmation || !friendDisplayName
-      ? ""
+      ? "Always remember: "
       : friendDisplayName === "You"
         ? "You wanted to remind yourself: "
         : `${friendDisplayName} wanted to remind you: `;
