@@ -17,11 +17,13 @@ import LoadingSpinner from "../shared/loading-spinner";
 type ListedAffirmationViewProps = {
   affirmation: Affirmation;
   onEdit: (affirmation: Affirmation) => void;
+  canEdit: boolean;
 };
 
 const ListedAffirmationView = ({
   affirmation,
   onEdit,
+  canEdit
 }: ListedAffirmationViewProps) => {
   const dispatch = useAppDispatch();
   const { affirmationUser } = useAppSelector((state) => state.user.value);
@@ -82,7 +84,7 @@ const ListedAffirmationView = ({
             {getDisplayName()}
           </Text>
         </View>
-        <View style={listedAffirmationViewStyle.actionContainer}>
+        {canEdit && <View style={listedAffirmationViewStyle.actionContainer}>
           {isLoading ? (
             <LoadingSpinner />
           ) : (
@@ -103,7 +105,7 @@ const ListedAffirmationView = ({
               </Pressable>
             </>
           )}
-        </View>
+        </View>}
       </View>
     </>
   );

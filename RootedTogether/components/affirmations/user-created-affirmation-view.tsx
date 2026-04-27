@@ -65,6 +65,7 @@ console.log(userCreatedAffirmations.length > 0)
                   key={affirmation.id}
                   affirmation={affirmation}
                   onEdit={onEdit}
+                  canEdit={true}
                 />
               ))}
           </ScrollView>
