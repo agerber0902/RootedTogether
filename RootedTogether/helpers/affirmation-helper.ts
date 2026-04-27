@@ -14,6 +14,8 @@ import {
   TodaysAffirmation,
 } from "@/models/affirmation";
 import { FriendDisplay } from "@/models/friends";
+import { getUser } from "./user-helper";
+import { isToday } from "./validation-helper";
 
 const collectionName = "affirmations";
 
@@ -30,9 +32,7 @@ export const editAffirmation = async (affirmation: Affirmation) => {
 export const getDefaultAffirmations = async (): Promise<Affirmation[]> => {
   const affirmationRef = collection(firestore, "defaultAffirmations");
 
-  const affirmationsQuery = query(
-    affirmationRef
-  );
+  const affirmationsQuery = query(affirmationRef);
 
   const snapshot = await getDocs(affirmationsQuery);
 
@@ -145,6 +145,23 @@ export const getTodaysAffirmations = async (
   });
 
   const result: TodaysAffirmation[] = [];
+
+  const user = await getUser(userId);
+
+  if (user?.todaysAffirmationIds && user.todaysAffirmationIds.length > 0 && isToday(user.updatedAt)) {
+    const cachedAffirmation = allAffirmations.filter((a) =>
+      user.todaysAffirmationIds?.includes(a.id ?? ""),
+    );
+    cachedAffirmation.map((affirmation) =>
+      result.push({
+        date: Timestamp.fromDate(new Date()),
+        friendDisplayName: "You",
+        affirmation: [affirmation],
+      }),
+    );
+
+    return result;
+  }
 
   // Add user's affirmations first
   const userAffirmation = getAffirmationForCreator(userId, allAffirmations);

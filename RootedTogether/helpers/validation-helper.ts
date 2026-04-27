@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export const stringExists = (input: string | undefined): boolean => {
     return (input !== undefined && input !== null && input?.length > 0);
 }
@@ -33,3 +35,16 @@ export const validateDistinctStringPair = (
 
     return undefined;
 }
+
+export const isToday = (timestamp?: Timestamp) => {
+  if (!timestamp) return false;
+
+  const date = timestamp.toDate();
+  const now = new Date();
+
+  return (
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate()
+  );
+};

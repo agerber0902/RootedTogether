@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface AffirmationUser {
   id?: string;
   uid: string;
@@ -7,6 +9,7 @@ export interface AffirmationUser {
   last: string;
   notificationToken?: string;
   todaysAffirmationIds?: string[];
+  updatedAt?: Timestamp | undefined;
 }
 
 export type CreateAffirmationUser = Omit<AffirmationUser, "id">;
@@ -21,6 +24,7 @@ type AffirmationUserRaw = {
   last?: unknown;
   notificationToken?: unknown;
   todaysAffirmationIds?: unknown;
+  updatedAt?: unknown;
 };
 
 export const AffirmationUserMap = (
@@ -34,7 +38,9 @@ export const AffirmationUserMap = (
     first: typeof data.first === "string" ? data.first : "",
     last: typeof data.last === "string" ? data.last : "",
     email: typeof data.email === "string" ? data.email : "",
-    notificationToken: typeof data.notificationToken === "string" ? data.notificationToken : "",
+    updatedAt: data.updatedAt instanceof Timestamp ? data.updatedAt : undefined,
+    notificationToken:
+      typeof data.notificationToken === "string" ? data.notificationToken : "",
     todaysAffirmationIds:
       Array.isArray(data.todaysAffirmationIds) &&
       data.todaysAffirmationIds.every((id) => typeof id === "string")
