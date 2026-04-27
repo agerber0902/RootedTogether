@@ -115,7 +115,9 @@ async function scheduleAffirmationNotifications() {
       }));
     }),
   );
-  const messages = allMessages.flat().filter((m) => m && m.to && m.to.startsWith("ExponentPushToken"));
+  const messages = allMessages
+    .flat()
+    .filter((m) => m && m.to && m.to.startsWith("ExponentPushToken"));
   if (!messages.length) {
     console.log("No messages to send.");
     return;
@@ -230,6 +232,41 @@ export const sendTestNotification = onRequest(async (request, response) => {
   }
 });
 
+async function saveAffirmationsToUser(
+  userId: string,
+  affirmations: NotificationAffirmation[],
+) {
+  console.log(`Saving to user ${userId} table..`);
+
+  const affirmationIds = affirmations.reduce<string[]>((acc, a) => {
+    if (!a.affirmation) return acc;
+
+    const list = Array.isArray(a.affirmation) ? a.affirmation : [a.affirmation];
+    console.log(list);
+    acc.push(...list.map((x) => x.id ?? ""));
+    return acc;
+  }, []);
+  affirmationIds.filter((af) => af !== "");
+
+  const db = admin.firestore();
+
+  const snapshot = await db
+    .collection("users")
+    .where("uid", "==", userId)
+    .limit(1)
+    .get();
+
+  if (!snapshot.empty) {
+    const doc = snapshot.docs[0];
+    console.log(`AffirmationIds: ${affirmationIds}`)
+
+    await doc.ref.update({
+      todaysAffirmationIds: affirmationIds,
+      updatedAt: admin.firestore.Timestamp.now(),
+    });
+  }
+}
+
 // Get all the affirmations for the user
 async function getUserNotifications(user: any) {
   console.log(`Attempting to get all the notifications for ${user.uid}...`);
@@ -261,6 +298,7 @@ async function getUserNotifications(user: any) {
     if (userAffirmation) {
       result.push(
         ...userAffirmation.map((affirmation) => ({
+          affirmation: affirmation,
           date: Timestamp.fromDate(new Date()),
           title: "Remind yourself",
           body: affirmation.message,
@@ -276,6 +314,9 @@ async function getUserNotifications(user: any) {
         affirmations.filter((a) => a.creatorId !== user.uid),
       )),
     );
+
+    // Save todays affirmations in user table
+    await saveAffirmationsToUser(user.uid, result);
 
     return result;
   } catch {
@@ -326,7 +367,7 @@ async function getUserAffirmationsFromFriends(
       // Get the creator's display name from the friend record
       const friendDisplayName =
         friends
-          .find((f) =>
+          .find((f: any) =>
             f.friendDetails?.some((fd: any) => fd.userId === user.uid),
           )
           ?.friendDetails?.find((detail: any) => detail.userId === user.uid)
@@ -337,6 +378,7 @@ async function getUserAffirmationsFromFriends(
       // Add notifications for all affirmations returned (can be multiple if all have today's date)
       notificationsFromFriends.push(
         ...creatorAffirmations.map((affirmation) => ({
+          affirmation: affirmation,
           date: Timestamp.fromDate(new Date()),
           title: friendDisplayName,
           body: affirmation.message,
@@ -365,11 +407,11 @@ async function getAllUsers() {
     //   console.log(`User ${index + 1}:`, doc.id, doc.data());
     // });
 
-    let users = usersSnapshot.docs.map((doc) => doc.data());
+    let users = usersSnapshot.docs.map((doc: any) => doc.data());
     console.log(`Mapped users:`, users);
 
     const seen = new Set();
-    users = users.filter((user) => {
+    users = users.filter((user: any) => {
       if (
         user.notificationToken &&
         !user.notificationToken?.startsWith("ExponentPushToken")
