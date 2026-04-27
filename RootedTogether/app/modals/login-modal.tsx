@@ -14,7 +14,12 @@ import { stringExists } from "@/helpers/validation-helper";
 import { signIn, signUp } from "@/helpers/firebase-helper";
 import LoadingSpinner from "@/components/shared/loading-spinner";
 
-const LoginModal = () => {
+type LoginModalProps = {
+  isStartCreate?: boolean | undefined
+  onClose?: () => void;
+};
+
+const LoginModal = ({isStartCreate = false, onClose = undefined}: LoginModalProps) => {
   const { isAuthenticated, authLoading, setDisplayName } = useAuth();
 
   const [name, setName] = useState<string>("");
@@ -22,7 +27,7 @@ const LoginModal = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isCreate, setIsCreate] = useState<boolean>(false);
+  const [isCreate, setIsCreate] = useState<boolean>(isStartCreate);
 
   const resetInputs = () => {
     setName("");
@@ -81,8 +86,8 @@ const LoginModal = () => {
       <ModalView
         headerTitle={isCreate ? "Create User" : "Login"}
         isVisible={!isAuthenticated}
-        onBackDrop={() => {}}
-        onClose={() => {}}
+        onBackDrop={onClose ? onClose : () => {}}
+        onClose={onClose ? onClose : () => {}}
         error={error}
       >
         <View style={loginModalStyle.container}>

@@ -5,12 +5,9 @@ import AccountModal from "../modals/account-modal";
 import { useState } from "react";
 import AccountInfoCard from "@/components/account/account-info-card";
 import { View } from "react-native";
-import { useAuth } from "@/provider/auth-provider";
-import LoginModal from "../modals/login-modal";
 
 const AccountScreen = () => {
   const safeAreaStyles = safeAreaStyle("account");
-  const { isAuthenticated } = useAuth();
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -23,10 +20,6 @@ const AccountScreen = () => {
   const onModalClose = () => {
     setIsModalVisible(false);
   };
-
-  // if (!isAuthenticated) {
-  //   return <LoginModal />;
-  // }
 
   return (
     <>

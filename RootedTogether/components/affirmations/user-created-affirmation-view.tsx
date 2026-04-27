@@ -74,7 +74,7 @@ console.log(userCreatedAffirmations.length > 0)
           <View style={userCreatedAffirmationsCardStyle.buttonContainer}>
             <CardButton
               key={"create-affirmation"}
-              title="Plant an Affirmation"
+              title="Create an Affirmation"
               onPress={onAdd}
               isDisabled={false}
             />
