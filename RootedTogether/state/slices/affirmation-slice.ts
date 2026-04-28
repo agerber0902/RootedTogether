@@ -5,6 +5,7 @@ export interface ProgressState {
   value: {
     defaultAffirmations: Affirmation[];
     userCreatedAffirmations: Affirmation[];
+    anonymousUserCreatedAffirmations: Affirmation[];
     todaysAffirmations: TodaysAffirmation[];
     todaysAffirmationDayKey: string | undefined;
   };
@@ -14,6 +15,7 @@ const initialState: ProgressState = {
   value: {
     defaultAffirmations: [],
     userCreatedAffirmations: [],
+    anonymousUserCreatedAffirmations: [],
     todaysAffirmations: [],
     todaysAffirmationDayKey: undefined,
   },
@@ -28,6 +30,9 @@ const affirmationSlice = createSlice({
     },
     setUserCreatedAffirmations: (state, action: PayloadAction<Affirmation[]>) => {
         state.value.userCreatedAffirmations = action.payload;
+    },
+    setAnonymousUserCreatedAffirmations: (state, action: PayloadAction<Affirmation[]>) => {
+        state.value.anonymousUserCreatedAffirmations = action.payload;
     },
     setTodaysAffirmation: (state, action: PayloadAction<{ affirmations: TodaysAffirmation[]; dayKey: string }>) => {
       state.value.todaysAffirmations = action.payload.affirmations;
@@ -49,6 +54,7 @@ export const {
     resetUserCreatedAffirmations,
     resetTodaysAffirmation,
     setDefaultAffirmations,
+    setAnonymousUserCreatedAffirmations,
 } = affirmationSlice.actions;
 
 export default affirmationSlice.reducer;

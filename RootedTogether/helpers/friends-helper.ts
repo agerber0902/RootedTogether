@@ -77,7 +77,6 @@ export const listenToFriends = (
   );
 
   return onSnapshot(friendQuery, async(snapshot) => {
-    console.log("🔥 snapshot fired:", snapshot.docs.length);
     const data = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),

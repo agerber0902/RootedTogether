@@ -1,5 +1,8 @@
 import LoadingSpinner from "@/components/shared/loading-spinner";
-import { getCachedDefaultAffirmations } from "@/config/firebase";
+import {
+  getCachedAnonymousAffirmations,
+  getCachedDefaultAffirmations,
+} from "@/config/firebase";
 import {
   getLocalDayKey,
   getRandomItem,
@@ -13,6 +16,7 @@ import { useAuth } from "@/provider/auth-provider";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import {
   resetUserCreatedAffirmations,
+  setAnonymousUserCreatedAffirmations,
   setDefaultAffirmations,
   setTodaysAffirmation,
   setUserCreatedAffirmations,
@@ -42,8 +46,12 @@ const AppBootstrap = ({ children }: AppBootstrapProps) => {
 
   useEffect(() => {
     // Get Default affimrations
-    const getCache = async () =>
+    const getCache = async () => {
       dispatch(setDefaultAffirmations(await getCachedDefaultAffirmations()));
+
+      const anonAffirmations = await getCachedAnonymousAffirmations();
+      dispatch(setAnonymousUserCreatedAffirmations(anonAffirmations));
+    };
 
     getCache();
   }, [dispatch]);

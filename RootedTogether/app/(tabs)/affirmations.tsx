@@ -5,7 +5,7 @@ import UserCreatedAffirmationView from "@/components/affirmations/user-created-a
 import { View } from "react-native";
 
 const AffirmationsScreen = () => {
-  const safeAreaStyles = safeAreaStyle('affirmation');
+  const safeAreaStyles = safeAreaStyle("affirmation");
 
   return (
     <>

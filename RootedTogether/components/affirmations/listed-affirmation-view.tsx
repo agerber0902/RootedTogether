@@ -4,7 +4,7 @@ import {
 } from "@/helpers/affirmation-helper";
 import { Affirmation } from "@/models/affirmation";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { setUserCreatedAffirmations } from "@/state/slices/affirmation-slice";
+import { setAnonymousUserCreatedAffirmations, setUserCreatedAffirmations } from "@/state/slices/affirmation-slice";
 import {
   iconSize,
   listedAffirmationViewStyle,
@@ -13,6 +13,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import LoadingSpinner from "../shared/loading-spinner";
+import { useAuth } from "@/provider/auth-provider";
+import { deleteCachedAnonymousAffirmation } from "@/config/firebase";
 
 type ListedAffirmationViewProps = {
   affirmation: Affirmation;
@@ -23,13 +25,12 @@ type ListedAffirmationViewProps = {
 const ListedAffirmationView = ({
   affirmation,
   onEdit,
-  canEdit
+  canEdit,
 }: ListedAffirmationViewProps) => {
+  const { isAuthenticated } = useAuth();
   const dispatch = useAppDispatch();
   const { affirmationUser } = useAppSelector((state) => state.user.value);
-  const { friendDisplays } = useAppSelector(
-    (state) => state.friend.value,
-  );
+  const { friendDisplays } = useAppSelector((state) => state.friend.value);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -48,14 +49,17 @@ const ListedAffirmationView = ({
     setIsLoading(true);
 
     try {
-      await deleteAffirmation(affirmation.id ?? "");
-
-      // update affirmations
-      dispatch(
-        setUserCreatedAffirmations(
-          await getUserCreatedAffirmations(affirmationUser!.uid),
-        ),
-      );
+      if (isAuthenticated) {
+        await deleteAffirmation(affirmation.id ?? "");
+        dispatch(
+          setUserCreatedAffirmations(
+            await getUserCreatedAffirmations(affirmationUser!.uid),
+          ),
+        );
+      } else {
+        const anonAffirmations = await deleteCachedAnonymousAffirmation(affirmation);
+        dispatch(setAnonymousUserCreatedAffirmations(anonAffirmations));
+      }
     } finally {
       setTimeout(() => {
         setIsLoading(false);
@@ -84,28 +88,30 @@ const ListedAffirmationView = ({
             {getDisplayName()}
           </Text>
         </View>
-        {canEdit && <View style={listedAffirmationViewStyle.actionContainer}>
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <>
-              <Pressable onPress={() => onEdit(affirmation)}>
-                <Ionicons
-                  name="pencil"
-                  size={iconSize}
-                  color={listedAffirmationViewStyle.actionIcon.color}
-                />
-              </Pressable>
-              <Pressable onPress={onDelete}>
-                <Ionicons
-                  name="trash"
-                  size={iconSize}
-                  color={listedAffirmationViewStyle.actionIcon.color}
-                />
-              </Pressable>
-            </>
-          )}
-        </View>}
+        {canEdit && (
+          <View style={listedAffirmationViewStyle.actionContainer}>
+            {isLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                <Pressable onPress={() => onEdit(affirmation)}>
+                  <Ionicons
+                    name="pencil"
+                    size={iconSize}
+                    color={listedAffirmationViewStyle.actionIcon.color}
+                  />
+                </Pressable>
+                <Pressable onPress={onDelete}>
+                  <Ionicons
+                    name="trash"
+                    size={iconSize}
+                    color={listedAffirmationViewStyle.actionIcon.color}
+                  />
+                </Pressable>
+              </>
+            )}
+          </View>
+        )}
       </View>
     </>
   );
