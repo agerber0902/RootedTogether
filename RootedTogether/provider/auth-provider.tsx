@@ -5,8 +5,9 @@ import React, {
   useEffect,
   useState,
   Dispatch,
+  useRef,
 } from "react";
-import { auth } from "../config/firebase";
+import { auth, convertAffirmationCache } from "../config/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 
 const AuthContext = createContext<{
@@ -35,6 +36,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authLoading, setAuthLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
+  const _has_converted = useRef<boolean>(false);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
       setUser(currentUser);
@@ -42,6 +45,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setAuthLoading(false);
       setIsAuthenticated(currentUser !== null);
+
+      if (currentUser && !_has_converted.current) {
+        _has_converted.current = true;
+
+        (async () => {
+          try {
+            await convertAffirmationCache(currentUser.uid);
+          } catch (err) {
+            console.error("Failed to convert anon affirmations:", err);
+          }
+        })();
+      }
     });
     return unsubscribe;
   }, [setAuthLoading]);

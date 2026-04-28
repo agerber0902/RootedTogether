@@ -5,7 +5,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import { getFirestore } from "firebase/firestore";
 import { Affirmation } from "@/models/affirmation";
-import { getDefaultAffirmations } from "@/helpers/affirmation-helper";
+import {
+  addAffirmation,
+  getDefaultAffirmations,
+} from "@/helpers/affirmation-helper";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -86,6 +89,27 @@ export const getCachedAnonymousAffirmations = async (): Promise<
   return [];
 };
 
+export const convertAffirmationCache = async (
+  userId: string,
+): Promise<void> => {
+  const cache = await getCachedAnonymousAffirmations();
+
+  await Promise.all(
+    cache.map((affirmation) => {
+      const affirmationToAdd = {
+        ...affirmation,
+        creatorId: userId,
+        recipientId: userId,
+      };
+      return addAffirmation(affirmationToAdd);
+    }),
+  );
+
+  await AsyncStorage.removeItem(ANON_AFFIRMATIONS_STORAGE_KEY);
+  _anon_affirmations_cache = undefined;
+
+};
+
 export const saveToCachedAnonymousAffirmations = async (
   affirmation: Affirmation,
 ): Promise<Affirmation[]> => {
@@ -94,7 +118,7 @@ export const saveToCachedAnonymousAffirmations = async (
 
   // Add to cache
   const affirmationToAdd = { id: Date.now().toString(), ...affirmation };
-  
+
   const updatedCache = [...cache, affirmationToAdd];
 
   _anon_affirmations_cache = updatedCache;
@@ -130,7 +154,6 @@ export const updateCachedAnonymousAffirmations = async (
     JSON.stringify(updatedCache),
   );
 
-
   return updatedCache;
 };
 
@@ -140,10 +163,8 @@ export const deleteCachedAnonymousAffirmation = async (
   // Get cache
   const cache = await getCachedAnonymousAffirmations();
   // Find Affirmation
-  const newAffirmations = cache.filter(
-    (c) => c.id !== affirmation.id,
-  );
-  
+  const newAffirmations = cache.filter((c) => c.id !== affirmation.id);
+
   const updatedCache = [...newAffirmations];
 
   _anon_affirmations_cache = updatedCache;
@@ -153,7 +174,6 @@ export const deleteCachedAnonymousAffirmation = async (
     ANON_AFFIRMATIONS_STORAGE_KEY,
     JSON.stringify(updatedCache),
   );
-
 
   return updatedCache;
 };
