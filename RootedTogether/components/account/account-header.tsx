@@ -12,7 +12,6 @@ type AccountHeaderProps = {
 }
 
 const AccountHeader = ({isEditMode, setIsEditMode}: AccountHeaderProps) => {
-  console.log(isEditMode)
   return (
     <View style={accountHeaderStyle.container}>
       <View style={accountHeaderStyle.headerContainer}>

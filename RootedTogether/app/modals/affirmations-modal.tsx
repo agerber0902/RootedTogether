@@ -3,6 +3,7 @@ import { Affirmation } from "@/models/affirmation";
 import { useState, useEffect } from "react";
 import {
   ScrollView,
+  Text,
   TextInput,
   TextInputChangeEvent,
   View,
@@ -20,7 +21,12 @@ import {
   getUserCreatedAffirmations,
 } from "@/helpers/affirmation-helper";
 import { Timestamp } from "firebase/firestore";
-import { setUserCreatedAffirmations } from "@/state/slices/affirmation-slice";
+import { setAnonymousUserCreatedAffirmations, setUserCreatedAffirmations } from "@/state/slices/affirmation-slice";
+import { useAuth } from "@/provider/auth-provider";
+import {
+  saveToCachedAnonymousAffirmations,
+  updateCachedAnonymousAffirmations,
+} from "@/config/firebase";
 
 type AffirmationsModalProps = {
   isVisible: boolean;
@@ -37,11 +43,11 @@ const AffirmationsModal = ({
   affirmation,
   setAffirmation,
 }: AffirmationsModalProps) => {
+  const { isAuthenticated } = useAuth();
+
   const dispatch = useAppDispatch();
   const { affirmationUser } = useAppSelector((state) => state.user.value);
-  const { friendDisplays } = useAppSelector(
-    (state) => state.friend.value,
-  );
+  const { friendDisplays } = useAppSelector((state) => state.friend.value);
 
   const [error, setError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -59,9 +65,11 @@ const AffirmationsModal = ({
   const recipientPickerValues = [
     // { label: "-- Choose Recipient --", value: affirmationUser!.uid },
     { label: "Personal", value: affirmationUser?.uid ?? "" },
-    ...friendDisplays.filter((fd) => fd.isAccepted).map((c) => {
-      return { label: c.friendDisplayName, value: c.friendId };
-    }),
+    ...friendDisplays
+      .filter((fd) => fd.isAccepted)
+      .map((c) => {
+        return { label: c.friendDisplayName, value: c.friendId };
+      }),
   ];
 
   // Reset state when modal closes
@@ -127,32 +135,52 @@ const AffirmationsModal = ({
             ? Timestamp.fromDate(selectedDate)
             : null
           : affirmation.displayDate;
-
-        await editAffirmation(affirmationToEdit);
+        if (isAuthenticated) {
+          await editAffirmation(affirmationToEdit);
+        } else {
+          // Update local async storage with affirmation
+          const anonAffirmations = await updateCachedAnonymousAffirmations(affirmationToEdit);
+          dispatch(setAnonymousUserCreatedAffirmations(anonAffirmations));
+        }
       } else {
         // Add to data base
-        await addAffirmation({
-          message,
-          displayDate: isSetDate
-            ? selectedDate
-              ? Timestamp.fromDate(selectedDate)
-              : null
-            : null,
-          recipientId: recipientId ?? affirmationUser!.uid,
-          creatorId: affirmationUser!.uid,
-          createdAt: Timestamp.fromDate(new Date()),
-        });
+        if (isAuthenticated) {
+          await addAffirmation({
+            message,
+            displayDate: isSetDate
+              ? selectedDate
+                ? Timestamp.fromDate(selectedDate)
+                : null
+              : null,
+            recipientId: recipientId ?? affirmationUser!.uid,
+            creatorId: affirmationUser!.uid,
+            createdAt: Timestamp.fromDate(new Date()),
+          });
+        } else {
+          // Add affirmation to local async storage
+          const anonAffirmations = await saveToCachedAnonymousAffirmations({
+            message: message,
+            displayDate: null,
+            recipientId: undefined,
+            creatorId: undefined,
+            createdAt: Timestamp.fromDate(new Date()),
+          });
+          dispatch(setAnonymousUserCreatedAffirmations(anonAffirmations));
+        }
       }
 
       // update user created affitmations
-      dispatch(
-        setUserCreatedAffirmations(
-          await getUserCreatedAffirmations(affirmationUser!.uid),
-        ),
-      );
+      if (isAuthenticated) {
+        dispatch(
+          setUserCreatedAffirmations(
+            await getUserCreatedAffirmations(affirmationUser!.uid),
+          ),
+        );
+      }
+
     } catch {
       hasSaveError = true;
-      setError("Unable to save friend.");
+      setError("Unable to save affirmation.");
     } finally {
       setTimeout(() => {
         setIsLoading(false);
@@ -191,53 +219,71 @@ const AffirmationsModal = ({
                 setMessage(e.nativeEvent.text)
               }
             />
-
-            <View style={affirmationModalStyle.dateContainer}>
-              <View style={affirmationModalStyle.switchContainer}>
-                <SharedSwitch
-                  text={affirmation ? "Edit Date" : "Add Date"}
-                  onPress={onToggleSetDate}
-                />
-              </View>
-
-              {isSetDate && (
+            {isAuthenticated && (
+              <>
                 <View style={affirmationModalStyle.dateContainer}>
-                  <DatePicker
-                    selectedDate={selectedDate}
-                    setSelectedDate={setSelectedDate}
-                  />
-                </View>
-              )}
-            </View>
+                  <View style={affirmationModalStyle.switchContainer}>
+                    <SharedSwitch
+                      text={affirmation ? "Edit Date" : "Add Date"}
+                      onPress={onToggleSetDate}
+                    />
+                  </View>
 
-            <View style={affirmationModalStyle.recipientPickerContainer}>
-              <View style={affirmationModalStyle.switchContainer}>
-                <SharedSwitch
-                  text={affirmation ? "Edit Recipient" : "Add Recipient"}
-                  onPress={onToggleSetRecipient}
-                />
-              </View>
-              {isSetRecipient && (
-                <SharedPicker
-                  pickerValues={recipientPickerValues}
-                  selectedValue={recipientId}
-                  onValueChange={setRecipientId}
-                />
-              )}
-            </View>
+                  {isSetDate && (
+                    <View style={affirmationModalStyle.dateContainer}>
+                      <DatePicker
+                        selectedDate={selectedDate}
+                        setSelectedDate={setSelectedDate}
+                      />
+                    </View>
+                  )}
+                </View>
+
+                <View style={affirmationModalStyle.recipientPickerContainer}>
+                  <View style={affirmationModalStyle.switchContainer}>
+                    <SharedSwitch
+                      text={affirmation ? "Edit Recipient" : "Add Recipient"}
+                      onPress={onToggleSetRecipient}
+                    />
+                  </View>
+                  {isSetRecipient && (
+                    <SharedPicker
+                      pickerValues={recipientPickerValues}
+                      selectedValue={recipientId}
+                      onValueChange={setRecipientId}
+                    />
+                  )}
+                </View>
+              </>
+            )}
           </View>
 
           <View style={affirmationModalStyle.actions}>
             {isLoading ? (
               <LoadingSpinner />
             ) : (
-              <CardButton
-                title={affirmation ? "Save" : "Share"}
-                onPress={onSave}
-                isDisabled={isLoading}
-              />
+              <>
+                <CardButton
+                  title={
+                    affirmation ? "Save" : !isAuthenticated ? "Create" : "Share"
+                  }
+                  onPress={onSave}
+                  isDisabled={isLoading}
+                />
+              </>
             )}
           </View>
+
+          {!isAuthenticated && (
+            <Text
+              style={affirmationModalStyle.noteText}
+              numberOfLines={2}
+              ellipsizeMode="tail"
+            >
+              Once you create an account, you may add date and recipient to the
+              affirmation.
+            </Text>
+          )}
         </ScrollView>
       </ModalView>
     </>

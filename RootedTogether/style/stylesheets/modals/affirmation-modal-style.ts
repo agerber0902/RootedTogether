@@ -58,4 +58,18 @@ export const affirmationModalStyle = StyleSheet.create({
     marginTop: "auto",
     paddingBottom: Theme.spacing.sm,
   },
+  noteText: {
+    display: 'flex',
+    width: '90%',
+
+    alignSelf: 'center',
+    textAlign: 'center',
+
+    fontFamily: Theme.typography.serifMedium,
+    fontSize: Theme.typography.size.modalHeader,
+    color: Theme.colorScheme.primaryText,
+    marginBottom: Theme.spacing.xs,
+
+    ...Theme.baseText,
+  }
 });
