@@ -148,14 +148,23 @@ export const getTodaysAffirmations = async (
 
   const user = await getUser(userId);
 
-  if (user?.todaysAffirmationIds && user.todaysAffirmationIds.length > 0 && isToday(user.updatedAt)) {
+  if (
+    user?.todaysAffirmationIds &&
+    user.todaysAffirmationIds.length > 0 &&
+    isToday(user.updatedAt)
+  ) {
     const cachedAffirmation = allAffirmations.filter((a) =>
       user.todaysAffirmationIds?.includes(a.id ?? ""),
     );
     cachedAffirmation.map((affirmation) =>
       result.push({
         date: Timestamp.fromDate(new Date()),
-        friendDisplayName: "You",
+        friendDisplayName:
+          affirmation.creatorId === userId
+            ? "You"
+            : friendDisplays.find(
+                (fd) => fd.friendId === affirmation.creatorId,
+              )?.friendDisplayName ?? 'Always remember',
         affirmation: [affirmation],
       }),
     );
