@@ -9,7 +9,6 @@ export const accountHeaderStyle = StyleSheet.create({
         flexDirection: 'row',
         alignItems: "center",
         justifyContent: 'space-between',
-        
     },
     headerContainer: {
         display: 'flex',
@@ -18,7 +17,17 @@ export const accountHeaderStyle = StyleSheet.create({
 
         justifyContent: 'flex-start',
 
-        paddingRight: 15,
+        paddingHorizontal: 15,
+    },
+    placeholderView: {
+        display: 'flex',
+        flex: 3,
+        width: '100%',
+    },
+    headerView: {
+        display: 'flex',
+        flex: 7,
+        width: '100%',
     },
     actionContainer: {
         // width: '20%',
@@ -27,7 +36,7 @@ export const accountHeaderStyle = StyleSheet.create({
         maxWidth: 200,
         
         paddingVertical: Theme.spacing.sm,
-        paddingBottom: Platform.OS === 'web' ? 0 : 50,
+        paddingBottom: Platform.OS === 'web' ? 0 : (Platform.OS === 'ios' && Platform.isPad) ? 50 : 10,
 
         marginRight: 10,
     },
