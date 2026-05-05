@@ -121,11 +121,13 @@ export const Theme = {
     delay: {
       baseDelay: 500,
       headerDelay: 1000,
+      headerButtonDelay: 2000,
       cardDelay: 1500,
     },
     duration: {
       baseDuration: 500,
-      headerDuration: 1000,
+      headerDuration: 1250,
+      headerButtonDuration: 1000,
       cardDuration: 1000,
     },
   },

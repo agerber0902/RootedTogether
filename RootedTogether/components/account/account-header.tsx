@@ -19,13 +19,21 @@ const AccountHeader = ({ isEditMode, setIsEditMode }: AccountHeaderProps) => {
       <View style={accountHeaderStyle.headerContainer}>
         <View style={accountHeaderStyle.placeholderView}></View>
         <View style={accountHeaderStyle.headerView}>
-          <Text
-            style={headerViewStyle.headerText}
-            numberOfLines={2}
-            ellipsizeMode={"tail"}
+          <FadeInView
+            visible={true}
+            delay={animationStyle.delay.cardDelay}
+            duration={animationStyle.duration.cardDuration}
+            finalElevation={animationStyle.elevation}
+            useElevation={true}
           >
-            Account Information
-          </Text>
+            <Text
+              style={headerViewStyle.headerText}
+              numberOfLines={2}
+              ellipsizeMode={"tail"}
+            >
+              Account Information
+            </Text>
+          </FadeInView>
 
           {/* <HeaderView title="Account Information" subText="" /> */}
         </View>
@@ -36,8 +44,8 @@ const AccountHeader = ({ isEditMode, setIsEditMode }: AccountHeaderProps) => {
           {isAuthenticated && (
             <FadeInView
               visible={true}
-              delay={animationStyle.delay.headerDelay}
-              duration={animationStyle.duration.headerDuration}
+              delay={animationStyle.delay.headerButtonDelay}
+              duration={animationStyle.duration.headerButtonDuration}
             >
               <View
                 style={{
