@@ -14,7 +14,7 @@ pool:
 
 variables:
   - group: rooted-dev-secrets
-  - name: activeDirectory
+  - name: appDirectory
     value: 'RootedTogether'
 
 stages:
