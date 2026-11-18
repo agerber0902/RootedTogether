@@ -40,9 +40,9 @@ stages:
 
           - script: |
               if [ "$(Build.SourceBranch)" = "refs/heads/develop" ]; then
-                npm run build -- --mode development
+                npm run web -- --mode development
               else
-                npm run build -- --mode production
+                npm run web -- --mode production
               fi
             workingDirectory: '$(Build.SourcesDirectory)/$(appDirectory)'
             displayName: Build Vite application
