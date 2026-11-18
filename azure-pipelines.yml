@@ -14,6 +14,8 @@ pool:
 
 variables:
   - group: rooted-dev-secrets
+  - name: activeDirectory
+    value: 'RootedTogether'
 
 stages:
 
@@ -33,6 +35,7 @@ stages:
             displayName: Install Node.js
 
           - script: npm ci
+            workingDirectory: '$(Build.SourcesDirectory)/$(appDirectory)'
             displayName: Install dependencies
 
           - script: |
@@ -41,6 +44,7 @@ stages:
               else
                 npm run build -- --mode production
               fi
+            workingDirectory: '$(Build.SourcesDirectory)/$(appDirectory)'
             displayName: Build Vite application
 
           - task: PublishPipelineArtifact@1
