@@ -4,18 +4,105 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  branches:
+    include:
+      - develop
+      - main
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '20.x'
-  displayName: 'Install Node.js'
+variables:
+  - group: rooted-dev-secrets
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+stages:
+
+  # BUILD
+  # ==========================================
+  - stage: Build
+    displayName: Build Vite Application
+    jobs:
+      - job: BuildApp
+        displayName: Build
+        steps:
+          - checkout: self
+
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '22.x'
+            displayName: Install Node.js
+
+          - script: npm ci
+            displayName: Install dependencies
+
+          - script: |
+              if [ "$(Build.SourceBranch)" = "refs/heads/develop" ]; then
+                npm run build -- --mode development
+              else
+                npm run build -- --mode production
+              fi
+            displayName: Build Vite application
+
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: 'dist'
+              artifact: 'vite-build'
+              publishLocation: 'pipeline'
+
+  # DEPLOY DEVELOPMENT
+  # ==========================================
+  - stage: Deploy Dev
+    displayName: Deploy to Rooted Dev
+    dependsOn: Build
+    condition: |
+      and(
+        succeeded(),
+        eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+      )
+
+    jobs:
+      - deployment: DeployDev
+        displayName: Deploy rooted-dev
+        environment: rooted-dev
+
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: vite-build
+
+                - script: |
+                    npx --yes @azure/static-web-apps-cli@2.0.2 deploy "$(Pipeline.Workspace)/vite-build" --deployment-token "$SWA_TOKEN" --env production
+                  displayName: Deploy Vite to Azure Static Web App
+                  env:
+                    SWA_TOKEN: $(ROOTED_DEV_TOKEN)
+
+  # PRODUCTION DEPLOYMENT
+  # ==========================================
+  - stage: Deploy_Prod
+    displayName: Deploy to Rooted Production
+    dependsOn: Build
+    condition: |
+      and(
+        succeeded(),
+        eq(variables['Build.SourceBranch'], 'refs/heads/main')
+      )
+
+    jobs:
+      - deployment: DeployProd
+        displayName: Deploy rooted-prd
+        environment: rooted-prd
+
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: vite-build
+
+                - script: |
+                    npx --yes @azure/static-web-apps-cli@2.0.2 deploy "$(Pipeline.Workspace)/vite-build" --deployment-token "$SWA_TOKEN" --env production
+                  displayName: Deploy Vite to Azure Static Web App
+                  env:
+                    SWA_TOKEN: $(ROOTED_PRD_TOKEN)
